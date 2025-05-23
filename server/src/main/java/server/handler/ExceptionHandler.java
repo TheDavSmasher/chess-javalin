@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public class ExceptionHandler implements io.javalin.http.ExceptionHandler<ServiceException> {
     @Override
     public void handle(@NotNull ServiceException e, @NotNull Context context) {
-        context.status(getStatusCode(e)).json(new ErrorResponse(e.getMessage()));
+        context.status(getStatusCode(e)).json(new ErrorResponse("Error: " + e.getMessage()));
     }
 
     private static HttpStatus getStatusCode(ServiceException e) {

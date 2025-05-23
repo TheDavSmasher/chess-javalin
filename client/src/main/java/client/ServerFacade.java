@@ -2,6 +2,7 @@ package client;
 
 import chess.ChessMove;
 import client.websocket.ServerMessageObserver;
+import client.websocket.WebsocketCommunicator;
 import model.dataaccess.GameData;
 import model.request.CreateGameRequest;
 import model.request.JoinGameRequest;
@@ -19,14 +20,14 @@ import static model.Serializer.serialize;
 public class ServerFacade {
 
     private static String urlPort = "http://localhost:8080/";
-    //private static WebsocketCommunicator websocket;
+    private static WebsocketCommunicator websocket;
 
     public static void setPort(int port) {
         urlPort = "http://localhost:" + port + "/";
     }
 
     public static void setObserver(ServerMessageObserver observer) throws IOException {
-       // websocket = new WebsocketCommunicator(urlPort, observer);
+        websocket = new WebsocketCommunicator(urlPort, observer);
     }
 
     public static UserEnterResponse register(String username, String password, String email) throws IOException {
@@ -70,18 +71,18 @@ public class ServerFacade {
 
     //Websocket
     public static void connectToGame(String authToken, int gameID) throws IOException {
-        //websocket.connectToGame(authToken, gameID);
+        websocket.connectToGame(authToken, gameID);
     }
 
     public static void makeMove(String authToken, int gameID, ChessMove move) throws IOException {
-        //websocket.makeMove(authToken, gameID, move);
+        websocket.makeMove(authToken, gameID, move);
     }
 
     public static void leaveGame(String authToken, int gameID) throws IOException {
-        //websocket.leaveGame(authToken, gameID);
+        websocket.leaveGame(authToken, gameID);
     }
 
     public static void resignGame(String authToken, int gameID) throws IOException {
-        //websocket.resignGame(authToken, gameID);
+        websocket.resignGame(authToken, gameID);
     }
 }

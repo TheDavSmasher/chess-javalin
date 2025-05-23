@@ -2,6 +2,7 @@ package dataaccess;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -43,7 +44,7 @@ public class DatabaseManager {
      * }
      * </code>
      */
-    static Connection getConnection() throws DataAccessException {
+    public static Connection getConnection() throws DataAccessException {
         try {
             //do not wrap the following line with a try-with-resources
             var conn = DriverManager.getConnection(connectionUrl, dbUsername, dbPassword);
@@ -75,5 +76,58 @@ public class DatabaseManager {
         var host = props.getProperty("db.host");
         var port = Integer.parseInt(props.getProperty("db.port"));
         connectionUrl = String.format("jdbc:mysql://%s:%d", host, port);
+    }
+
+    public static void configureDatabase() throws DataAccessException {
+        DatabaseManager.createDatabase();
+
+        String[] createStatements = {
+                """
+                CREATE TABLE IF NOT EXISTS auth (
+                  `authToken` varchar(255) NOT NULL,
+                  `username` varchar(255) NOT NULL,
+                  PRIMARY KEY (`authToken`),
+                  INDEX (username)
+                )
+                """,
+                """
+                CREATE TABLE IF NOT EXISTS users (
+                  `username` varchar(255) NOT NULL,
+                  `password` varchar(255) NOT NULL,
+                  `email` varchar(255) NOT NULL,
+                  PRIMARY KEY (`username`),
+                  INDEX (`username`)
+                )
+                """,
+                """
+                CREATE TABLE IF NOT EXISTS games (
+                  `gameID` int NOT NULL AUTO_INCREMENT,
+                  `whiteUsername` varchar(255),
+                  `blackUsername` varchar(255),
+                  `gameName` varchar(255) NOT NULL,
+                  `game` TEXT NOT NULL,
+                  PRIMARY KEY (`gameID`),
+                  INDEX (`gameName`)
+                )
+                """
+        };
+
+        Connection connection = null;
+        try (Connection c = DatabaseManager.getConnection()) {
+            connection = c;
+            connection.setAutoCommit(false);
+            for (String statement : createStatements) {
+                try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+                    preparedStatement.executeUpdate();
+                }
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ignored) {
+            }
+            throw new DataAccessException(e.getMessage());
+        }
     }
 }

@@ -14,22 +14,21 @@ import static model.Serializer.deserialize;
 
 public class HttpCommunicator {
     private static final HttpClient client = HttpClient.newHttpClient();
-    private static final HttpRequest.Builder requestBuilder = HttpRequest.newBuilder().timeout(Duration.ofMillis(5000));
 
     public static <T> T doPost(String urlString, String body, String authToken, Class<T> responseClass) throws IOException {
-        return doServerMethod(urlString,  requestBuilder.POST(bodyPublisher(body)), authToken, responseClass);
+        return doServerMethod(urlString, getRequestBuilder().POST(bodyPublisher(body)), authToken, responseClass);
     }
 
     public static <T> void doDelete(String urlString, String authToken, Class<T> responseClass) throws IOException {
-        doServerMethod(urlString, requestBuilder.DELETE(), authToken, responseClass);
+        doServerMethod(urlString, getRequestBuilder().DELETE(), authToken, responseClass);
     }
 
     public static <T> void doPut(String urlString, String body, String authToken, Class<T> responseClass) throws IOException {
-        doServerMethod(urlString, requestBuilder.PUT(bodyPublisher(body)), authToken, responseClass);
+        doServerMethod(urlString, getRequestBuilder().PUT(bodyPublisher(body)), authToken, responseClass);
     }
 
     public static <T> T doGet(String urlString, String authToken, Class<T> responseClass) throws IOException {
-        return doServerMethod(urlString, requestBuilder.GET(), authToken, responseClass);
+        return doServerMethod(urlString, getRequestBuilder().GET(), authToken, responseClass);
     }
 
     private static <T> T doServerMethod(String url, HttpRequest.Builder builder, String authToken, Class<T> responseClass) throws IOException {
@@ -50,6 +49,10 @@ public class HttpCommunicator {
             throw new IOException(deserialize(response.body(), ErrorResponse.class).message());
         }
         return deserialize(response.body(), responseClass);
+    }
+
+    private static HttpRequest.Builder getRequestBuilder() {
+        return HttpRequest.newBuilder().timeout(Duration.ofMillis(5000));
     }
 
     private static HttpRequest.BodyPublisher bodyPublisher(String body) {

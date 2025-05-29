@@ -3,9 +3,9 @@ package server;
 import io.javalin.Javalin;
 import io.javalin.json.JavalinGson;
 import io.javalin.websocket.WsContext;
-import service.ServiceException;
 import server.handler.*;
 import server.websocket.WSServer;
+import service.ServiceException;
 
 public class Server {
 
@@ -33,8 +33,7 @@ public class Server {
     }
 
     public int run(int desiredPort) {
-        javalin.start(desiredPort);
-        return javalin.port();
+        return javalin.start(desiredPort).port();
     }
 
     public void stop() {

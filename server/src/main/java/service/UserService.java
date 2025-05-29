@@ -11,7 +11,9 @@ import model.response.result.PreexistingException;
 import model.response.result.ServiceException;
 import model.response.result.UnauthorizedException;
 
-public class UserService extends Service {
+import static service.Service.tryCatch;
+
+public class UserService {
     public static UserEnterResponse register(UserEnterRequest request) throws ServiceException {
         return tryCatch(() -> {
             if (request.username() == null || request.password() == null || request.email() == null ||

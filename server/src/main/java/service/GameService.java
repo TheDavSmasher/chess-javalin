@@ -12,7 +12,9 @@ import model.response.result.BadRequestException;
 import model.response.result.PreexistingException;
 import model.response.result.ServiceException;
 
-public class GameService extends Service {
+import static service.Service.tryCatch;
+
+public class GameService {
     public static ListGamesResponse getAllGames(String authToken) throws ServiceException {
         return tryCatch(() -> {
             UserService.validateAuth(authToken);

@@ -6,7 +6,9 @@ import dataaccess.UserDAO;
 import model.response.EmptyResponse;
 import model.response.result.ServiceException;
 
-public class AppService extends Service {
+import static service.Service.tryCatch;
+
+public class AppService {
     public static EmptyResponse clearData() throws ServiceException {
         return tryCatch(() -> {
             AuthDAO.getInstance().clear();

@@ -2,7 +2,7 @@ package server.handler;
 
 import model.request.JoinGameRequest;
 import model.response.EmptyResponse;
-import model.response.result.ServiceException;
+import service.ServiceException;
 import service.GameService;
 
 public class JoinGameHandler extends RequestDeserializer<JoinGameRequest, EmptyResponse> {

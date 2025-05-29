@@ -1,7 +1,7 @@
 package server.websocket;
 
 import io.javalin.websocket.WsMessageContext;
-import model.response.result.ServiceException;
+import service.ServiceException;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ErrorMessage;

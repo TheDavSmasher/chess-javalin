@@ -1,7 +1,7 @@
 package server.handler;
 
 import io.javalin.http.Context;
-import model.response.result.ServiceException;
+import service.ServiceException;
 
 public abstract class RequestDeserializer<T, U>  extends ObjectSerializer<U> {
     @Override

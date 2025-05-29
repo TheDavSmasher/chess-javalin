@@ -1,4 +1,4 @@
-package model.response.result;
+package service;
 
 public class BadRequestException extends ServiceException {
     public BadRequestException() {

@@ -5,7 +5,7 @@ import chess.ChessMove;
 import chess.ChessPosition;
 import chess.InvalidMoveException;
 import model.dataaccess.GameData;
-import model.response.result.ServiceException;
+import service.ServiceException;
 import org.eclipse.jetty.websocket.api.Session;
 import service.GameService;
 import websocket.commands.MakeMoveCommand;

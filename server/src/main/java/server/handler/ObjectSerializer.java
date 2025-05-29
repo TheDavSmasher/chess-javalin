@@ -3,7 +3,7 @@ package server.handler;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.HttpStatus;
-import model.response.result.ServiceException;
+import service.ServiceException;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class ObjectSerializer<T> implements Handler {

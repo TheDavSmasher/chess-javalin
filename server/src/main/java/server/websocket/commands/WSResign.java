@@ -1,7 +1,7 @@
 package server.websocket.commands;
 
 import chess.ChessGame;
-import model.response.result.ServiceException;
+import service.ServiceException;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.commands.ResignCommand;
 

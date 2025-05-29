@@ -1,6 +1,6 @@
 package server.websocket.commands;
 
-import model.response.result.ServiceException;
+import service.ServiceException;
 import org.eclipse.jetty.websocket.api.Session;
 import service.GameService;
 import websocket.commands.LeaveCommand;

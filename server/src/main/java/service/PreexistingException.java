@@ -1,4 +1,4 @@
-package model.response.result;
+package service;
 
 public class PreexistingException extends ServiceException {
     public PreexistingException() {

@@ -4,7 +4,6 @@ import dataaccess.AuthDAO;
 import dataaccess.GameDAO;
 import dataaccess.UserDAO;
 import model.response.EmptyResponse;
-import model.response.result.ServiceException;
 
 import static service.Service.tryCatch;
 

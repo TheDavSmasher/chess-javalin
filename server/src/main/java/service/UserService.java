@@ -6,10 +6,6 @@ import model.dataaccess.AuthData;
 import model.request.UserEnterRequest;
 import model.response.EmptyResponse;
 import model.response.UserEnterResponse;
-import model.response.result.BadRequestException;
-import model.response.result.PreexistingException;
-import model.response.result.ServiceException;
-import model.response.result.UnauthorizedException;
 
 import static service.Service.tryCatch;
 

@@ -1,8 +1,6 @@
 package service;
 
 import dataaccess.DataAccessException;
-import model.response.result.ServiceException;
-import model.response.result.UnexpectedException;
 
 public final class Service {
     public static final boolean UseSQL = true;

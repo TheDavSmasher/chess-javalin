@@ -8,9 +8,6 @@ import model.request.JoinGameRequest;
 import model.response.CreateGameResponse;
 import model.response.EmptyResponse;
 import model.response.ListGamesResponse;
-import model.response.result.BadRequestException;
-import model.response.result.PreexistingException;
-import model.response.result.ServiceException;
 
 import static service.Service.tryCatch;
 

@@ -3,7 +3,7 @@ package server;
 import io.javalin.Javalin;
 import io.javalin.json.JavalinGson;
 import io.javalin.websocket.WsContext;
-import model.response.result.ServiceException;
+import service.ServiceException;
 import server.handler.*;
 import server.websocket.WSServer;
 

@@ -2,7 +2,7 @@ package server.websocket.commands;
 
 import chess.ChessGame;
 import model.dataaccess.GameData;
-import model.response.result.ServiceException;
+import service.ServiceException;
 import server.websocket.Connection;
 import server.websocket.WebSocketCommand;
 import service.GameService;

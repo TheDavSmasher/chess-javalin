@@ -1,4 +1,4 @@
-package model.response.result;
+package service;
 
 public class ServiceException extends Exception {
     public ServiceException(String message) {

@@ -127,7 +127,7 @@ public class DatabaseManager {
                 connection.rollback();
             } catch (SQLException ignored) {
             }
-            throw new DataAccessException(e.getMessage());
+            throw new DataAccessException("could not configure database", e);
         }
     }
 }

@@ -22,7 +22,7 @@ public abstract class SQLDAO {
         try (PreparedStatement statement = getStatement(sql, params); ResultSet rs = statement.executeQuery()) {
             return query.execute(rs);
         } catch (SQLException e) {
-            throw new DataAccessException(e.getMessage());
+            throw new DataAccessException("could not execute query", e);
         }
     }
 
@@ -37,7 +37,7 @@ public abstract class SQLDAO {
 
             update.execute(result);
         } catch (SQLException e) {
-            throw new DataAccessException(e.getMessage());
+            throw new DataAccessException("could not execute update", e);
         }
     }
 

@@ -7,13 +7,13 @@ import model.request.UserEnterRequest;
 import model.response.EmptyResponse;
 import model.response.UserEnterResponse;
 
+import static org.eclipse.jetty.util.StringUtil.isBlank;
 import static service.Service.tryCatch;
 
 public class UserService {
     public static UserEnterResponse register(UserEnterRequest request) throws ServiceException {
         return tryCatch(() -> {
-            if (request.username() == null || request.password() == null || request.email() == null ||
-                    request.username().isEmpty() || request.password().isEmpty() || request.email().isEmpty()) {
+            if (isBlank(request.username()) || isBlank(request.password()) || isBlank(request.email())) {
                 throw new BadRequestException();
             }
 
@@ -29,7 +29,7 @@ public class UserService {
 
     public static UserEnterResponse login(UserEnterRequest request) throws ServiceException {
         return tryCatch(() -> {
-            if (request.username() == null || request.password() == null || request.username().isEmpty() || request.password().isEmpty()) {
+            if (isBlank(request.username()) || isBlank(request.password())) {
                 throw new BadRequestException();
             }
 

@@ -157,9 +157,7 @@ public class ChessClient implements ServerMessageObserver {
             out.print("Please provide a username, password, and email.\nFormat: 1 username password email");
             return "Retry";
         }
-        String username = params[0];
-        String password = params[1];
-        String email = params[2];
+        String username = params[0], password = params[1], email = params[2];
 
         try {
             authToken = serverFacade.register(username, password, email).authToken();
@@ -178,8 +176,7 @@ public class ChessClient implements ServerMessageObserver {
             out.print("Please provide a username and password.\nFormat: 2 username password");
             return "Retry";
         }
-        String username = params[0];
-        String password = params[1];
+        String username = params[0], password = params[1];
 
         try {
             authToken = serverFacade.login(username, password).authToken();
@@ -219,7 +216,14 @@ public class ChessClient implements ServerMessageObserver {
             return "Retry";
         }
         try {
-            String fullName = stringFromParams(params);
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < params.length; i++) {
+                result.append(params[i]);
+                if (i < params.length - 1) {
+                    result.append(" ");
+                }
+            }
+            String fullName = result.toString();
             serverFacade.createGame(authToken, fullName);
             out.print("Game created! List all games to see it and be able to join or observe it.");
         } catch (IOException e) {
@@ -238,17 +242,18 @@ public class ChessClient implements ServerMessageObserver {
             out.print("Please list the games before you can join!");
             return "List first";
         }
+        String color = params[0], gameIndex = params[1];
         try {
-            int index = Integer.parseInt(params[1]) - 1;
+            int index = Integer.parseInt(gameIndex) - 1;
             if (index >= existingGames.length) {
                 out.print("That game does not exist!");
                 return "Out of range";
             }
             currentGameID = existingGames[index];
-            serverFacade.joinGame(authToken, params[0], currentGameID);
+            serverFacade.joinGame(authToken, color, currentGameID);
             serverFacade.connectToGame(authToken, currentGameID);
             currentState = MenuState.MID_GAME;
-            whitePlayer = params[0].equalsIgnoreCase("white");
+            whitePlayer = color.equalsIgnoreCase("white");
         } catch (IOException e) {
             out.print(e.getMessage());
             return "Error Caught";
@@ -268,8 +273,9 @@ public class ChessClient implements ServerMessageObserver {
             out.print("Please list the games before you can join!");
             return "List first";
         }
+        String gameIndex = params[0];
         try {
-            int index = Integer.parseInt(params[0]) - 1;
+            int index = Integer.parseInt(gameIndex) - 1;
             if (index >= existingGames.length) {
                 out.print("That game does not exist!");
                 return "Out of range";
@@ -300,17 +306,6 @@ public class ChessClient implements ServerMessageObserver {
         return "See you later!";
     }
 
-    private String stringFromParams(String[] params) {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < params.length; i++) {
-            result.append(params[i]);
-            if (i < params.length - 1) {
-                result.append(" ");
-            }
-        }
-        return result.toString();
-    }
-
     private String redrawBoard() {
         String[][] gameBoard = ChessUI.getChessBoardAsArray(currentGame.getBoard());
         ChessUI.printChessBoard(out, gameBoard, whitePlayer);
@@ -325,14 +320,10 @@ public class ChessClient implements ServerMessageObserver {
                 Format: 2 start end (pieceType)""");
             return "Retry";
         }
+        String start = params[0], end = params[1];
         try {
-            ChessPiece.PieceType type;
-            if (params.length < 3) {
-                type = null;
-            } else {
-                type = typeFromString(params[2]);
-            }
-            ChessMove move = new ChessMove(positionFromString(params[0]), positionFromString(params[1]), type);
+            ChessPiece.PieceType type = params.length < 3 ? null : typeFromString(params[2]);
+            ChessMove move = new ChessMove(positionFromString(start), positionFromString(end), type);
             serverFacade.makeMove(authToken, currentGameID, move);
             return "Move made";
         } catch (IOException e) {
@@ -345,8 +336,9 @@ public class ChessClient implements ServerMessageObserver {
         if (params.length < 1) {
             out.print("Please provide a start position.\nFormat: 3 start");
         }
+        String startPos = params[0];
         try {
-            ChessPosition start = positionFromString(params[0]);
+            ChessPosition start = positionFromString(startPos);
             String[][] gameBoard = ChessUI.getChessBoardAsArray(currentGame.getBoard());
             String[][] moves = ChessUI.getValidMovesInArray((ArrayList<ChessMove>) currentGame.validMoves(start));
             ChessUI.printChessBoard(out, gameBoard, moves, whitePlayer);

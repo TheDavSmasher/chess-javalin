@@ -83,29 +83,25 @@ public class ChessUI {
     }
 
     private static void drawChessSquare(PrintStream out, String pieceString, String moveString, boolean isWhite) {
-        boolean isStart = moveString != null && moveString.equals("S");
-        boolean toHighlight = moveString != null && !moveString.equals("S");
+        boolean isMove = moveString != null;
+        boolean moveSpot = !(isMove && "S".equals(moveString));
 
-        if (moveString != null) {
+        if (isMove) {
             out.print(SET_TEXT_COLOR_BLACK);
+            if (moveString.equals("S")) {
+                out.print(SET_BG_COLOR_YELLOW);
+            }
         }
 
-        if (isStart) {
-            out.print(SET_BG_COLOR_YELLOW);
-        } else {
+        if (moveSpot) {
             out.print(isWhite
-                    ? toHighlight ? SET_BG_COLOR_GREEN : SET_BG_COLOR_WHITE
-                    : toHighlight ? SET_BG_COLOR_DARK_GREEN : SET_BG_COLOR_BLACK);
-
+                    ? isMove ? SET_BG_COLOR_GREEN : SET_BG_COLOR_WHITE
+                    : isMove ? SET_BG_COLOR_DARK_GREEN : SET_BG_COLOR_BLACK);
             if (pieceString != null) {
                 out.print(isUpperCase(pieceString.charAt(0)) ? SET_TEXT_COLOR_RED : SET_TEXT_COLOR_BLUE);
             }
         }
-        if (pieceString != null) {
-            out.print(" "+pieceString.toUpperCase()+" ");
-        } else {
-            out.print("   ");
-        }
+        out.print(pieceString != null ? " "+pieceString.toUpperCase()+" " : "   ");
     }
 
     private static void setGreyBG(PrintStream out) {

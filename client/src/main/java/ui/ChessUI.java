@@ -94,56 +94,35 @@ public class ChessUI {
             }
         }
 
+        if (isStart || toHighlight) {
+            setBlackText(out);
+        }
+
         if (isStart) {
-            printStartMoveSquare(out, pieceString);
-        } else if (isWhite) {
-            printWhiteSquare(out, pieceString, toHighlight);
+            setYellowBG(out);
         } else {
-            printBlackSquare(out, pieceString, toHighlight);
-        }
-    }
-
-    private static void printWhiteSquare(PrintStream out, String pieceString, boolean highlighted) {
-        if (highlighted) {
-            setBlackText(out);
-            setLightGreenBG(out);
-        } else {
-            setWhiteBG(out);
-        }
-        if (pieceString != null) {
-            if (isUpperCase(pieceString.charAt(0))) {
-                setRedText(out);
+            if (isWhite) {
+                if (toHighlight) {
+                    setLightGreenBG(out);
+                } else {
+                    setWhiteBG(out);
+                }
             } else {
-                setBlueText(out);
+                if (toHighlight) {
+                    setDarkGreenBG(out);
+                } else {
+                    setBlackBG(out);
+                }
             }
-            out.print(" "+pieceString.toUpperCase()+" ");
-        } else {
-            out.print("   ");
-        }
-    }
 
-    private static void printBlackSquare(PrintStream out, String pieceString, boolean highlighted) {
-        if (highlighted) {
-            setBlackText(out);
-            setDarkGreenBG(out);
-        } else {
-            setBlackBG(out);
-        }
-        if (pieceString != null) {
-            if (isUpperCase(pieceString.charAt(0))) {
-                setRedText(out);
-            } else {
-                setBlueText(out);
+            if (pieceString != null) {
+                if (isUpperCase(pieceString.charAt(0))) {
+                    setRedText(out);
+                } else {
+                    setBlueText(out);
+                }
             }
-            out.print(" "+pieceString.toUpperCase()+" ");
-        } else {
-            out.print("   ");
         }
-    }
-
-    private static void printStartMoveSquare(PrintStream out, String pieceString) {
-        setYellowBG(out);
-        setBlackText(out);
         if (pieceString != null) {
             out.print(" "+pieceString.toUpperCase()+" ");
         } else {

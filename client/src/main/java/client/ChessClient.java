@@ -92,6 +92,22 @@ public class ChessClient implements ServerMessageObserver {
         OBSERVING
     }
 
+    private void changeState(MenuState state) {
+        currentState = state;
+        if (state == MenuState.POST_LOGIN) {
+            currentGame = null;
+            currentGameID = 0;
+        } else if (state == MenuState.PRE_LOGIN) {
+            authToken = null;
+        }
+        help(true);
+    }
+
+    private void changeState(String token) {
+        authToken = token;
+        changeState(MenuState.POST_LOGIN);
+    }
+
     private static String getHelpOption(String option, boolean skipDescription, String... description) {
         StringBuilder sb = new StringBuilder().append(option);
         if (!skipDescription) {
@@ -164,10 +180,7 @@ public class ChessClient implements ServerMessageObserver {
             throw new FormatException("Please provide a username, password, and email.", "1 username password email");
         }
         String username = params[0], password = params[1], email = params[2];
-
-        authToken = serverFacade.register(username, password, email).authToken();
-        currentState = MenuState.POST_LOGIN;
-        help(true);
+        changeState(serverFacade.register(username, password, email).authToken());
     }
 
     private void signIn(String[] params) throws ClientException, IOException {
@@ -175,10 +188,7 @@ public class ChessClient implements ServerMessageObserver {
             throw new FormatException("Please provide a username and password", "2 username password");
         }
         String username = params[0], password = params[1];
-
-        authToken = serverFacade.login(username, password).authToken();
-        currentState = MenuState.POST_LOGIN;
-        help(true);
+        changeState(serverFacade.login(username, password).authToken());
     }
 
     private void listGames() throws IOException {
@@ -222,11 +232,12 @@ public class ChessClient implements ServerMessageObserver {
         if (index >= existingGames.length) {
             throw new ClientException("That game does not exist!");
         }
-        currentGameID = existingGames[index];
-        serverFacade.joinGame(authToken, color, currentGameID);
-        serverFacade.connectToGame(authToken, currentGameID);
-        currentState = MenuState.MID_GAME;
+        int newGameID = existingGames[index];
+        serverFacade.joinGame(authToken, color, newGameID);
+        serverFacade.connectToGame(authToken, newGameID);
+        currentGameID = newGameID;
         whitePlayer = color.equalsIgnoreCase("white");
+        changeState(MenuState.MID_GAME);
     }
 
     private void observeGame(String[] params) throws ClientException, IOException {
@@ -241,16 +252,15 @@ public class ChessClient implements ServerMessageObserver {
         if (index >= existingGames.length) {
             throw new ClientException("That game does not exist!");
         }
-        currentGameID = existingGames[index];
+        int newGameID = existingGames[index];
         serverFacade.connectToGame(authToken, currentGameID);
-        currentState = MenuState.OBSERVING;
+        currentGameID = newGameID;
+        changeState(MenuState.OBSERVING);
     }
 
     private void logout() throws IOException {
         serverFacade.logout(authToken);
-        currentState = MenuState.PRE_LOGIN;
-        authToken = null;
-        help(true);
+        changeState(MenuState.PRE_LOGIN);
     }
 
     private void redrawBoard() {
@@ -284,18 +294,12 @@ public class ChessClient implements ServerMessageObserver {
 
     private void leaveGame() throws IOException {
         serverFacade.leaveGame(authToken, currentGameID);
-        currentGameID = 0;
-        currentGame = null;
-        currentState = MenuState.POST_LOGIN;
-        help(true);
+        changeState(MenuState.POST_LOGIN);
     }
 
     private void resignGame() throws IOException {
         serverFacade.resignGame(authToken, currentGameID);
-        currentGameID = 0;
-        currentGame = null;
-        currentState = MenuState.POST_LOGIN;
-        help(true);
+        changeState(MenuState.POST_LOGIN);
     }
 
     private ChessPosition positionFromString(String moveString) throws IOException {

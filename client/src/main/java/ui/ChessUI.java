@@ -13,51 +13,38 @@ import static java.lang.Character.isUpperCase;
 import static ui.EscapeSequences.*;
 
 public class ChessUI {
-    private static String[][] getChessBoardAsArray(ChessBoard chessBoard) {
-        String[][] stringBoard = new String[BOARD_SIZE][BOARD_SIZE];
-
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            for (int j = 0; j < BOARD_SIZE; j++) {
-                ChessPiece tempPiece = chessBoard.getPiece(new ChessPosition(i+1, j+1));
-                if (tempPiece != null) {
-                    stringBoard[i][j] = tempPiece.toString();
-                }
-            }
-        }
-
-        return stringBoard;
-    }
-
-    private static String[][] getValidMovesInArray(Collection<ChessMove> pieceMoves) {
-        String[][] stringMoves = new String[BOARD_SIZE][BOARD_SIZE];
-
-        if (pieceMoves == null) { return stringMoves; }
-
-        ChessPosition start = pieceMoves.stream().toList().getFirst().getStartPosition();
-        stringMoves[start.getRow() - 1][start.getColumn() - 1] = "S";
-
-        for (ChessMove move : pieceMoves) {
-            ChessPosition position = move.getEndPosition();
-            stringMoves[position.getRow() - 1][position.getColumn() - 1] = "V";
-        }
-
-        return stringMoves;
-    }
-
     public static void printChessBoard(PrintStream out, ChessBoard board, boolean whiteBottom) {
         printChessBoard(out, board, null, whiteBottom);
     }
 
-    public static void printChessBoard(PrintStream out, ChessBoard chessBoard, Collection<ChessMove> validMoves, boolean whiteBottom) {
+    public static void printChessBoard(PrintStream out, ChessBoard chessBoard, Collection<ChessMove> pieceMoves, boolean whiteBottom) {
         out.println();
         printTopHeader(out, whiteBottom);
 
-        boolean firstIsWhite = true;
-        String[][] board = getChessBoardAsArray(chessBoard), moves = getValidMovesInArray(validMoves);
+        String[][] board = new String[BOARD_SIZE][BOARD_SIZE];
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                ChessPiece tempPiece = chessBoard.getPiece(new ChessPosition(i+1, j+1));
+                if (tempPiece != null) {
+                    board[i][j] = tempPiece.toString();
+                }
+            }
+        }
+
+        String[][] moves = new String[BOARD_SIZE][BOARD_SIZE];
+        if (pieceMoves != null) {
+            ChessPosition start = pieceMoves.stream().toList().getFirst().getStartPosition();
+            moves[start.getRow() - 1][start.getColumn() - 1] = "S";
+
+            for (ChessMove move : pieceMoves) {
+                ChessPosition position = move.getEndPosition();
+                moves[position.getRow() - 1][position.getColumn() - 1] = "V";
+            }
+        }
+
         for (int i = 0; i < BOARD_SIZE; i++) {
             int boardRow = whiteBottom ? (BOARD_SIZE - i - 1) : i;
-            drawChessRow(out, i, board[boardRow], moves[boardRow], firstIsWhite, whiteBottom);
-            firstIsWhite = !firstIsWhite;
+            drawChessRow(out, i, board[boardRow], moves[boardRow], i % 2 == 0, whiteBottom);
         }
 
         printTopHeader(out, whiteBottom);

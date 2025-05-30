@@ -6,7 +6,7 @@ import chess.ChessPiece;
 import chess.ChessPosition;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
+import java.util.Collection;
 
 import static java.lang.Character.isUpperCase;
 import static ui.EscapeSequences.*;
@@ -30,10 +30,10 @@ public class ChessUI {
         return stringBoard;
     }
 
-    public static String[][] getValidMovesInArray(ArrayList<ChessMove> pieceMoves) {
+    public static String[][] getValidMovesInArray(Collection<ChessMove> pieceMoves) {
         String[][] stringMoves = new String[8][8];
 
-        ChessPosition start = pieceMoves.getFirst().getStartPosition();
+        ChessPosition start = pieceMoves.stream().toList().getFirst().getStartPosition();
         stringMoves[start.getRow() - 1][start.getColumn() - 1] = "S";
 
         for (ChessMove move : pieceMoves) {

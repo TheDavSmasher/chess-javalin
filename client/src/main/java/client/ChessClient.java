@@ -159,10 +159,9 @@ public class ChessClient implements ServerMessageObserver {
         out.print(sb);
     }
 
-    private void register(String[] params) {
+    private void register(String[] params) throws ClientException {
         if (params.length < 3) {
-            out.print("Please provide a username, password, and email.\nFormat: 1 username password email");
-            return;
+            throw new FormatException("Please provide a username, password, and email.", "1 username password email");
         }
         String username = params[0], password = params[1], email = params[2];
 
@@ -176,10 +175,9 @@ public class ChessClient implements ServerMessageObserver {
         help(true);
     }
 
-    private void signIn(String[] params) {
+    private void signIn(String[] params) throws ClientException {
         if (params.length < 2) {
-            out.print("Please provide a username and password.\nFormat: 2 username password");
-            return;
+            throw new FormatException("Please provide a username and password", "2 username password");
         }
         String username = params[0], password = params[1];
 
@@ -212,10 +210,9 @@ public class ChessClient implements ServerMessageObserver {
         }
     }
 
-    private void createGame(String[] params) {
+    private void createGame(String[] params) throws ClientException {
         if (params.length < 1) {
-            out.print("Please provide a game ID.\\nFormat: 2 gameName");
-            return;
+            throw new FormatException("Please provide a game ID", "2 gameName");
         }
         try {
             StringBuilder result = new StringBuilder();
@@ -233,21 +230,18 @@ public class ChessClient implements ServerMessageObserver {
         }
     }
 
-    private void joinGame(String[] params) {
+    private void joinGame(String[] params) throws ClientException {
         if (params.length < 2) {
-            out.print("Please provide a game ID and color.\nFormat: 3 WHITE/BLACK gameID");
-            return;
+            throw new FormatException("Please provide a game ID and color", "3 WHITE/BLACK gameID");
         }
         if (existingGames == null) {
-            out.print("Please list the games before you can join!");
-            return;
+            throw new ClientException("Please list the games before you can join!");
         }
         String color = params[0], gameIndex = params[1];
         try {
             int index = Integer.parseInt(gameIndex) - 1;
             if (index >= existingGames.length) {
-                out.print("That game does not exist!");
-                return;
+                throw new ClientException("That game does not exist!");
             }
             currentGameID = existingGames[index];
             serverFacade.joinGame(authToken, color, currentGameID);
@@ -261,21 +255,18 @@ public class ChessClient implements ServerMessageObserver {
         }
     }
 
-    private void observeGame(String[] params) {
+    private void observeGame(String[] params) throws ClientException {
         if (params.length < 1) {
-            out.print("Please provide a game ID.\nFormat: 4 gameID");
-            return;
+            throw new FormatException("Please provide a game ID","4 gameID");
         }
         if (existingGames == null) {
-            out.print("Please list the games before you can join!");
-            return;
+            throw new ClientException("Please list the games before you can join!");
         }
         String gameIndex = params[0];
         try {
             int index = Integer.parseInt(gameIndex) - 1;
             if (index >= existingGames.length) {
-                out.print("That game does not exist!");
-                return;
+                throw new ClientException("That game does not exist!");
             }
             currentGameID = existingGames[index];
             serverFacade.connectToGame(authToken, currentGameID);
@@ -303,13 +294,13 @@ public class ChessClient implements ServerMessageObserver {
         ChessUI.printChessBoard(out, gameBoard, whitePlayer);
     }
 
-    private void makeMove(String[] params) {
+    private void makeMove(String[] params) throws ClientException {
         if (params.length < 2) {
-            out.print("""
+
+            throw new FormatException("""
                 Please provide a start and end position.
-                If a pawn is to be promoted, also provide what it should become.
-                Format: 2 start end (pieceType)""");
-            return;
+                If a pawn is to be promoted, also provide what it should become.""",
+                "2 start end (pieceType)");
         }
         String start = params[0], end = params[1];
         try {
@@ -321,9 +312,9 @@ public class ChessClient implements ServerMessageObserver {
         }
     }
 
-    private void highlightMoves(String[] params) {
+    private void highlightMoves(String[] params) throws ClientException {
         if (params.length < 1) {
-            out.print("Please provide a start position.\nFormat: 3 start");
+            throw new FormatException("Please provide a start position.", "3 start");
         }
         String startPos = params[0];
         try {

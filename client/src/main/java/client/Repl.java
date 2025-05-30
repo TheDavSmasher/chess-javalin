@@ -21,7 +21,7 @@ public class Repl {
 
             try {
                 client.evaluate(line);
-            } catch (ExitException e) {
+            } catch (ExitException ignored) {
                 break;
             } catch (Throwable e) {
                 out.print(e);

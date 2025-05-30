@@ -36,11 +36,11 @@ public class ServerFacade {
     }
 
     public UserEnterResponse register(String username, String password, String email) throws IOException {
-        return http.doPost("user", new UserEnterRequest(username, password, email), null, UserEnterResponse.class);
+        return http.doPost("user", new UserEnterRequest(username, password, email), UserEnterResponse.class);
     }
 
     public UserEnterResponse login(String username, String password) throws IOException {
-        return http.doPost("session", new UserEnterRequest(username, password), null, UserEnterResponse.class);
+        return http.doPost("session", new UserEnterRequest(username, password), UserEnterResponse.class);
     }
 
     public ArrayList<GameData> listGames(String authToken) throws IOException {
@@ -60,7 +60,7 @@ public class ServerFacade {
     }
 
     public void clear() throws IOException {
-        http.doDelete("db", null);
+        http.doDelete("db");
     }
 
     //Websocket

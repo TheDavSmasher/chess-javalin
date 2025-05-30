@@ -11,11 +11,12 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 
 import static model.Serializer.deserialize;
+import static model.Serializer.serialize;
 
 public class HttpCommunicator {
     private static final HttpClient client = HttpClient.newHttpClient();
 
-    public static <T> T doPost(String urlString, String body, String authToken, Class<T> responseClass) throws IOException {
+    public static <T> T doPost(String urlString, Object body, String authToken, Class<T> responseClass) throws IOException {
         return doServerMethod(urlString, getRequestBuilder().POST(bodyPublisher(body)), authToken, responseClass);
     }
 
@@ -23,7 +24,7 @@ public class HttpCommunicator {
         doServerMethod(urlString, getRequestBuilder().DELETE(), authToken, null);
     }
 
-    public static void doPut(String urlString, String body, String authToken) throws IOException {
+    public static void doPut(String urlString, Object body, String authToken) throws IOException {
         doServerMethod(urlString, getRequestBuilder().PUT(bodyPublisher(body)), authToken, null);
     }
 
@@ -55,7 +56,7 @@ public class HttpCommunicator {
         return HttpRequest.newBuilder().timeout(Duration.ofMillis(5000));
     }
 
-    private static HttpRequest.BodyPublisher bodyPublisher(String body) {
-        return HttpRequest.BodyPublishers.ofString(body);
+    private static HttpRequest.BodyPublisher bodyPublisher(Object body) {
+        return HttpRequest.BodyPublishers.ofString(serialize(body));
     }
 }

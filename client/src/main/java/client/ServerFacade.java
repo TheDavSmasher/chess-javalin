@@ -14,8 +14,6 @@ import model.response.UserEnterResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static model.Serializer.serialize;
-
 public class ServerFacade {
 
     private static String urlPort = "http://localhost:8080/";
@@ -31,14 +29,13 @@ public class ServerFacade {
 
     public static UserEnterResponse register(String username, String password, String email) throws IOException {
         String url = urlPort + "user";
-        String body = serialize(new UserEnterRequest(username, password, email));
-        return HttpCommunicator.doPost(url, body, null, UserEnterResponse.class);
+        return HttpCommunicator.doPost(url,
+                new UserEnterRequest(username, password, email), null, UserEnterResponse.class);
     }
 
     public static UserEnterResponse login(String username, String password) throws IOException {
         String url = urlPort + "session";
-        String body = serialize(new UserEnterRequest(username, password, null));
-        return HttpCommunicator.doPost(url, body, null, UserEnterResponse.class);
+        return HttpCommunicator.doPost(url, new UserEnterRequest(username, password, null), null, UserEnterResponse.class);
     }
 
     public static ArrayList<GameData> listGames(String authToken) throws IOException {
@@ -48,14 +45,12 @@ public class ServerFacade {
 
     public static CreateGameResponse createGame(String authToken, String gameName) throws IOException {
         String url = urlPort + "game";
-        String body = serialize(new CreateGameRequest(gameName));
-        return HttpCommunicator.doPost(url, body, authToken, CreateGameResponse.class);
+        return HttpCommunicator.doPost(url, new CreateGameRequest(gameName), authToken, CreateGameResponse.class);
     }
 
     public static void joinGame(String authToken, String color, int gameID) throws IOException {
         String url = urlPort + "game";
-        String body = serialize(new JoinGameRequest(color, gameID));
-        HttpCommunicator.doPut(url, body, authToken);
+        HttpCommunicator.doPut(url, new JoinGameRequest(color, gameID), authToken);
     }
 
     public static void logout(String authToken) throws IOException {

@@ -36,39 +36,31 @@ public class ServerFacade {
     }
 
     public UserEnterResponse register(String username, String password, String email) throws IOException {
-        String url = "user";
-        return http.doPost(url,
-                new UserEnterRequest(username, password, email), null, UserEnterResponse.class);
+        return http.doPost("user", new UserEnterRequest(username, password, email), null, UserEnterResponse.class);
     }
 
     public UserEnterResponse login(String username, String password) throws IOException {
-        String url = "session";
-        return http.doPost(url, new UserEnterRequest(username, password, null), null, UserEnterResponse.class);
+        return http.doPost("session", new UserEnterRequest(username, password, null), null, UserEnterResponse.class);
     }
 
     public ArrayList<GameData> listGames(String authToken) throws IOException {
-        ListGamesResponse response = http.doGet("game", authToken, ListGamesResponse.class);
-        return response.games();
+        return http.doGet("game", authToken, ListGamesResponse.class).games();
     }
 
     public CreateGameResponse createGame(String authToken, String gameName) throws IOException {
-        String url = "game";
-        return http.doPost(url, new CreateGameRequest(gameName), authToken, CreateGameResponse.class);
+        return http.doPost("game", new CreateGameRequest(gameName), authToken, CreateGameResponse.class);
     }
 
     public void joinGame(String authToken, String color, int gameID) throws IOException {
-        String url = "game";
-        http.doPut(url, new JoinGameRequest(color, gameID), authToken);
+        http.doPut("game", new JoinGameRequest(color, gameID), authToken);
     }
 
     public void logout(String authToken) throws IOException {
-        String url = "session";
-        http.doDelete(url, authToken);
+        http.doDelete("session", authToken);
     }
 
     public void clear() throws IOException {
-        String url = "db";
-        http.doDelete(url, null);
+        http.doDelete("db", null);
     }
 
     //Websocket

@@ -8,15 +8,13 @@ import chess.ChessPosition;
 import java.io.PrintStream;
 import java.util.Collection;
 
+import static chess.ChessBoard.BOARD_SIZE;
 import static java.lang.Character.isUpperCase;
 import static ui.EscapeSequences.*;
 
 public class ChessUI {
-
-    private static final int BOARD_SIZE = 8;
-
-    public static String[][] getChessBoardAsArray(ChessBoard chessBoard) {
-        String[][] stringBoard = new String[8][8];
+    private static String[][] getChessBoardAsArray(ChessBoard chessBoard) {
+        String[][] stringBoard = new String[BOARD_SIZE][BOARD_SIZE];
 
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
@@ -30,8 +28,10 @@ public class ChessUI {
         return stringBoard;
     }
 
-    public static String[][] getValidMovesInArray(Collection<ChessMove> pieceMoves) {
-        String[][] stringMoves = new String[8][8];
+    private static String[][] getValidMovesInArray(Collection<ChessMove> pieceMoves) {
+        String[][] stringMoves = new String[BOARD_SIZE][BOARD_SIZE];
+
+        if (pieceMoves == null) { return stringMoves; }
 
         ChessPosition start = pieceMoves.stream().toList().getFirst().getStartPosition();
         stringMoves[start.getRow() - 1][start.getColumn() - 1] = "S";
@@ -44,15 +44,16 @@ public class ChessUI {
         return stringMoves;
     }
 
-    public static void printChessBoard(PrintStream out, String[][] board, boolean whiteBottom) {
-        printChessBoard(out, board, new String[8][8], whiteBottom);
+    public static void printChessBoard(PrintStream out, ChessBoard board, boolean whiteBottom) {
+        printChessBoard(out, board, null, whiteBottom);
     }
 
-    public static void printChessBoard(PrintStream out, String[][] board, String[][] moves, boolean whiteBottom) {
+    public static void printChessBoard(PrintStream out, ChessBoard chessBoard, Collection<ChessMove> validMoves, boolean whiteBottom) {
         out.println();
         printTopHeader(out, whiteBottom);
 
         boolean firstIsWhite = true;
+        String[][] board = getChessBoardAsArray(chessBoard), moves = getValidMovesInArray(validMoves);
         for (int i = 0; i < BOARD_SIZE; i++) {
             int boardRow = whiteBottom ? (BOARD_SIZE - i - 1) : i;
             drawChessRow(out, i, board[boardRow], moves[boardRow], firstIsWhite, whiteBottom);

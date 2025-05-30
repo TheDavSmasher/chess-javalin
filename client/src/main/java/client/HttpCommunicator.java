@@ -26,7 +26,7 @@ public class HttpCommunicator {
     }
 
     public <T> T doPost(String path, Object body, Class<T> responseClass) throws IOException {
-        return doPost(path, getRequestBuilder().POST(bodyPublisher(body)), null, responseClass);
+        return doPost(path, body, null, responseClass);
     }
 
     public void doDelete(String path, String authToken) throws IOException {

@@ -8,7 +8,6 @@ import model.request.CreateGameRequest;
 import model.request.JoinGameRequest;
 import model.request.UserEnterRequest;
 import model.response.CreateGameResponse;
-import model.response.EmptyResponse;
 import model.response.ListGamesResponse;
 import model.response.UserEnterResponse;
 
@@ -56,17 +55,17 @@ public class ServerFacade {
     public static void joinGame(String authToken, String color, int gameID) throws IOException {
         String url = urlPort + "game";
         String body = serialize(new JoinGameRequest(color, gameID));
-        HttpCommunicator.doPut(url, body, authToken, EmptyResponse.class);
+        HttpCommunicator.doPut(url, body, authToken);
     }
 
     public static void logout(String authToken) throws IOException {
         String url = urlPort + "session";
-        HttpCommunicator.doDelete(url, authToken, EmptyResponse.class);
+        HttpCommunicator.doDelete(url, authToken);
     }
 
     public static void clear() throws IOException {
         String url = urlPort + "db";
-        HttpCommunicator.doDelete(url, null, EmptyResponse.class);
+        HttpCommunicator.doDelete(url, null);
     }
 
     //Websocket

@@ -19,12 +19,12 @@ public class HttpCommunicator {
         return doServerMethod(urlString, getRequestBuilder().POST(bodyPublisher(body)), authToken, responseClass);
     }
 
-    public static <T> void doDelete(String urlString, String authToken, Class<T> responseClass) throws IOException {
-        doServerMethod(urlString, getRequestBuilder().DELETE(), authToken, responseClass);
+    public static void doDelete(String urlString, String authToken) throws IOException {
+        doServerMethod(urlString, getRequestBuilder().DELETE(), authToken, null);
     }
 
-    public static <T> void doPut(String urlString, String body, String authToken, Class<T> responseClass) throws IOException {
-        doServerMethod(urlString, getRequestBuilder().PUT(bodyPublisher(body)), authToken, responseClass);
+    public static void doPut(String urlString, String body, String authToken) throws IOException {
+        doServerMethod(urlString, getRequestBuilder().PUT(bodyPublisher(body)), authToken, null);
     }
 
     public static <T> T doGet(String urlString, String authToken, Class<T> responseClass) throws IOException {
@@ -48,7 +48,7 @@ public class HttpCommunicator {
         if (response.statusCode() != HttpURLConnection.HTTP_OK) {
             throw new IOException(deserialize(response.body(), ErrorResponse.class).message());
         }
-        return deserialize(response.body(), responseClass);
+        return responseClass != null ? deserialize(response.body(), responseClass) : null;
     }
 
     private static HttpRequest.Builder getRequestBuilder() {

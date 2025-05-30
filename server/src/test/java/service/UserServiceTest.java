@@ -60,10 +60,10 @@ class UserServiceTest {
 
         UserService.register(enterRequest);
 
-        UserEnterRequest wrongUser = new UserEnterRequest(wrongUsername, password, null);
+        UserEnterRequest wrongUser = new UserEnterRequest(wrongUsername, password);
         Assertions.assertThrows(UnauthorizedException.class, () -> UserService.login(wrongUser));
 
-        UserEnterRequest wrongPass = new UserEnterRequest(username, wrongPassword, null);
+        UserEnterRequest wrongPass = new UserEnterRequest(username, wrongPassword);
         Assertions.assertThrows(UnauthorizedException.class, () -> UserService.login(wrongPass));
     }
 

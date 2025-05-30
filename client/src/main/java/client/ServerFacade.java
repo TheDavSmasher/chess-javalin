@@ -40,7 +40,7 @@ public class ServerFacade {
     }
 
     public UserEnterResponse login(String username, String password) throws IOException {
-        return http.doPost("session", new UserEnterRequest(username, password, null), null, UserEnterResponse.class);
+        return http.doPost("session", new UserEnterRequest(username, password), null, UserEnterResponse.class);
     }
 
     public ArrayList<GameData> listGames(String authToken) throws IOException {

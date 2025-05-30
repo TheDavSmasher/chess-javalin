@@ -15,13 +15,14 @@ public class Repl {
         client.help(true);
 
         Scanner scanner = new Scanner(System.in);
-        var result = "";
-        while (!result.equals("quit")) {
+        while (true) {
             printPrompt(out);
             String line = scanner.nextLine();
 
             try {
-                result = client.evaluate(line);
+                client.evaluate(line);
+            } catch (ExitException e) {
+                break;
             } catch (Throwable e) {
                 out.print(e);
             }

@@ -35,46 +35,54 @@ public class ChessClient implements ServerMessageObserver {
         this.out = out;
     }
 
-    public String evaluate(String input) {
+    public void evaluate(String input) throws ClientException {
         String[] tokens = input.toLowerCase().split(" ");
         int command;
         try {
             command = (tokens.length > 0) ? Integer.parseInt(tokens[0]) : 0;
         } catch (NumberFormatException e) {
             help(false);
-            return "Wrong option";
+            return;
         }
         String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
-        return switch (currentState) {
-            case PRE_LOGIN -> switch (command) {
+        switch (currentState) {
+            case PRE_LOGIN -> {
+                switch (command) {
                     case 1 -> register(params);
                     case 2 -> signIn(params);
-                    case 3 -> "quit";
+                    case 3 -> throw new ExitException();
                     default -> help(false);
-            };
-            case POST_LOGIN ->  switch (command) {
+                }
+            }
+            case POST_LOGIN -> {
+                switch (command) {
                     case 1 -> listGames();
                     case 2 -> createGame(params);
                     case 3 -> joinGame(params);
                     case 4 -> observeGame(params);
                     case 5 -> logout();
                     default -> help(false);
-            };
-            case MID_GAME -> switch (command) {
+                }
+            }
+            case MID_GAME -> {
+                switch (command) {
                     case 1 -> redrawBoard();
                     case 2 -> makeMove(params);
                     case 3 -> highlightMoves(params);
                     case 4 -> leaveGame();
                     case 5 -> resignGame();
                     default -> help(false);
-            };
-            case OBSERVING -> switch (command) {
+                }
+            }
+            case OBSERVING -> {
+                switch (command) {
                     case 1 -> redrawBoard();
                     case 2 -> highlightMoves(params);
                     case 3 -> leaveGame();
                     default -> help(false);
-            };
-        };
+                }
+            }
+        }
     }
 
     private enum MenuState {
@@ -95,7 +103,7 @@ public class ChessClient implements ServerMessageObserver {
         return sb.append("\n").toString();
     }
 
-    public String help(boolean simple) {
+    public void help(boolean simple) {
         out.println();
 
         StringBuilder sb = new StringBuilder();
@@ -149,14 +157,12 @@ public class ChessClient implements ServerMessageObserver {
         }).append("\n").append(getHelpOption("0 - Help", simple,
                 "print this menu again. Also prints out if input is beyond what's accepted."));
         out.print(sb);
-
-        return "Helping";
     }
 
-    private String register(String[] params) {
+    private void register(String[] params) {
         if (params.length < 3) {
             out.print("Please provide a username, password, and email.\nFormat: 1 username password email");
-            return "Retry";
+            return;
         }
         String username = params[0], password = params[1], email = params[2];
 
@@ -165,17 +171,15 @@ public class ChessClient implements ServerMessageObserver {
             currentState = MenuState.POST_LOGIN;
         } catch (IOException e) {
             out.print(e.getMessage());
-            return "Error Caught";
+            return;
         }
         help(true);
-
-        return "Welcome new user";
     }
 
-    private String signIn(String[] params) {
+    private void signIn(String[] params) {
         if (params.length < 2) {
             out.print("Please provide a username and password.\nFormat: 2 username password");
-            return "Retry";
+            return;
         }
         String username = params[0], password = params[1];
 
@@ -184,20 +188,18 @@ public class ChessClient implements ServerMessageObserver {
             currentState = MenuState.POST_LOGIN;
         } catch (IOException e) {
             out.print(e.getMessage());
-            return "Error Caught";
+            return;
         }
         help(true);
-
-        return "Welcome back";
     }
 
-    private String listGames() {
+    private void listGames() {
         ArrayList<GameData> allGames;
         try {
             allGames = serverFacade.listGames(authToken);
         } catch (IOException e) {
             out.print(e.getMessage());
-            return "Error Caught";
+            return;
         }
         existingGames = new int[allGames.size()];
         out.print("Games:");
@@ -208,13 +210,12 @@ public class ChessClient implements ServerMessageObserver {
             String black = (data.blackUsername() != null) ? data.blackUsername() : "No one";
             out.print("\n  " + (++i) + ". " + data.gameName() + ": " + white + " vs " + black);
         }
-        return "Here's the games";
     }
 
-    private String createGame(String[] params) {
+    private void createGame(String[] params) {
         if (params.length < 1) {
             out.print("Please provide a game ID.\\nFormat: 2 gameName");
-            return "Retry";
+            return;
         }
         try {
             StringBuilder result = new StringBuilder();
@@ -229,26 +230,24 @@ public class ChessClient implements ServerMessageObserver {
             out.print("Game created! List all games to see it and be able to join or observe it.");
         } catch (IOException e) {
             out.print(e.getMessage());
-            return "Error Caught";
         }
-        return "Created new game";
     }
 
-    private String joinGame(String[] params) {
+    private void joinGame(String[] params) {
         if (params.length < 2) {
             out.print("Please provide a game ID and color.\nFormat: 3 WHITE/BLACK gameID");
-            return "Retry";
+            return;
         }
         if (existingGames == null) {
             out.print("Please list the games before you can join!");
-            return "List first";
+            return;
         }
         String color = params[0], gameIndex = params[1];
         try {
             int index = Integer.parseInt(gameIndex) - 1;
             if (index >= existingGames.length) {
                 out.print("That game does not exist!");
-                return "Out of range";
+                return;
             }
             currentGameID = existingGames[index];
             serverFacade.joinGame(authToken, color, currentGameID);
@@ -257,83 +256,72 @@ public class ChessClient implements ServerMessageObserver {
             whitePlayer = color.equalsIgnoreCase("white");
         } catch (IOException e) {
             out.print(e.getMessage());
-            return "Error Caught";
         } catch (NumberFormatException e) {
             help(false);
-            return "Wrong option";
         }
-        return "You joined";
     }
 
-    private String observeGame(String[] params) {
+    private void observeGame(String[] params) {
         if (params.length < 1) {
             out.print("Please provide a game ID.\nFormat: 4 gameID");
-            return "Retry";
+            return;
         }
         if (existingGames == null) {
             out.print("Please list the games before you can join!");
-            return "List first";
+            return;
         }
         String gameIndex = params[0];
         try {
             int index = Integer.parseInt(gameIndex) - 1;
             if (index >= existingGames.length) {
                 out.print("That game does not exist!");
-                return "Out of range";
+                return;
             }
             currentGameID = existingGames[index];
             serverFacade.connectToGame(authToken, currentGameID);
             currentState = MenuState.OBSERVING;
         } catch (IOException e) {
             out.print(e.getMessage());
-            return "Error Caught";
         } catch (NumberFormatException e) {
             help(false);
-            return "Wrong option";
         }
-        return "You're now watching";
     }
 
-    private String logout() {
+    private void logout() {
         try {
             serverFacade.logout(authToken);
         } catch (IOException e) {
             out.print(e.getMessage());
-            return "Error Caught";
+            return;
         }
         authToken = null;
         help(true);
-
-        return "See you later!";
     }
 
-    private String redrawBoard() {
+    private void redrawBoard() {
         String[][] gameBoard = ChessUI.getChessBoardAsArray(currentGame.getBoard());
         ChessUI.printChessBoard(out, gameBoard, whitePlayer);
-        return "Board Printed";
     }
 
-    private String makeMove(String[] params) {
+    private void makeMove(String[] params) {
         if (params.length < 2) {
             out.print("""
                 Please provide a start and end position.
                 If a pawn is to be promoted, also provide what it should become.
                 Format: 2 start end (pieceType)""");
-            return "Retry";
+            return;
         }
         String start = params[0], end = params[1];
         try {
             ChessPiece.PieceType type = params.length < 3 ? null : typeFromString(params[2]);
             ChessMove move = new ChessMove(positionFromString(start), positionFromString(end), type);
             serverFacade.makeMove(authToken, currentGameID, move);
-            return "Move made";
         } catch (IOException e) {
             out.print(e.getMessage());
-            return "Retry";
         }
     }
 
-    private String highlightMoves(String[] params) {
+    private void highlightMoves(String[] params) {
         if (params.length < 1) {
             out.print("Please provide a start position.\nFormat: 3 start");
         }
@@ -343,14 +331,12 @@ public class ChessClient implements ServerMessageObserver {
             String[][] gameBoard = ChessUI.getChessBoardAsArray(currentGame.getBoard());
             String[][] moves = ChessUI.getValidMovesInArray((ArrayList<ChessMove>) currentGame.validMoves(start));
             ChessUI.printChessBoard(out, gameBoard, moves, whitePlayer);
-            return "Valid Moves shown";
         } catch (IOException e) {
             out.print(e.getMessage());
-            return "Retry";
         }
     }
 
-    private String leaveGame() {
+    private void leaveGame() {
         try {
             serverFacade.leaveGame(authToken, currentGameID);
             currentGameID = 0;
@@ -359,12 +345,10 @@ public class ChessClient implements ServerMessageObserver {
             help(true);
         } catch (IOException e) {
             out.print(e.getMessage());
-            return "Caught Error";
         }
-        return "Playing later";
     }
 
-    private String resignGame() {
+    private void resignGame() {
         try {
             serverFacade.resignGame(authToken, currentGameID);
             currentGameID = 0;
@@ -373,9 +357,7 @@ public class ChessClient implements ServerMessageObserver {
             help(true);
         } catch (IOException e) {
             out.print(e.getMessage());
-            return "Caught Error";
         }
-        return "Sore Loser";
     }
 
     private ChessPosition positionFromString(String moveString) throws IOException {

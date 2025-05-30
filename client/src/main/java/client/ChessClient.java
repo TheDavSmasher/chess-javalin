@@ -22,18 +22,15 @@ import static model.Serializer.deserialize;
 public class ChessClient implements ServerMessageObserver {
     private String authToken = null;
     private int[] existingGames = null;
-    private PrintStream out;
+    private final PrintStream out;
     private int currentGameID = 0;
     private boolean whitePlayer = true;
     private MenuState currentState = MenuState.PRE_LOGIN;
     private ChessGame currentGame = null;
     private final ServerFacade serverFacade;
 
-    public ChessClient() {
+    public ChessClient(PrintStream out) {
         serverFacade = new ServerFacade(this);
-    }
-
-    public void setOut(PrintStream out) {
         this.out = out;
     }
 

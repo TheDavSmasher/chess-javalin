@@ -7,12 +7,11 @@ import java.util.Scanner;
 import static ui.EscapeSequences.UNSET_TEXT_COLOR;
 
 public class Repl {
-    private final ChessClient client = new ChessClient();
+    private final PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+    private final ChessClient client = new ChessClient(out);
 
     public void run() {
-        PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.println("Welcome to my Chess Server!");
-        client.setOut(out);
         client.help(true);
 
         Scanner scanner = new Scanner(System.in);

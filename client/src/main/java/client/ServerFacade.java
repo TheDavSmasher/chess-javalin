@@ -15,13 +15,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class ServerFacade {
-    private final String urlPort;
     private WebsocketCommunicator websocket;
     private final HttpCommunicator http;
 
     public ServerFacade(int port) {
-        urlPort = "http://localhost:" + port + "/";
-        http = new HttpCommunicator(urlPort);
+        http = new HttpCommunicator(getUrlString(port));
     }
 
     public ServerFacade() {
@@ -30,7 +28,11 @@ public class ServerFacade {
 
     public ServerFacade(ServerMessageObserver observer) {
         this();
-        websocket = new WebsocketCommunicator(urlPort, observer);
+        websocket = new WebsocketCommunicator(getUrlString(8080), observer);
+    }
+
+    private static String getUrlString(int port) {
+        return "http://localhost:" + port + "/";
     }
 
     public UserEnterResponse register(String username, String password, String email) throws IOException {

@@ -44,47 +44,36 @@ public class ChessClient implements ServerMessageObserver {
             return "Wrong option";
         }
         String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
-        switch (currentState) {
-            case PRE_LOGIN -> {
-                return switch (command) {
+        return switch (currentState) {
+            case PRE_LOGIN -> switch (command) {
                     case 1 -> register(params);
                     case 2 -> signIn(params);
                     case 3 -> "quit";
                     default -> help(false);
-                };
-            }
-            case POST_LOGIN -> {
-                return switch (command) {
+            };
+            case POST_LOGIN ->  switch (command) {
                     case 1 -> listGames();
                     case 2 -> createGame(params);
                     case 3 -> joinGame(params);
                     case 4 -> observeGame(params);
                     case 5 -> logout();
                     default -> help(false);
-                };
-            }
-            case MID_GAME -> {
-                return switch (command) {
+            };
+            case MID_GAME -> switch (command) {
                     case 1 -> redrawBoard();
                     case 2 -> makeMove(params);
                     case 3 -> highlightMoves(params);
                     case 4 -> leaveGame();
                     case 5 -> resignGame();
                     default -> help(false);
-                };
-            }
-            case OBSERVING -> {
-                return switch (command) {
+            };
+            case OBSERVING -> switch (command) {
                     case 1 -> redrawBoard();
                     case 2 -> highlightMoves(params);
                     case 3 -> leaveGame();
                     default -> help(false);
-                };
-            }
-            default -> {
-                return "Not sure how we got here";
-            }
-        }
+            };
+        };
     }
 
     private enum MenuState {
@@ -418,7 +407,7 @@ public class ChessClient implements ServerMessageObserver {
         return new ChessPosition(rowInt, colInt);
     }
 
-    private ChessPiece.PieceType typeFromString (String type) throws IOException {
+    private ChessPiece.PieceType typeFromString(String type) throws IOException {
         try {
             return ChessPiece.PieceType.valueOf(type);
         } catch (IllegalArgumentException e) {
@@ -446,8 +435,7 @@ public class ChessClient implements ServerMessageObserver {
     }
 
     private void loadGame(LoadGameMessage message) {
-        String gameJson = message.getGame();
-        currentGame = deserialize(gameJson, ChessGame.class);
+        currentGame = deserialize(message.getGame(), ChessGame.class);
         ChessUI.printChessBoard(out, ChessUI.getChessBoardAsArray(currentGame.getBoard()), whitePlayer);
         help(true);
     }

@@ -20,22 +20,16 @@ import java.util.Arrays;
 import static model.Serializer.deserialize;
 
 public class ChessClient implements ServerMessageObserver {
-    private String authToken;
-    private int[] existingGames;
+    private String authToken = null;
+    private int[] existingGames = null;
     private PrintStream out;
-    private int currentGameID;
-    private boolean whitePlayer;
-    private MenuState currentState;
-    private ChessGame currentGame;
+    private int currentGameID = 0;
+    private boolean whitePlayer = true;
+    private MenuState currentState = MenuState.PRE_LOGIN;
+    private ChessGame currentGame = null;
     private final ServerFacade serverFacade;
 
     public ChessClient() {
-        authToken = null;
-        existingGames = null;
-        currentGameID = 0;
-        currentGame = null;
-        whitePlayer = true;
-        currentState = MenuState.PRE_LOGIN;
         serverFacade = new ServerFacade(this);
     }
 

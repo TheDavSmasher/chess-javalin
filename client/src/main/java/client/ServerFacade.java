@@ -15,11 +15,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class ServerFacade {
-
     private final String urlPort;
-    private ServerMessageObserver observer;
     private WebsocketCommunicator websocket;
     private final HttpCommunicator http;
+
+    public ServerFacade(int port) {
+        urlPort = "http://localhost:" + port + "/";
+        http = new HttpCommunicator(urlPort);
+    }
 
     public ServerFacade() {
         this(8080);
@@ -27,15 +30,6 @@ public class ServerFacade {
 
     public ServerFacade(ServerMessageObserver observer) {
         this();
-        this.observer = observer;
-    }
-
-    public ServerFacade(int port) {
-        urlPort = "http://localhost:" + port + "/";
-        http = new HttpCommunicator(urlPort);
-    }
-
-    public void setObserver() throws IOException {
         websocket = new WebsocketCommunicator(urlPort, observer);
     }
 

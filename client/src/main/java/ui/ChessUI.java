@@ -33,18 +33,20 @@ public class ChessUI {
 
         String[][] moves = new String[BOARD_SIZE][BOARD_SIZE];
         if (pieceMoves != null) {
-            ChessPosition start = pieceMoves.stream().toList().getFirst().getStartPosition();
-            moves[start.getRow() - 1][start.getColumn() - 1] = "S";
-
+            boolean firstMove = true;
             for (ChessMove move : pieceMoves) {
+                if (firstMove) {
+                    ChessPosition start = move.getStartPosition();
+                    moves[start.getRow() - 1][start.getColumn() - 1] = "S";
+                    firstMove = false;
+                }
                 ChessPosition position = move.getEndPosition();
                 moves[position.getRow() - 1][position.getColumn() - 1] = "V";
             }
         }
 
         for (int i = 0; i < BOARD_SIZE; i++) {
-            int boardRow = whiteBottom ? (BOARD_SIZE - i - 1) : i;
-            drawChessRow(out, i, board[boardRow], moves[boardRow], i % 2 == 0, whiteBottom);
+            drawChessRow(out, i, board, moves, i % 2 == 0, whiteBottom);
         }
 
         printTopHeader(out, whiteBottom);
@@ -55,8 +57,7 @@ public class ChessUI {
         setGreyBG(out);
         out.print("   ");
         for (int i = 0; i < BOARD_SIZE; i++) {
-            int index = whiteBottom ? i : BOARD_SIZE - i - 1;
-            out.print(columns[index]);
+            out.print(columns[whiteBottom ? i : BOARD_SIZE - i - 1]);
         }
         out.print("   ");
         resetColor(out);
@@ -69,13 +70,12 @@ public class ChessUI {
         out.print(" " + actual + " ");
     }
 
-    private static void drawChessRow(PrintStream out, int col, String[] boardRow, String[] movesRow, boolean firstIsWhite, boolean whiteBottom) {
+    private static void drawChessRow(PrintStream out, int col, String[][] board, String[][] moves, boolean firstIsWhite, boolean whiteBottom) {
         drawSideHeader(out, col, whiteBottom);
-        boolean isWhite = firstIsWhite;
+        int boardRow = whiteBottom ? (BOARD_SIZE - col - 1) : col;
         for (int i = 0; i < BOARD_SIZE; i++) {
             int boardCol = whiteBottom ? i : (BOARD_SIZE - i - 1);
-            drawChessSquare(out, boardRow[boardCol], movesRow[boardCol], isWhite);
-            isWhite = !isWhite;
+            drawChessSquare(out, board[boardRow][boardCol], moves[boardRow][boardCol], (i % 2 == 0) == firstIsWhite);
         }
         drawSideHeader(out, col, whiteBottom);
         resetColor(out);

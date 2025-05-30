@@ -108,55 +108,58 @@ public class ChessClient implements ServerMessageObserver {
     public String help(boolean simple) {
         out.println();
 
-        out.print((switch (currentState) {
-            case PRE_LOGIN ->
-                    getHelpOption("1 - Register", simple,
+        StringBuilder sb = new StringBuilder();
+        (switch (currentState) {
+            case PRE_LOGIN -> sb
+                    .append(getHelpOption("1 - Register", simple,
                             "creates a new user in the database. Username must be unique.",
-                            "Format: 1 username password email") +
-                    getHelpOption("2 - Login", simple,
+                            "Format: 1 username password email"))
+                    .append(getHelpOption("2 - Login", simple,
                             "logs in to the server with a pre-registered username with its corresponding password.",
-                            "Format: 2 username password") +
-                    getHelpOption("3 - Quit", simple,
-                            "exit out of the client.");
-            case POST_LOGIN ->
-                    getHelpOption("1 - List Games", simple,
-                            "show all games that are currently being hosted in the server.") +
-                    getHelpOption("2 - Create Game", simple,
+                            "Format: 2 username password"))
+                    .append(getHelpOption("3 - Quit", simple,
+                            "exit out of the client."));
+            case POST_LOGIN -> sb
+                    .append(getHelpOption("1 - List Games", simple,
+                            "show all games that are currently being hosted in the server."))
+                    .append(getHelpOption("2 - Create Game", simple,
                             "create a new game in the database with a name. The game's name can include spaces.",
-                            "Format: 2 gameName") +
-                    getHelpOption("3 - Join Game", simple,
+                            "Format: 2 gameName"))
+                    .append(getHelpOption("3 - Join Game", simple,
                             "join an existing game with as a specific player color.",
-                            "Format: 3 white/black gameID") +
-                    getHelpOption("4 - Observe Game", simple,
+                            "Format: 3 white/black gameID"))
+                    .append(getHelpOption("4 - Observe Game", simple,
                             "see the current state of a game without becoming a player.",
-                            "Format: 4 gameID") +
-                    getHelpOption("5 - Logout", simple,
-                            "leave your current session and return to login menu.");
-            case MID_GAME ->
-                    getHelpOption("1 - Redraw Board", simple,
-                            "print the board again for the current state of the game.") +
-                    getHelpOption("2 - Make Move", simple,
+                            "Format: 4 gameID"))
+                    .append(getHelpOption("5 - Logout", simple,
+                            "leave your current session and return to login menu."));
+            case MID_GAME -> sb
+                    .append(getHelpOption("1 - Redraw Board", simple,
+                            "print the board again for the current state of the game."))
+                    .append(getHelpOption("2 - Make Move", simple,
                             "select a piece in a given position and give its ending position.",
                             "Please make sure the move is legal.",
-                            "Format: 2 start end        Format positions column then row, such as G6.") +
-                    getHelpOption("3 - Highlight Legal Moves", simple,
+                            "Format: 2 start end        Format positions column then row, such as G6."))
+                    .append(getHelpOption("3 - Highlight Legal Moves", simple,
                             "select a position on the board to see all legal moves the piece in that position can make.",
-                            "Format: 3 position        Format positions column then row, such as G6.") +
-                    getHelpOption("4 - Leave", simple,
-                            "leave the current game, emptying your position and allowing anyone to join. Join again to continue.") +
-                    getHelpOption("5 - Resign", simple,
+                            "Format: 3 position        Format positions column then row, such as G6."))
+                    .append(getHelpOption("4 - Leave", simple,
+                            "leave the current game, emptying your position and allowing anyone to join. Join again to continue."))
+                    .append(getHelpOption("5 - Resign", simple,
                             "forfeit the current game, rendering it unplayable and the opposing player as winner.",
-                            "This action cannot be undone.");
-            case OBSERVING ->
-                    getHelpOption("1 - Redraw Board", simple,
-                            "print the board again for the current state of the game.") +
-                    getHelpOption("2 - Highlight Legal Moves", simple,
+                            "This action cannot be undone."));
+            case OBSERVING -> sb
+                    .append(getHelpOption("1 - Redraw Board", simple,
+                            "print the board again for the current state of the game."))
+                    .append(getHelpOption("2 - Highlight Legal Moves", simple,
                             "select a position on the board to see all legal moves the piece in that position can make.",
-                                    "Format: 3 position        Format positions column then row, such as G6.") +
-                    getHelpOption("3 - Stop Watching", simple,
-                            "leave the current game, returning to the menu.");
-        }) + "\n" + getHelpOption("0 - Help", simple,
+                                    "Format: 3 position        Format positions column then row, such as G6."))
+                    .append(getHelpOption("3 - Stop Watching", simple,
+                            "leave the current game, returning to the menu."));
+        }).append("\n").append(getHelpOption("0 - Help", simple,
                 "print this menu again. Also prints out if input is beyond what's accepted."));
+        out.print(sb);
+
         return "Helping";
     }
 

@@ -1,10 +1,11 @@
 package client;
 
+import backend.ServerFacade;
+import backend.websocket.ServerMessageObserver;
 import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
-import client.websocket.ServerMessageObserver;
 import model.dataaccess.GameData;
 import ui.ChessUI;
 import websocket.messages.ErrorMessage;

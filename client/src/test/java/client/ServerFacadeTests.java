@@ -1,5 +1,6 @@
 package client;
 
+import backend.ServerFacade;
 import model.dataaccess.GameData;
 import model.response.CreateGameResponse;
 import org.junit.jupiter.api.*;

@@ -1,8 +1,8 @@
-package client;
+package backend;
 
+import backend.websocket.ServerMessageObserver;
+import backend.websocket.WebsocketCommunicator;
 import chess.ChessMove;
-import client.websocket.ServerMessageObserver;
-import client.websocket.WebsocketCommunicator;
 import model.dataaccess.GameData;
 import model.request.CreateGameRequest;
 import model.request.JoinGameRequest;

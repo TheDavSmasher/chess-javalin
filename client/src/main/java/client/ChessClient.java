@@ -27,6 +27,7 @@ public class ChessClient implements ServerMessageObserver {
     private boolean whitePlayer;
     private MenuState currentState;
     private ChessGame currentGame;
+    private final ServerFacade serverFacade = new ServerFacade();
 
     public ChessClient() {
         authToken = null;
@@ -197,9 +198,9 @@ public class ChessClient implements ServerMessageObserver {
         String email = params[2];
 
         try {
-            authToken = ServerFacade.register(username, password, email).authToken();
+            authToken = serverFacade.register(username, password, email).authToken();
             currentState = MenuState.POST_LOGIN;
-            ServerFacade.setObserver(this);
+            serverFacade.setObserver(this);
         } catch (IOException e) {
             out.print(e.getMessage());
             return "Error Caught";
@@ -218,9 +219,9 @@ public class ChessClient implements ServerMessageObserver {
         String password = params[1];
 
         try {
-            authToken = ServerFacade.login(username, password).authToken();
+            authToken = serverFacade.login(username, password).authToken();
             currentState = MenuState.POST_LOGIN;
-            ServerFacade.setObserver(this);
+            serverFacade.setObserver(this);
         } catch (IOException e) {
             out.print(e.getMessage());
             return "Error Caught";
@@ -233,7 +234,7 @@ public class ChessClient implements ServerMessageObserver {
     private String listGames() {
         ArrayList<GameData> allGames;
         try {
-            allGames = ServerFacade.listGames(authToken);
+            allGames = serverFacade.listGames(authToken);
         } catch (IOException e) {
             out.print(e.getMessage());
             return "Error Caught";
@@ -257,7 +258,7 @@ public class ChessClient implements ServerMessageObserver {
         }
         try {
             String fullName = stringFromParams(params);
-            ServerFacade.createGame(authToken, fullName);
+            serverFacade.createGame(authToken, fullName);
             out.print("Game created! List all games to see it and be able to join or observe it.");
         } catch (IOException e) {
             out.print(e.getMessage());
@@ -282,8 +283,8 @@ public class ChessClient implements ServerMessageObserver {
                 return "Out of range";
             }
             currentGameID = existingGames[index];
-            ServerFacade.joinGame(authToken, params[0], currentGameID);
-            ServerFacade.connectToGame(authToken, currentGameID);
+            serverFacade.joinGame(authToken, params[0], currentGameID);
+            serverFacade.connectToGame(authToken, currentGameID);
             currentState = MenuState.MID_GAME;
             whitePlayer = params[0].equalsIgnoreCase("white");
         } catch (IOException e) {
@@ -312,7 +313,7 @@ public class ChessClient implements ServerMessageObserver {
                 return "Out of range";
             }
             currentGameID = existingGames[index];
-            ServerFacade.connectToGame(authToken, currentGameID);
+            serverFacade.connectToGame(authToken, currentGameID);
             currentState = MenuState.OBSERVING;
         } catch (IOException e) {
             out.print(e.getMessage());
@@ -326,7 +327,7 @@ public class ChessClient implements ServerMessageObserver {
 
     private String logout() {
         try {
-            ServerFacade.logout(authToken);
+            serverFacade.logout(authToken);
         } catch (IOException e) {
             out.print(e.getMessage());
             return "Error Caught";
@@ -370,7 +371,7 @@ public class ChessClient implements ServerMessageObserver {
                 type = typeFromString(params[2]);
             }
             ChessMove move = new ChessMove(positionFromString(params[0]), positionFromString(params[1]), type);
-            ServerFacade.makeMove(authToken, currentGameID, move);
+            serverFacade.makeMove(authToken, currentGameID, move);
             return "Move made";
         } catch (IOException e) {
             out.print(e.getMessage());
@@ -396,7 +397,7 @@ public class ChessClient implements ServerMessageObserver {
 
     private String leaveGame() {
         try {
-            ServerFacade.leaveGame(authToken, currentGameID);
+            serverFacade.leaveGame(authToken, currentGameID);
             currentGameID = 0;
             currentGame = null;
             currentState = MenuState.POST_LOGIN;
@@ -410,7 +411,7 @@ public class ChessClient implements ServerMessageObserver {
 
     private String resignGame() {
         try {
-            ServerFacade.resignGame(authToken, currentGameID);
+            serverFacade.resignGame(authToken, currentGameID);
             currentGameID = 0;
             currentGame = null;
             currentState = MenuState.POST_LOGIN;

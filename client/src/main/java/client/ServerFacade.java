@@ -16,67 +16,74 @@ import java.util.ArrayList;
 
 public class ServerFacade {
 
-    private static String urlPort = "http://localhost:8080/";
-    private static WebsocketCommunicator websocket;
+    private final String urlPort;
+    private WebsocketCommunicator websocket;
+    private final HttpCommunicator http;
 
-    public static void setPort(int port) {
-        urlPort = "http://localhost:" + port + "/";
+    public ServerFacade() {
+        urlPort = "http://localhost:8080/";
+        http = new HttpCommunicator(urlPort);
     }
 
-    public static void setObserver(ServerMessageObserver observer) throws IOException {
+    public ServerFacade(int port) {
+        urlPort = "http://localhost:" + port + "/";
+        http = new HttpCommunicator(urlPort);
+    }
+
+    public void setObserver(ServerMessageObserver observer) throws IOException {
         websocket = new WebsocketCommunicator(urlPort, observer);
     }
 
-    public static UserEnterResponse register(String username, String password, String email) throws IOException {
+    public UserEnterResponse register(String username, String password, String email) throws IOException {
         String url = urlPort + "user";
-        return HttpCommunicator.doPost(url,
+        return http.doPost(url,
                 new UserEnterRequest(username, password, email), null, UserEnterResponse.class);
     }
 
-    public static UserEnterResponse login(String username, String password) throws IOException {
+    public UserEnterResponse login(String username, String password) throws IOException {
         String url = urlPort + "session";
-        return HttpCommunicator.doPost(url, new UserEnterRequest(username, password, null), null, UserEnterResponse.class);
+        return http.doPost(url, new UserEnterRequest(username, password, null), null, UserEnterResponse.class);
     }
 
-    public static ArrayList<GameData> listGames(String authToken) throws IOException {
-        ListGamesResponse response = HttpCommunicator.doGet(urlPort + "game", authToken, ListGamesResponse.class);
+    public ArrayList<GameData> listGames(String authToken) throws IOException {
+        ListGamesResponse response = http.doGet(urlPort + "game", authToken, ListGamesResponse.class);
         return response.games();
     }
 
-    public static CreateGameResponse createGame(String authToken, String gameName) throws IOException {
+    public CreateGameResponse createGame(String authToken, String gameName) throws IOException {
         String url = urlPort + "game";
-        return HttpCommunicator.doPost(url, new CreateGameRequest(gameName), authToken, CreateGameResponse.class);
+        return http.doPost(url, new CreateGameRequest(gameName), authToken, CreateGameResponse.class);
     }
 
-    public static void joinGame(String authToken, String color, int gameID) throws IOException {
+    public void joinGame(String authToken, String color, int gameID) throws IOException {
         String url = urlPort + "game";
-        HttpCommunicator.doPut(url, new JoinGameRequest(color, gameID), authToken);
+        http.doPut(url, new JoinGameRequest(color, gameID), authToken);
     }
 
-    public static void logout(String authToken) throws IOException {
+    public void logout(String authToken) throws IOException {
         String url = urlPort + "session";
-        HttpCommunicator.doDelete(url, authToken);
+        http.doDelete(url, authToken);
     }
 
-    public static void clear() throws IOException {
+    public void clear() throws IOException {
         String url = urlPort + "db";
-        HttpCommunicator.doDelete(url, null);
+        http.doDelete(url, null);
     }
 
     //Websocket
-    public static void connectToGame(String authToken, int gameID) throws IOException {
+    public void connectToGame(String authToken, int gameID) throws IOException {
         websocket.connectToGame(authToken, gameID);
     }
 
-    public static void makeMove(String authToken, int gameID, ChessMove move) throws IOException {
+    public void makeMove(String authToken, int gameID, ChessMove move) throws IOException {
         websocket.makeMove(authToken, gameID, move);
     }
 
-    public static void leaveGame(String authToken, int gameID) throws IOException {
+    public void leaveGame(String authToken, int gameID) throws IOException {
         websocket.leaveGame(authToken, gameID);
     }
 
-    public static void resignGame(String authToken, int gameID) throws IOException {
+    public void resignGame(String authToken, int gameID) throws IOException {
         websocket.resignGame(authToken, gameID);
     }
 }

@@ -16,19 +16,25 @@ import static model.Serializer.serialize;
 public class HttpCommunicator {
     private static final HttpClient client = HttpClient.newHttpClient();
 
-    public static <T> T doPost(String urlString, Object body, String authToken, Class<T> responseClass) throws IOException {
+    private final String serverUrl;
+
+    public HttpCommunicator(String url) {
+        serverUrl = url;
+    }
+
+    public <T> T doPost(String urlString, Object body, String authToken, Class<T> responseClass) throws IOException {
         return doServerMethod(urlString, getRequestBuilder().POST(bodyPublisher(body)), authToken, responseClass);
     }
 
-    public static void doDelete(String urlString, String authToken) throws IOException {
+    public void doDelete(String urlString, String authToken) throws IOException {
         doServerMethod(urlString, getRequestBuilder().DELETE(), authToken, null);
     }
 
-    public static void doPut(String urlString, Object body, String authToken) throws IOException {
+    public void doPut(String urlString, Object body, String authToken) throws IOException {
         doServerMethod(urlString, getRequestBuilder().PUT(bodyPublisher(body)), authToken, null);
     }
 
-    public static <T> T doGet(String urlString, String authToken, Class<T> responseClass) throws IOException {
+    public <T> T doGet(String urlString, String authToken, Class<T> responseClass) throws IOException {
         return doServerMethod(urlString, getRequestBuilder().GET(), authToken, responseClass);
     }
 

@@ -15,34 +15,37 @@ import static model.Serializer.deserialize;
 import static model.Serializer.serialize;
 
 public class WebsocketCommunicator extends Endpoint {
-    private final Session session;
+    private Session session;
+    private boolean connected = false;
+    private final String socketUrl;
     private final ServerMessageObserver observer;
 
-    @SuppressWarnings("Convert2Lambda")
-    public WebsocketCommunicator(String url, ServerMessageObserver messageObserver) throws IOException {
-        try {
-            observer = messageObserver;
-            url = url.replace("http", "ws");
-            URI socketURI = URI.create(url + "ws");
+    public WebsocketCommunicator(String url, ServerMessageObserver messageObserver) {
+        observer = messageObserver;
+        socketUrl = url.replace("http", "ws");
+    }
 
-            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-            session = container.connectToServer(this, socketURI);
+    @SuppressWarnings("Convert2Lambda")
+    private void connectToServer() throws IOException {
+        try {
+            session = ContainerProvider.getWebSocketContainer().connectToServer(this, URI.create(socketUrl + "ws"));
 
             session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
                     Class<? extends ServerMessage> messageClass =
-                    switch (deserialize(message, ServerMessage.class).getServerMessageType()) {
-                        case NOTIFICATION -> Notification.class;
-                        case LOAD_GAME -> LoadGameMessage.class;
-                        case ERROR -> ErrorMessage.class;
-                    };
+                            switch (deserialize(message, ServerMessage.class).getServerMessageType()) {
+                                case NOTIFICATION -> Notification.class;
+                                case LOAD_GAME -> LoadGameMessage.class;
+                                case ERROR -> ErrorMessage.class;
+                            };
                     observer.notify(deserialize(message, messageClass));
                 }
             });
-        } catch (IOException | DeploymentException e) {
+        } catch (DeploymentException e) {
             throw new IOException(e.getMessage());
         }
+        connected = true;
     }
 
     @Override
@@ -67,6 +70,9 @@ public class WebsocketCommunicator extends Endpoint {
     }
 
     private void sendCommand(UserGameCommand command) throws IOException {
+        if (!connected) {
+            connectToServer();
+        }
         session.getBasicRemote().sendText(serialize(command));
     }
 }

@@ -17,12 +17,17 @@ import java.util.ArrayList;
 public class ServerFacade {
 
     private final String urlPort;
+    private ServerMessageObserver observer;
     private WebsocketCommunicator websocket;
     private final HttpCommunicator http;
 
     public ServerFacade() {
-        urlPort = "http://localhost:8080/";
-        http = new HttpCommunicator(urlPort);
+        this(8080);
+    }
+
+    public ServerFacade(ServerMessageObserver observer) {
+        this();
+        this.observer = observer;
     }
 
     public ServerFacade(int port) {
@@ -30,7 +35,7 @@ public class ServerFacade {
         http = new HttpCommunicator(urlPort);
     }
 
-    public void setObserver(ServerMessageObserver observer) throws IOException {
+    public void setObserver() throws IOException {
         websocket = new WebsocketCommunicator(urlPort, observer);
     }
 

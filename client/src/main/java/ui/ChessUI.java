@@ -83,44 +83,22 @@ public class ChessUI {
     }
 
     private static void drawChessSquare(PrintStream out, String pieceString, String moveString, boolean isWhite) {
-        boolean isStart = false;
-        boolean toHighlight = false;
+        boolean isStart = moveString != null && moveString.equals("S");
+        boolean toHighlight = moveString != null && !moveString.equals("S");
 
         if (moveString != null) {
-            if (moveString.equals("S")) {
-                isStart = true;
-            } else {
-                toHighlight = true;
-            }
-        }
-
-        if (isStart || toHighlight) {
-            setBlackText(out);
+            out.print(SET_TEXT_COLOR_BLACK);
         }
 
         if (isStart) {
-            setYellowBG(out);
+            out.print(SET_BG_COLOR_YELLOW);
         } else {
-            if (isWhite) {
-                if (toHighlight) {
-                    setLightGreenBG(out);
-                } else {
-                    setWhiteBG(out);
-                }
-            } else {
-                if (toHighlight) {
-                    setDarkGreenBG(out);
-                } else {
-                    setBlackBG(out);
-                }
-            }
+            out.print(isWhite
+                    ? toHighlight ? SET_BG_COLOR_GREEN : SET_BG_COLOR_WHITE
+                    : toHighlight ? SET_BG_COLOR_DARK_GREEN : SET_BG_COLOR_BLACK);
 
             if (pieceString != null) {
-                if (isUpperCase(pieceString.charAt(0))) {
-                    setRedText(out);
-                } else {
-                    setBlueText(out);
-                }
+                out.print(isUpperCase(pieceString.charAt(0)) ? SET_TEXT_COLOR_RED : SET_TEXT_COLOR_BLUE);
             }
         }
         if (pieceString != null) {
@@ -130,41 +108,9 @@ public class ChessUI {
         }
     }
 
-    public static void setRedText(PrintStream out) {
-        out.print(SET_TEXT_COLOR_RED);
-    }
-
-    private static void setBlueText(PrintStream out) {
-        out.print(SET_TEXT_COLOR_BLUE);
-    }
-
-    private static void setBlackText(PrintStream out) {
-        out.print(SET_TEXT_COLOR_BLACK);
-    }
-
-    private static void setBlackBG(PrintStream out) {
-        out.print(SET_BG_COLOR_BLACK);
-    }
-
-    private static void setWhiteBG(PrintStream out) {
-        out.print(SET_BG_COLOR_WHITE);
-    }
-
     private static void setGreyBG(PrintStream out) {
         out.print(SET_BG_COLOR_LIGHT_GREY);
         out.print(SET_TEXT_COLOR_BLACK);
-    }
-
-    private static void setLightGreenBG(PrintStream out) {
-        out.print(SET_BG_COLOR_GREEN);
-    }
-
-    private static void setDarkGreenBG(PrintStream out) {
-        out.print(SET_BG_COLOR_DARK_GREEN);
-    }
-
-    private static void setYellowBG(PrintStream out) {
-        out.print(SET_BG_COLOR_YELLOW);
     }
 
     public static void resetColor(PrintStream out) {

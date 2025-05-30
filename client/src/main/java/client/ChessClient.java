@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static model.Serializer.deserialize;
+import static ui.EscapeSequences.SET_TEXT_COLOR_RED;
 
 public class ChessClient implements ServerMessageObserver {
     private String authToken = null;
@@ -343,7 +344,7 @@ public class ChessClient implements ServerMessageObserver {
     }
 
     private void displayError(ErrorMessage errorMessage) {
-        ChessUI.setRedText(out);
+        out.print(SET_TEXT_COLOR_RED);
         out.println(errorMessage.getError());
         ChessUI.resetColor(out);
     }

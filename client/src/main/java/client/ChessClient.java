@@ -201,7 +201,6 @@ public class ChessClient implements ServerMessageObserver {
         try {
             authToken = serverFacade.register(username, password, email).authToken();
             currentState = MenuState.POST_LOGIN;
-            serverFacade.setObserver();
         } catch (IOException e) {
             out.print(e.getMessage());
             return "Error Caught";
@@ -222,7 +221,6 @@ public class ChessClient implements ServerMessageObserver {
         try {
             authToken = serverFacade.login(username, password).authToken();
             currentState = MenuState.POST_LOGIN;
-            serverFacade.setObserver();
         } catch (IOException e) {
             out.print(e.getMessage());
             return "Error Caught";

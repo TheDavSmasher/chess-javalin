@@ -94,89 +94,62 @@ public class ChessClient implements ServerMessageObserver {
         OBSERVING
     }
 
+    private static String getHelpOption(String option, String description, boolean skipDescription) {
+        return option + (skipDescription ? "" : ": " + description) + "\n";
+    }
+
     public String help(boolean simple) {
         out.println();
-        if (simple) {
-            switch (currentState) {
-                case PRE_LOGIN -> out.print("""
-                    1 - Register
-                    2 - Login
-                    3 - Quit
-                    
-                    0 - Help
-                    """);
-                case POST_LOGIN -> out.print("""
-                    1 - List Games
-                    2 - Create Game
-                    3 - Join Game
-                    4 - Observe Game
-                    5 - Logout
-                    
-                    0 - Help
-                    """);
-                case MID_GAME -> out.print("""
-                    1 - Redraw Board
-                    2 - Make Move
-                    3 - Highlight Legal Moves
-                    4 - Leave
-                    5 - Resign
-                    
-                    0 - Help
-                    """);
-                case OBSERVING -> out.print("""
-                    1 - Redraw Board
-                    2 - Highlight Legal Moves
-                    3 - Stop watching
-                    
-                    0 - Help
-                    """);
-            }
-        } else {
-            switch (currentState) {
-                case PRE_LOGIN -> out.print("""
-                    1 - Register: creates a new user in the database. Username must be unique.
-                       Format: 1 username password email
-                    2 - Login: logs in to the server with a pre-registered username with its corresponding password.
-                       Format: 2 username password
-                    3 - Quit: exit out of the client.
-                    
-                    0 - Help: print this menu again. Also prints out if input is beyond what's accepted.
-                    """);
-                case POST_LOGIN -> out.print("""
-                    1 - List Games: show all games that are currently being hosted in the server.
-                    2 - Create Game: create a new game in the database with a name. The game's name can include spaces.
-                       Format: 2 gameName
-                    3 - Join Game: join an existing game with as a specific player color.
-                       Format: 3 white/black gameID
-                    4 - Observe Game: see the current state of a game without becoming a player,
-                       Format: 4 gameID
-                    5 - Logout: leave your current session and return to login menu.
-                    
-                    0 - Help: print this menu again. Also prints out if input is beyond what's accepted.
-                    """);
-                case MID_GAME -> out.print("""
-                    1 - Redraw Board: print the board again for the current state of the game.
-                    2 - Make Move: select a piece in a given position and give its ending position.
-                       Please make sure the move is legal.
-                       Format: 2 start end        Format positions column then row, such as G6.
-                    3 - Highlight Legal Moves: select a position on the board to see all legal moves the piece in that position can make.
-                       Format: 3 position        Format positions column then row, such as G6.
-                    4 - Leave: leave the current game, emptying your position and allowing anyone to join. Join again to continue.
-                    5 - Resign: forfeit the current game, rendering it unplayable and the opposing player as winner.
-                        This action cannot be undone.
-                    
-                    0 - Help: print this menu again. Also prints out if input is beyond what's accepted.
-                    """);
-                case OBSERVING -> out.print("""
-                    1 - Redraw Board: print the board again for the current state of the game.
-                    2 - Highlight Legal Moves: select a position on the board to see all legal moves the piece in that position can make.
-                       Format: 3 position        Format positions column then row, such as G6.
-                    3 - Stop Watching: leave the current game, returning to the menu.
-                    
-                    0 - Help: print this menu again. Also prints out if input is beyond what's accepted.
-                    """);
-            }
-        }
+
+        out.print((switch (currentState) {
+            case PRE_LOGIN ->
+                    getHelpOption("1 - Register",
+                            "creates a new user in the database. Username must be unique.\n" +
+                                    "   Format: 1 username password email", simple) +
+                    getHelpOption("2 - Login",
+                            "logs in to the server with a pre-registered username with its corresponding password.\n" +
+                                    "   Format: 2 username password", simple) +
+                    getHelpOption("3 - Quit",
+                            "exit out of the client.", simple);
+            case POST_LOGIN ->
+                    getHelpOption("1 - List Games",
+                            "show all games that are currently being hosted in the server.", simple) +
+                    getHelpOption("2 - Create Game",
+                            "create a new game in the database with a name. The game's name can include spaces.\n" +
+                                    "   Format: 2 gameName", simple) +
+                    getHelpOption("3 - Join Game",
+                            "join an existing game with as a specific player color.\n" +
+                                    "   Format: 3 white/black gameID", simple) +
+                    getHelpOption("4 - Observe Game",
+                            "see the current state of a game without becoming a player,\n" +
+                                    "   Format: 4 gameID", simple) +
+                    getHelpOption("5 - Logout",
+                            "leave your current session and return to login menu.", simple);
+            case MID_GAME ->
+                    getHelpOption("1 - Redraw Board",
+                            "print the board again for the current state of the game.", simple) +
+                    getHelpOption("2 - Make Move",
+                            "select a piece in a given position and give its ending position.\n" +
+                                    "   Please make sure the move is legal.\n" +
+                                    "   Format: 2 start end        Format positions column then row, such as G6.", simple) +
+                    getHelpOption("3 - Highlight Legal Moves",
+                            "select a position on the board to see all legal moves the piece in that position can make.\n" +
+                                    "   Format: 3 position        Format positions column then row, such as G6.", simple) +
+                    getHelpOption("4 - Leave",
+                            "leave the current game, emptying your position and allowing anyone to join. Join again to continue.", simple) +
+                    getHelpOption("5 - Resign",
+                            "forfeit the current game, rendering it unplayable and the opposing player as winner.\n" +
+                                    "  This action cannot be undone.", simple);
+            case OBSERVING ->
+                    getHelpOption("1 - Redraw Board",
+                            "print the board again for the current state of the game.", simple) +
+                    getHelpOption("2 - Highlight Legal Moves",
+                            "select a position on the board to see all legal moves the piece in that position can make.\n" +
+                                    "   Format: 3 position        Format positions column then row, such as G6.", simple) +
+                    getHelpOption("3 - Stop Watching",
+                            "leave the current game, returning to the menu.", simple);
+        }) + "\n" + getHelpOption("0 - Help",
+                "print this menu again. Also prints out if input is beyond what's accepted.", simple));
         return "Helping";
     }
 

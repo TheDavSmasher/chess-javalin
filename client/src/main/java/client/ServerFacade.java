@@ -34,38 +34,38 @@ public class ServerFacade {
     }
 
     public UserEnterResponse register(String username, String password, String email) throws IOException {
-        String url = urlPort + "user";
+        String url = "user";
         return http.doPost(url,
                 new UserEnterRequest(username, password, email), null, UserEnterResponse.class);
     }
 
     public UserEnterResponse login(String username, String password) throws IOException {
-        String url = urlPort + "session";
+        String url = "session";
         return http.doPost(url, new UserEnterRequest(username, password, null), null, UserEnterResponse.class);
     }
 
     public ArrayList<GameData> listGames(String authToken) throws IOException {
-        ListGamesResponse response = http.doGet(urlPort + "game", authToken, ListGamesResponse.class);
+        ListGamesResponse response = http.doGet("game", authToken, ListGamesResponse.class);
         return response.games();
     }
 
     public CreateGameResponse createGame(String authToken, String gameName) throws IOException {
-        String url = urlPort + "game";
+        String url = "game";
         return http.doPost(url, new CreateGameRequest(gameName), authToken, CreateGameResponse.class);
     }
 
     public void joinGame(String authToken, String color, int gameID) throws IOException {
-        String url = urlPort + "game";
+        String url = "game";
         http.doPut(url, new JoinGameRequest(color, gameID), authToken);
     }
 
     public void logout(String authToken) throws IOException {
-        String url = urlPort + "session";
+        String url = "session";
         http.doDelete(url, authToken);
     }
 
     public void clear() throws IOException {
-        String url = urlPort + "db";
+        String url = "db";
         http.doDelete(url, null);
     }
 

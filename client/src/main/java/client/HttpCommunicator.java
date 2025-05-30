@@ -15,31 +15,30 @@ import static model.Serializer.serialize;
 
 public class HttpCommunicator {
     private static final HttpClient client = HttpClient.newHttpClient();
-
     private final String serverUrl;
 
     public HttpCommunicator(String url) {
         serverUrl = url;
     }
 
-    public <T> T doPost(String urlString, Object body, String authToken, Class<T> responseClass) throws IOException {
-        return doServerMethod(urlString, getRequestBuilder().POST(bodyPublisher(body)), authToken, responseClass);
+    public <T> T doPost(String path, Object body, String authToken, Class<T> responseClass) throws IOException {
+        return doServerMethod(path, getRequestBuilder().POST(bodyPublisher(body)), authToken, responseClass);
     }
 
-    public void doDelete(String urlString, String authToken) throws IOException {
-        doServerMethod(urlString, getRequestBuilder().DELETE(), authToken, null);
+    public void doDelete(String path, String authToken) throws IOException {
+        doServerMethod(path, getRequestBuilder().DELETE(), authToken, null);
     }
 
-    public void doPut(String urlString, Object body, String authToken) throws IOException {
-        doServerMethod(urlString, getRequestBuilder().PUT(bodyPublisher(body)), authToken, null);
+    public void doPut(String path, Object body, String authToken) throws IOException {
+        doServerMethod(path, getRequestBuilder().PUT(bodyPublisher(body)), authToken, null);
     }
 
-    public <T> T doGet(String urlString, String authToken, Class<T> responseClass) throws IOException {
-        return doServerMethod(urlString, getRequestBuilder().GET(), authToken, responseClass);
+    public <T> T doGet(String path, String authToken, Class<T> responseClass) throws IOException {
+        return doServerMethod(path, getRequestBuilder().GET(), authToken, responseClass);
     }
 
-    private static <T> T doServerMethod(String url, HttpRequest.Builder builder, String authToken, Class<T> responseClass) throws IOException {
-        builder.uri(URI.create(url));
+    private <T> T doServerMethod(String path, HttpRequest.Builder builder, String authToken, Class<T> responseClass) throws IOException {
+        builder.uri(URI.create(serverUrl + path));
 
         if (authToken != null) {
             builder.header("Authorization", authToken);

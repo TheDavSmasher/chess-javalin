@@ -75,12 +75,11 @@ public class GameService {
             }
             //If game is over, keep names for legacy
             if (oldGame.game().isGameOver()) return null;
-            String color = "";
-            if (auth.username().equals(oldGame.whiteUsername())) {
-                color = "WHITE";
-            } else if (auth.username().equals(oldGame.blackUsername())) {
-                color = "BLACK";
-            }
+            String color = switch (auth.username()) {
+                case String w when w.equals(oldGame.whiteUsername()) -> "WHITE";
+                case String b when b.equals(oldGame.blackUsername()) -> "BLACK";
+                default -> "";
+            };
             gameDAO.updateGamePlayer(!color.isEmpty() ? gameID : -1, color, null);
             return null;
         });

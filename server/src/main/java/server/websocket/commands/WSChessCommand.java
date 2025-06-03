@@ -6,6 +6,7 @@ import service.ServiceException;
 import server.websocket.Connection;
 import server.websocket.WebSocketCommand;
 import service.GameService;
+import service.UserService;
 import websocket.commands.UserGameCommand;
 
 public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocketCommand<T> {
@@ -27,7 +28,8 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
 
     protected GameData checkPlayerGameState(UserGameCommand command, String username, String description) throws ServiceException {
         boolean checkColor = !description.equals("resign");
-        GameData gameData = GameService.getGame(command.getAuthToken(), command.getGameID());
+        UserService.validateAuth(command.getAuthToken());
+        GameData gameData = GameService.getGame(command.getGameID());
         if (gameData.game().isGameOver()) {
             throw new ServiceException("Game is already finished. You cannot " + description + " anymore.");
         }

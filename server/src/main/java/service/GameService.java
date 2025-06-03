@@ -60,9 +60,8 @@ public class GameService {
         });
     }
 
-    public static GameData getGame(String authToken, int gameID) throws ServiceException {
+    public static GameData getGame(int gameID) throws ServiceException {
         return tryCatch(() -> {
-            UserService.validateAuth(authToken);
             GameDAO gameDAO = GameDAO.getInstance();
             return gameDAO.getGame(gameID);
         });

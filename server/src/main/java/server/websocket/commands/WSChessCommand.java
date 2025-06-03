@@ -33,19 +33,14 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
         if (gameData.game().isGameOver()) {
             throw new ServiceException("Game is already finished. You cannot " + description + " anymore.");
         }
-        ChessGame.TeamColor color = userIsPlayer(gameData, username);
-        if (color == null) {
-            throw new ServiceException("You need to be a player to " + description + ".");
-        }
+        ChessGame.TeamColor color = switch (username) {
+            case String w when w.equals(gameData.whiteUsername()) -> ChessGame.TeamColor.WHITE;
+            case String b when b.equals(gameData.blackUsername()) -> ChessGame.TeamColor.BLACK;
+            default -> throw new ServiceException("You need to be a player to " + description + ".");
+        };
         if (checkColor && color != gameData.game().getTeamTurn()) {
             throw new ServiceException("It is not your turn to make a move.");
         }
         return gameData;
-    }
-
-    private ChessGame.TeamColor userIsPlayer(GameData data, String username) {
-        if (username.equals(data.whiteUsername())) return ChessGame.TeamColor.WHITE;
-        if (username.equals(data.blackUsername())) return ChessGame.TeamColor.BLACK;
-        return null;
     }
 }

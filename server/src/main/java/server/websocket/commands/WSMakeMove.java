@@ -10,8 +10,6 @@ import org.eclipse.jetty.websocket.api.Session;
 import service.GameService;
 import websocket.commands.MakeMoveCommand;
 
-import static model.Serializer.serialize;
-
 public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
     @Override
     protected Class<MakeMoveCommand> getCommandClass() {
@@ -30,7 +28,7 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
         } catch (InvalidMoveException e) {
             throw new ServiceException(e.getMessage());
         }
-        GameService.updateGameState(command.getAuthToken(), command.getGameID(), serialize(game));
+        GameService.updateGameState(command.getAuthToken(), command.getGameID(), game);
 
         connectionManager.loadNewGame(gameData, command.getGameID());
 

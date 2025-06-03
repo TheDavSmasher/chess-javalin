@@ -1,5 +1,6 @@
 package service;
 
+import chess.ChessGame;
 import dataaccess.GameDAO;
 import model.dataaccess.AuthData;
 import model.dataaccess.GameData;
@@ -9,6 +10,7 @@ import model.response.CreateGameResponse;
 import model.response.EmptyResponse;
 import model.response.ListGamesResponse;
 
+import static model.Serializer.serialize;
 import static service.Service.tryCatch;
 
 public class GameService {
@@ -75,11 +77,11 @@ public class GameService {
         });
     }
 
-    public static void updateGameState(String authToken, int gameID, String gameJson) throws ServiceException {
+    public static void updateGameState(String authToken, int gameID, ChessGame game) throws ServiceException {
         tryCatch(() -> {
             UserService.validateAuth(authToken);
             GameDAO gameDAO = GameDAO.getInstance();
-            gameDAO.updateGameBoard(gameID, gameJson);
+            gameDAO.updateGameBoard(gameID, serialize(game));
             return null;
         });
     }

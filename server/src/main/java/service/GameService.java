@@ -18,8 +18,7 @@ public class GameService {
     public static ListGamesResponse getAllGames(String authToken) throws ServiceException {
         return tryCatch(() -> {
             UserService.validateAuth(authToken);
-            GameDAO gameDAO = GameDAO.getInstance();
-            return new ListGamesResponse(gameDAO.listGames());
+            return new ListGamesResponse(GameDAO.getInstance().listGames());
         });
     }
 
@@ -29,9 +28,7 @@ public class GameService {
             if (isEmpty(request.gameName())) {
                 throw new BadRequestException();
             }
-            GameDAO gameDAO = GameDAO.getInstance();
-            GameData newGame = gameDAO.createGame(request.gameName());
-            return new CreateGameResponse(newGame.gameID());
+            return new CreateGameResponse(GameDAO.getInstance().createGame(request.gameName()).gameID());
         });
     }
 

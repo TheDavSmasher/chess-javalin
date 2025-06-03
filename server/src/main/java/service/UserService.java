@@ -16,7 +16,6 @@ public class UserService {
             throwIfInsufficient(request, true);
 
             UserDAO userDAO = UserDAO.getInstance();
-
             if (userDAO.getUser(request.username()) != null) {
                 throw new PreexistingException();
             }
@@ -29,13 +28,10 @@ public class UserService {
         return tryCatch(() -> {
             throwIfInsufficient(request, false);
 
-            UserDAO userDAO = UserDAO.getInstance();
-            AuthDAO authDAO = AuthDAO.getInstance();
-
-            if (userDAO.getUser(request.username(), request.password()) == null) {
+            if (UserDAO.getInstance().getUser(request.username(), request.password()) == null) {
                 throw new UnauthorizedException();
             }
-            AuthData newAuth = authDAO.createAuth(request.username());
+            AuthData newAuth = AuthDAO.getInstance().createAuth(request.username());
             return new UserEnterResponse(newAuth.username(), newAuth.authToken());
         });
     }
@@ -49,16 +45,14 @@ public class UserService {
     public static EmptyResponse logout(String authToken) throws ServiceException {
         return tryCatch(() -> {
             validateAuth(authToken);
-            AuthDAO authDAO = AuthDAO.getInstance();
-            authDAO.deleteAuth(authToken);
+            AuthDAO.getInstance().deleteAuth(authToken);
             return new EmptyResponse();
         });
     }
 
     public static AuthData validateAuth(String authToken) throws ServiceException {
         return tryCatch(() -> {
-            AuthDAO authDAO = AuthDAO.getInstance();
-            AuthData userAuth = authDAO.getAuth(authToken);
+            AuthData userAuth = AuthDAO.getInstance().getAuth(authToken);
             if (userAuth == null) {
                 throw new UnauthorizedException();
             }

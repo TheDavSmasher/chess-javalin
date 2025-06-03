@@ -61,10 +61,7 @@ public class GameService {
     }
 
     public static GameData getGame(int gameID) throws ServiceException {
-        return tryCatch(() -> {
-            GameDAO gameDAO = GameDAO.getInstance();
-            return gameDAO.getGame(gameID);
-        });
+        return tryCatch(() -> GameDAO.getInstance().getGame(gameID));
     }
 
     //WebSocket

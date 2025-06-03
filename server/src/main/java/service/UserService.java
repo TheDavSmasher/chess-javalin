@@ -4,7 +4,6 @@ import dataaccess.AuthDAO;
 import dataaccess.UserDAO;
 import model.dataaccess.AuthData;
 import model.request.UserEnterRequest;
-import model.response.EmptyResponse;
 import model.response.UserEnterResponse;
 
 import static org.eclipse.jetty.util.StringUtil.isBlank;
@@ -42,11 +41,11 @@ public class UserService {
         }
     }
 
-    public static EmptyResponse logout(String authToken) throws ServiceException {
+    public static Void logout(String authToken) throws ServiceException {
         return tryCatch(() -> {
             validateAuth(authToken);
             AuthDAO.getInstance().deleteAuth(authToken);
-            return new EmptyResponse();
+            return null;
         });
     }
 

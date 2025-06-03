@@ -1,13 +1,12 @@
 package server.handler;
 
 import io.javalin.http.Context;
-import model.response.EmptyResponse;
 import service.ServiceException;
 import service.UserService;
 
-public class LogoutHandler extends ObjectSerializer<EmptyResponse> {
+public class LogoutHandler extends ObjectSerializer<Void> {
     @Override
-    public EmptyResponse serviceHandle(Context context) throws ServiceException {
+    public Void serviceHandle(Context context) throws ServiceException {
         return UserService.logout(getAuthToken(context));
     }
 }

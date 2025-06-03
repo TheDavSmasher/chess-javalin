@@ -1,13 +1,12 @@
 package server.handler;
 
 import io.javalin.http.Context;
-import model.response.EmptyResponse;
 import service.ServiceException;
 import service.AppService;
 
-public class ClearHandler extends ObjectSerializer<EmptyResponse> {
+public class ClearHandler extends ObjectSerializer<Void> {
     @Override
-    public EmptyResponse serviceHandle(Context ignored) throws ServiceException {
+    public Void serviceHandle(Context ignored) throws ServiceException {
         return AppService.clearData();
     }
 }

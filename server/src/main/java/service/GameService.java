@@ -7,7 +7,6 @@ import model.dataaccess.GameData;
 import model.request.CreateGameRequest;
 import model.request.JoinGameRequest;
 import model.response.CreateGameResponse;
-import model.response.EmptyResponse;
 import model.response.ListGamesResponse;
 
 import static model.Serializer.serialize;
@@ -32,7 +31,7 @@ public class GameService {
         });
     }
 
-    public static EmptyResponse joinGame(JoinGameRequest request, String authToken) throws ServiceException {
+    public static Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
         return tryCatch(() -> {
             String username = UserService.validateAuth(authToken).username();
             GameDAO gameDAO = GameDAO.getInstance();
@@ -53,7 +52,7 @@ public class GameService {
             }
 
             gameDAO.updateGamePlayer(request.gameID(), color, username);
-            return new EmptyResponse();
+            return null;
         });
     }
 

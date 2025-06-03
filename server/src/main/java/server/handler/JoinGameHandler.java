@@ -1,13 +1,12 @@
 package server.handler;
 
 import model.request.JoinGameRequest;
-import model.response.EmptyResponse;
 import service.ServiceException;
 import service.GameService;
 
-public class JoinGameHandler extends RequestDeserializer<JoinGameRequest, EmptyResponse> {
+public class JoinGameHandler extends RequestDeserializer<JoinGameRequest, Void> {
     @Override
-    protected EmptyResponse serviceCall(JoinGameRequest joinGameRequest, String authToken) throws ServiceException {
+    protected Void serviceCall(JoinGameRequest joinGameRequest, String authToken) throws ServiceException {
         return GameService.joinGame(joinGameRequest, authToken);
     }
 

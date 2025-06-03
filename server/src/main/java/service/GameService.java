@@ -75,7 +75,7 @@ public class GameService {
             AuthData auth = UserService.validateAuth(authToken);
             GameDAO gameDAO = GameDAO.getInstance();
             GameData oldGame = gameDAO.getGame(gameID);
-            if (gameID <= 0 || oldGame == null) {
+            if (oldGame == null) {
                 throw new BadRequestException();
             }
             //If game is over, keep names for legacy

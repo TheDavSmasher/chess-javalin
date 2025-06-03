@@ -43,7 +43,18 @@ public class GameService {
             if (request.playerColor() == null || request.gameID() <= 0 || oldGame == null) {
                 throw new BadRequestException();
             }
-            String color = getColor(request.playerColor(), oldGame, auth.username());
+            String color = request.playerColor().toUpperCase();
+
+            String gameUser = switch (color) {
+                case "WHITE" -> oldGame.whiteUsername();
+                case "BLACK" -> oldGame.blackUsername();
+                default -> throw new BadRequestException();
+            };
+
+            if (gameUser != null && !gameUser.equals(auth.username())) {
+                throw new PreexistingException();
+            }
+
             gameDAO.updateGamePlayer(request.gameID(), color, auth.username());
             return new EmptyResponse();
         });
@@ -84,21 +95,5 @@ public class GameService {
             gameDAO.updateGameBoard(gameID, serialize(game));
             return null;
         });
-    }
-
-    private static String getColor(String playerColor, GameData oldGame, String username) throws ServiceException {
-        String color = playerColor.toUpperCase();
-
-        String gameUser = switch (color) {
-            case "WHITE" -> oldGame.whiteUsername();
-            case "BLACK" -> oldGame.blackUsername();
-            default -> throw new BadRequestException();
-        };
-
-        if (gameUser == null || gameUser.equals(username)) {
-            return color;
-        }
-
-        throw new PreexistingException();
     }
 }

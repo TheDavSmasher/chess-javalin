@@ -11,6 +11,7 @@ import model.response.EmptyResponse;
 import model.response.ListGamesResponse;
 
 import static model.Serializer.serialize;
+import static org.eclipse.jetty.util.StringUtil.isEmpty;
 import static service.Service.tryCatch;
 
 public class GameService {
@@ -27,7 +28,7 @@ public class GameService {
             UserService.validateAuth(authToken);
             GameDAO gameDAO = GameDAO.getInstance();
 
-            if (request.gameName() == null || request.gameName().isEmpty()) {
+            if (isEmpty(request.gameName())) {
                 throw new BadRequestException();
             }
             GameData newGame = gameDAO.createGame(request.gameName());
@@ -40,7 +41,7 @@ public class GameService {
             String username = UserService.validateAuth(authToken).username();
             GameDAO gameDAO = GameDAO.getInstance();
             GameData oldGame = gameDAO.getGame(request.gameID());
-            if (request.playerColor() == null || request.gameID() <= 0 || oldGame == null) {
+            if (request.playerColor() == null || oldGame == null) {
                 throw new BadRequestException();
             }
             String color = request.playerColor().toUpperCase();
@@ -51,7 +52,7 @@ public class GameService {
                 default -> throw new BadRequestException();
             };
 
-            if (gameUser != null && !gameUser.equals(username)) {
+            if (!username.equals(gameUser)) {
                 throw new PreexistingException();
             }
 
@@ -79,9 +80,9 @@ public class GameService {
             }
             //If game is over, keep names for legacy
             if (oldGame.game().isGameOver()) return null;
-            if (oldGame.whiteUsername() != null && oldGame.whiteUsername().equals(auth.username())) {
+            if (auth.username().equals(oldGame.whiteUsername())) {
                 gameDAO.updateGamePlayer(gameID, "WHITE", null);
-            } else if (oldGame.blackUsername() != null && oldGame.blackUsername().equals(auth.username())) {
+            } else if (auth.username().equals(oldGame.blackUsername())) {
                 gameDAO.updateGamePlayer(gameID, "BLACK", null);
             }
             return null;

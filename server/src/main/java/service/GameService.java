@@ -37,7 +37,7 @@ public class GameService {
 
     public static EmptyResponse joinGame(JoinGameRequest request, String authToken) throws ServiceException {
         return tryCatch(() -> {
-            AuthData auth = UserService.validateAuth(authToken);
+            String username = UserService.validateAuth(authToken).username();
             GameDAO gameDAO = GameDAO.getInstance();
             GameData oldGame = gameDAO.getGame(request.gameID());
             if (request.playerColor() == null || request.gameID() <= 0 || oldGame == null) {
@@ -51,11 +51,11 @@ public class GameService {
                 default -> throw new BadRequestException();
             };
 
-            if (gameUser != null && !gameUser.equals(auth.username())) {
+            if (gameUser != null && !gameUser.equals(username)) {
                 throw new PreexistingException();
             }
 
-            gameDAO.updateGamePlayer(request.gameID(), color, auth.username());
+            gameDAO.updateGamePlayer(request.gameID(), color, username);
             return new EmptyResponse();
         });
     }

@@ -26,11 +26,10 @@ public class GameService {
     public static CreateGameResponse createGame(CreateGameRequest request, String authToken) throws ServiceException {
         return tryCatch(() -> {
             UserService.validateAuth(authToken);
-            GameDAO gameDAO = GameDAO.getInstance();
-
             if (isEmpty(request.gameName())) {
                 throw new BadRequestException();
             }
+            GameDAO gameDAO = GameDAO.getInstance();
             GameData newGame = gameDAO.createGame(request.gameName());
             return new CreateGameResponse(newGame.gameID());
         });
@@ -80,11 +79,13 @@ public class GameService {
             }
             //If game is over, keep names for legacy
             if (oldGame.game().isGameOver()) return null;
+            String color = "";
             if (auth.username().equals(oldGame.whiteUsername())) {
-                gameDAO.updateGamePlayer(gameID, "WHITE", null);
+                color = "WHITE";
             } else if (auth.username().equals(oldGame.blackUsername())) {
-                gameDAO.updateGamePlayer(gameID, "BLACK", null);
+                color = "BLACK";
             }
+            gameDAO.updateGamePlayer(!color.isEmpty() ? gameID : -1, color, null);
             return null;
         });
     }

@@ -88,8 +88,7 @@ public class GameService {
     public static void updateGameState(String authToken, int gameID, ChessGame game) throws ServiceException {
         tryCatch(() -> {
             UserService.validateAuth(authToken);
-            GameDAO gameDAO = GameDAO.getInstance();
-            gameDAO.updateGameBoard(gameID, serialize(game));
+            GameDAO.getInstance().updateGameBoard(gameID, serialize(game));
             return null;
         });
     }

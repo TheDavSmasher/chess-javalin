@@ -48,7 +48,7 @@ public abstract class SQLDAO {
             switch (params[i]) {
                 case String s -> statement.setString(++i, s);
                 case Integer s -> statement.setInt(++i, s);
-                case null, default -> statement.setNull(++i, NULL);
+                default -> statement.setNull(++i, NULL);
             }
         }
         return statement;

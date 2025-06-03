@@ -14,7 +14,7 @@ import java.net.URI;
 import static model.Serializer.deserialize;
 import static model.Serializer.serialize;
 
-public class WebsocketCommunicator extends Endpoint {
+public class WebsocketCommunicator extends Endpoint implements MessageHandler.Whole<String> {
     private Session session;
     private boolean connected = false;
     private final String socketUrl;
@@ -25,27 +25,25 @@ public class WebsocketCommunicator extends Endpoint {
         socketUrl = url.replace("http", "ws");
     }
 
-    @SuppressWarnings("Convert2Lambda")
     private void connectToServer() throws IOException {
         try {
             session = ContainerProvider.getWebSocketContainer().connectToServer(this, URI.create(socketUrl + "ws"));
-
-            session.addMessageHandler(new MessageHandler.Whole<String>() {
-                @Override
-                public void onMessage(String message) {
-                    Class<? extends ServerMessage> messageClass =
-                            switch (deserialize(message, ServerMessage.class).getServerMessageType()) {
-                                case NOTIFICATION -> Notification.class;
-                                case LOAD_GAME -> LoadGameMessage.class;
-                                case ERROR -> ErrorMessage.class;
-                            };
-                    observer.notify(deserialize(message, messageClass));
-                }
-            });
+            session.addMessageHandler(this);
         } catch (DeploymentException e) {
             throw new IOException(e.getMessage());
         }
         connected = true;
+    }
+
+    @Override
+    public void onMessage(String message) {
+        Class<? extends ServerMessage> messageClass =
+            switch (deserialize(message, ServerMessage.class).getServerMessageType()) {
+                case NOTIFICATION -> Notification.class;
+                case LOAD_GAME -> LoadGameMessage.class;
+                case ERROR -> ErrorMessage.class;
+            };
+        observer.notify(deserialize(message, messageClass));
     }
 
     @Override

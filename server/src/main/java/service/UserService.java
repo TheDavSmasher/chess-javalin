@@ -53,18 +53,14 @@ public class UserService {
         });
     }
 
-    public static AuthData getUser(String authToken) throws ServiceException {
+    public static AuthData validateAuth(String authToken) throws ServiceException {
         return tryCatch(() -> {
             AuthDAO authDAO = AuthDAO.getInstance();
-            return authDAO.getAuth(authToken);
+            AuthData userAuth = authDAO.getAuth(authToken);
+            if (userAuth == null) {
+                throw new UnauthorizedException();
+            }
+            return userAuth;
         });
-    }
-
-    public static AuthData validateAuth(String authToken) throws ServiceException {
-        AuthData userAuth = getUser(authToken);
-        if (userAuth == null) {
-            throw new UnauthorizedException();
-        }
-        return userAuth;
     }
 }

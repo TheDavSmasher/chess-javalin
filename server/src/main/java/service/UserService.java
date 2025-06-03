@@ -13,9 +13,7 @@ import static service.Service.tryCatch;
 public class UserService {
     public static UserEnterResponse register(UserEnterRequest request) throws ServiceException {
         return tryCatch(() -> {
-            if (isBlank(request.username()) || isBlank(request.password()) || isBlank(request.email())) {
-                throw new BadRequestException();
-            }
+            throwIfInsufficient(request, true);
 
             UserDAO userDAO = UserDAO.getInstance();
 
@@ -29,9 +27,7 @@ public class UserService {
 
     public static UserEnterResponse login(UserEnterRequest request) throws ServiceException {
         return tryCatch(() -> {
-            if (isBlank(request.username()) || isBlank(request.password())) {
-                throw new BadRequestException();
-            }
+            throwIfInsufficient(request, false);
 
             UserDAO userDAO = UserDAO.getInstance();
             AuthDAO authDAO = AuthDAO.getInstance();
@@ -42,6 +38,12 @@ public class UserService {
             AuthData newAuth = authDAO.createAuth(request.username());
             return new UserEnterResponse(newAuth.username(), newAuth.authToken());
         });
+    }
+
+    private static void throwIfInsufficient(UserEnterRequest request, boolean checkEmail) throws ServiceException {
+        if (isBlank(request.username()) || isBlank(request.password()) || (checkEmail && isBlank(request.email()))) {
+            throw new BadRequestException();
+        }
     }
 
     public static EmptyResponse logout(String authToken) throws ServiceException {

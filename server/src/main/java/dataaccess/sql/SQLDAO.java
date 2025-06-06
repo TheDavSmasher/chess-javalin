@@ -32,8 +32,9 @@ public abstract class SQLDAO {
         }
     }
 
-    protected static <T> T trySingleQuery(@Language("SQL") String sql, SqlQuery<T> query, Object... params) throws DataAccessException {
-        return tryQuery(sql, rs -> rs.next() ? query.execute(rs) : null, params);
+    protected <T> T trySingleQuery(String whereCol, Object whereVal, SqlQuery<T> query) throws DataAccessException {
+        return tryQuery("SELECT * FROM " + getTableName() + " WHERE " + whereCol + "=?",
+                rs -> rs.next() ? query.execute(rs) : null, whereVal);
     }
 
     protected static void tryUpdate(@Language("SQL") String sql, SqlUpdate update, Object... params) throws DataAccessException {

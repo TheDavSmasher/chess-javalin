@@ -26,11 +26,9 @@ public class UserService {
     public static UserEnterResponse login(UserEnterRequest request) throws ServiceException {
         return tryCatch(() -> {
             throwIfInsufficient(request, false);
-
-            if (UserDAO.getInstance().getUser(request.username(), request.password()) == null) {
-                throw new UnauthorizedException();
-            }
-            return UserEnterResponse.fromAuth(AuthDAO.getInstance().createAuth(request.username()));
+            return UserDAO.getInstance().getUser(request.username(), request.password()) == null
+                    ? throwUnauthorized()
+                    : UserEnterResponse.fromAuth(AuthDAO.getInstance().createAuth(request.username()));
         });
     }
 

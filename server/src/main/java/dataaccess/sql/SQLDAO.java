@@ -11,7 +11,12 @@ import static java.sql.Types.NULL;
 public abstract class SQLDAO {
     protected SQLDAO(boolean setupTable) throws DataAccessException {
         if (setupTable) {
-            DatabaseManager.configureDatabaseTable(getTableSetup());
+            DatabaseManager.createDatabase();
+            try (PreparedStatement preparedStatement = getStatement(getTableSetup())) {
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                throw new DataAccessException("could not configure database table", e);
+            }
         }
     }
 

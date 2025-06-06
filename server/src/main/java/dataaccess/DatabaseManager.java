@@ -1,11 +1,7 @@
 package dataaccess;
 
-import org.intellij.lang.annotations.Language;
-
 import java.sql.*;
 import java.util.Properties;
-
-import static java.sql.Types.NULL;
 
 public class DatabaseManager {
     private static String databaseName;
@@ -80,28 +76,5 @@ public class DatabaseManager {
         var host = props.getProperty("db.host");
         var port = Integer.parseInt(props.getProperty("db.port"));
         connectionUrl = String.format("jdbc:mysql://%s:%d", host, port);
-    }
-
-    public static void configureDatabaseTable(@Language("SQL") String statement) throws DataAccessException {
-        createDatabase();
-
-        try (PreparedStatement preparedStatement = getStatement(statement)) {
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataAccessException("could not configure database table", e);
-        }
-    }
-
-    private static PreparedStatement getStatement(String sql, Object... params) throws DataAccessException, SQLException {
-        Connection connection = getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        for (int i = 0; i < params.length;) {
-            switch (params[i]) {
-                case String s -> statement.setString(++i, s);
-                case Integer s -> statement.setInt(++i, s);
-                default -> statement.setNull(++i, NULL);
-            }
-        }
-        return statement;
     }
 }

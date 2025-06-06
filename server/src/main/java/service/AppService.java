@@ -1,10 +1,7 @@
 package service;
 
-import dataaccess.AuthDAO;
-import dataaccess.GameDAO;
-import dataaccess.UserDAO;
-
 import static service.Service.tryCatch;
+import dataaccess.DataAccessObject.*;
 
 public class AppService {
     public static Void clearData() throws ServiceException {

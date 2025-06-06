@@ -1,11 +1,10 @@
 package service;
 
-import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
-import dataaccess.UserDAO;
 import model.dataaccess.AuthData;
 import model.request.UserEnterRequest;
 import model.response.UserEnterResponse;
+import dataaccess.DataAccessObject.*;
 
 import static org.eclipse.jetty.util.StringUtil.isBlank;
 import static service.Service.*;

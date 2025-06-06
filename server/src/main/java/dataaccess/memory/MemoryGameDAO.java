@@ -1,11 +1,11 @@
 package dataaccess.memory;
 
-import dataaccess.GameDAO;
 import model.dataaccess.GameData;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import dataaccess.DataAccessObject.*;
 
 public class MemoryGameDAO implements GameDAO {
     static MemoryGameDAO instance;

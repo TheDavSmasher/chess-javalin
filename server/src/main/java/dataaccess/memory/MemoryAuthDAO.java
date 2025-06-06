@@ -1,12 +1,11 @@
 package dataaccess.memory;
 
-import dataaccess.AuthDAO;
 import model.dataaccess.AuthData;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.UUID;
-
+import dataaccess.DataAccessObject.*;
 
 public class MemoryAuthDAO implements AuthDAO {
     static MemoryAuthDAO instance;

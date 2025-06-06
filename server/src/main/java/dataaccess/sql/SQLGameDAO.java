@@ -2,8 +2,8 @@ package dataaccess.sql;
 
 import chess.ChessGame;
 import dataaccess.DataAccessException;
-import dataaccess.GameDAO;
 import model.dataaccess.GameData;
+import dataaccess.DataAccessObject.*;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;

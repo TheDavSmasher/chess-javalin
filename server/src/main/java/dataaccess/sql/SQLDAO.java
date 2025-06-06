@@ -1,9 +1,9 @@
 package dataaccess.sql;
 
-import dataaccess.ChessDAO;
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
 import org.intellij.lang.annotations.Language;
+import dataaccess.DataAccessObject.*;
 
 import java.sql.*;
 

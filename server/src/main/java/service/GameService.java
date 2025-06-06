@@ -1,7 +1,7 @@
 package service;
 
 import chess.ChessGame;
-import dataaccess.GameDAO;
+import dataaccess.DataAccessObject.*;
 import model.dataaccess.GameData;
 import model.request.CreateGameRequest;
 import model.request.JoinGameRequest;

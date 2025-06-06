@@ -1,6 +1,5 @@
 package server.websocket.commands;
 
-import model.dataaccess.AuthData;
 import model.dataaccess.GameData;
 import server.websocket.WebsocketException;
 import service.ServiceException;

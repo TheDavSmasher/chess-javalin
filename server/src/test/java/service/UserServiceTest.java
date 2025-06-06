@@ -1,6 +1,5 @@
 package service;
 
-import model.dataaccess.AuthData;
 import model.request.UserEnterRequest;
 import model.response.UserEnterResponse;
 import org.junit.jupiter.api.Assertions;

@@ -2,6 +2,7 @@ package server.websocket.commands;
 
 import chess.ChessGame;
 import model.dataaccess.GameData;
+import server.websocket.WebsocketException;
 import service.ServiceException;
 import server.websocket.Connection;
 import server.websocket.WebSocketCommand;
@@ -18,10 +19,10 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
         return "The game has ended.\n";
     }
 
-    protected String checkConnection(String authToken) throws ServiceException {
+    protected String checkConnection(String authToken) throws WebsocketException {
         Connection connection = connectionManager.getFromUsers(authToken);
         if (connection == null) {
-            throw new ServiceException(UNAUTHORIZED);
+            throw new WebsocketException(UNAUTHORIZED);
         }
         return connection.username();
     }
@@ -31,15 +32,15 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
         UserService.validateAuth(command.getAuthToken());
         GameData gameData = GameService.getGame(command.getGameID());
         if (gameData.game().isGameOver()) {
-            throw new ServiceException("Game is already finished. You cannot " + description + " anymore.");
+            throw new WebsocketException("Game is already finished. You cannot " + description + " anymore.");
         }
         ChessGame.TeamColor color = switch (username) {
             case String w when w.equals(gameData.whiteUsername()) -> ChessGame.TeamColor.WHITE;
             case String b when b.equals(gameData.blackUsername()) -> ChessGame.TeamColor.BLACK;
-            default -> throw new ServiceException("You need to be a player to " + description + ".");
+            default -> throw new WebsocketException("You need to be a player to " + description + ".");
         };
         if (checkColor && color != gameData.game().getTeamTurn()) {
-            throw new ServiceException("It is not your turn to make a move.");
+            throw new WebsocketException("It is not your turn to make a move.");
         }
         return gameData;
     }

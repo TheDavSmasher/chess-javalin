@@ -2,6 +2,7 @@ package server.websocket.commands;
 
 import model.dataaccess.AuthData;
 import model.dataaccess.GameData;
+import server.websocket.WebsocketException;
 import service.ServiceException;
 import org.eclipse.jetty.websocket.api.Session;
 import server.websocket.WebSocketCommand;
@@ -19,7 +20,7 @@ public class WSConnect extends WebSocketCommand<ConnectCommand> {
     protected void execute(ConnectCommand command, Session session) throws ServiceException {
         AuthData auth = UserService.validateAuth(command.getAuthToken());
         GameData data = GameService.getGame(command.getGameID());
-        if (data == null) throw new ServiceException("Game does not exist.");
+        if (data == null) throw new WebsocketException("Game does not exist.");
 
         notifyGame(command.getGameID(), auth.username() + " is now observing the game.");
         connectionManager.addToGame(data, command.getAuthToken(), auth.username(), session);

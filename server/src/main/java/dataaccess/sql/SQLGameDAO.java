@@ -15,7 +15,7 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
     private static SQLGameDAO instance;
     private static boolean tableCreated = false;
 
-    public SQLGameDAO () throws DataAccessException {
+    public SQLGameDAO() throws DataAccessException {
         super(tableCreated);
         tableCreated = true;
     }

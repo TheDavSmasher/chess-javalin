@@ -34,17 +34,14 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
 
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
-        return tryQuery("SELECT * FROM games WHERE gameID =?", rs -> {
-            if (!rs.next()) return null;
-            int id = rs.getInt("gameID");
-            String white = rs.getString("whiteUsername");
-            String black = rs.getString("blackUsername");
-            String name = rs.getString("gameName");
-            String gameJson = rs.getString("game");
-            ChessGame game = deserialize(gameJson, ChessGame.class);
-
-            return new GameData(id, white, black, name, game);
-        }, gameID);
+        return trySingleQuery("SELECT * FROM games WHERE gameID =?",
+                rs -> new GameData(
+                        rs.getInt("gameID"),
+                        rs.getString("whiteUsername"),
+                        rs.getString("blackUsername"),
+                        rs.getString("gameName"),
+                        deserialize(rs.getString("game"), ChessGame.class)),
+                gameID);
     }
 
     @Override

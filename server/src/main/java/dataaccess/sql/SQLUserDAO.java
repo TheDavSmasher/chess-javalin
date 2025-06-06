@@ -12,13 +12,12 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        return tryQuery("SELECT * FROM users WHERE username =?", rs -> {
-            if (!rs.next()) return null;
-            String name = rs.getString("username");
-            String password = rs.getString("password");
-            String email = rs.getString("email");
-            return new UserData(name, password, email);
-        }, username);
+        return trySingleQuery("SELECT * FROM users WHERE username =?",
+                rs -> new UserData(
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("email")),
+                username);
     }
 
     @Override

@@ -26,6 +26,10 @@ public abstract class SQLDAO {
         }
     }
 
+    protected static <T> T trySingleQuery(@Language("SQL") String sql, SqlQuery<T> query, Object... params) throws DataAccessException {
+        return tryQuery(sql, rs -> rs.next() ? query.execute(rs) : null, params);
+    }
+
     protected static void tryUpdate(@Language("SQL") String sql, SqlUpdate update, Object... params) throws DataAccessException {
         try (PreparedStatement statement = getStatement(sql, params)) {
             int result = statement.executeUpdate();

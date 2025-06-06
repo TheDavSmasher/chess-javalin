@@ -10,7 +10,7 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
     private static boolean tableCreated = false;
 
     public SQLUserDAO () throws DataAccessException {
-        super(!tableCreated);
+        super(tableCreated);
         tableCreated = true;
     }
 

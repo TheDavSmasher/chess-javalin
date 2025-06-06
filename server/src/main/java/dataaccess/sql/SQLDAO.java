@@ -9,14 +9,13 @@ import java.sql.*;
 import static java.sql.Types.NULL;
 
 public abstract class SQLDAO {
-    protected SQLDAO(boolean setupTable) throws DataAccessException {
-        if (setupTable) {
-            DatabaseManager.createDatabase();
-            try (PreparedStatement preparedStatement = getStatement(getTableSetup())) {
-                preparedStatement.executeUpdate();
-            } catch (SQLException e) {
-                throw new DataAccessException("could not configure database table", e);
-            }
+    protected SQLDAO(boolean tableExists) throws DataAccessException {
+        if (tableExists) return;
+        DatabaseManager.createDatabase();
+        try (PreparedStatement preparedStatement = getStatement(getTableSetup())) {
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("could not configure database table", e);
         }
     }
 

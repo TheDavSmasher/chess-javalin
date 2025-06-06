@@ -11,7 +11,7 @@ public class SQLAuthDAO extends SQLDAO implements AuthDAO {
     private static boolean tableCreated = false;
 
     public SQLAuthDAO() throws DataAccessException {
-        super(!tableCreated);
+        super(tableCreated);
         tableCreated = true;
     }
 

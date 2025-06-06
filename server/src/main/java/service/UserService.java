@@ -7,7 +7,7 @@ import model.request.UserEnterRequest;
 import model.response.UserEnterResponse;
 
 import static org.eclipse.jetty.util.StringUtil.isBlank;
-import static service.Service.tryCatch;
+import static service.Service.*;
 
 public class UserService {
     public static UserEnterResponse register(UserEnterRequest request) throws ServiceException {
@@ -50,12 +50,6 @@ public class UserService {
     }
 
     public static AuthData validateAuth(String authToken) throws ServiceException {
-        return tryCatch(() -> {
-            AuthData userAuth = AuthDAO.getInstance().getAuth(authToken);
-            if (userAuth == null) {
-                throw new UnauthorizedException();
-            }
-            return userAuth;
-        });
+        return tryCatch(() -> AuthDAO.getInstance().getAuth(authToken) instanceof AuthData auth ? auth : throwUnauthorized());
     }
 }

@@ -12,4 +12,8 @@ public final class Service {
             throw new UnexpectedException(e.getMessage());
         }
     }
+
+    public static <T> T throwUnauthorized() throws UnauthorizedException {
+        throw new UnauthorizedException();
+    }
 }

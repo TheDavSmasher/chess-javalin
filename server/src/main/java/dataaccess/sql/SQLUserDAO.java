@@ -30,9 +30,8 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
 
     @Override
     public UserData getUser(String username, String password) throws DataAccessException {
-        UserData userData = getUser(username);
-        if (userData == null || !BCrypt.checkpw(password, userData.password())) return null;
-        return userData;
+        return !(getUser(username) instanceof UserData userData) || !BCrypt.checkpw(password, userData.password())
+                ? null : userData;
     }
 
     @Override

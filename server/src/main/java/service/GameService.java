@@ -14,13 +14,11 @@ import static service.Service.*;
 
 public class GameService {
     public static ListGamesResponse getAllGames(String authToken) throws ServiceException {
-        return tryAuthorized(authToken, ignored -> {
-            return new ListGamesResponse(GameDAO.getInstance().listGames());
-        });
+        return tryAuthorized(authToken, () -> new ListGamesResponse(GameDAO.getInstance().listGames()));
     }
 
     public static CreateGameResponse createGame(CreateGameRequest request, String authToken) throws ServiceException {
-        return tryAuthorized(authToken, ignored -> isEmpty(request.gameName()) ? throwBadRequest()
+        return tryAuthorized(authToken, () -> isEmpty(request.gameName()) ? throwBadRequest()
                 : new CreateGameResponse(GameDAO.getInstance().createGame(request.gameName()).gameID()));
     }
 
@@ -71,8 +69,6 @@ public class GameService {
     }
 
     public static void updateGameState(String authToken, int gameID, ChessGame game) throws ServiceException {
-        tryAuthorized(authToken, ignored -> {
-            GameDAO.getInstance().updateGameBoard(gameID, serialize(game));
-        });
+        tryAuthorized(authToken, ignored -> GameDAO.getInstance().updateGameBoard(gameID, serialize(game)));
     }
 }

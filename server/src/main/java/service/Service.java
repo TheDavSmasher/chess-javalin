@@ -26,8 +26,11 @@ public final class Service {
         throw new BadRequestException();
     }
 
-    public static <T> T tryAuthorized(String authToken, AuthorizedFunction<T> logic) throws ServiceException {
-        return tryCatch(() -> logic.call(UserService.validateAuth(authToken)));
+    public static <T> T tryAuthorized(String authToken, AuthorizedSupplier<T> logic) throws ServiceException {
+        return tryCatch(() -> {
+            UserService.validateAuth(authToken);
+            return logic.call();
+        });
     }
 
     public static void tryAuthorized(String authToken, AuthorizedConsumer logic) throws ServiceException {
@@ -43,8 +46,8 @@ public final class Service {
         void method() throws ServiceException, DataAccessException;
     }
 
-    public interface AuthorizedFunction<T> {
-        T call(String username) throws ServiceException, DataAccessException;
+    public interface AuthorizedSupplier<T> {
+        T call() throws ServiceException, DataAccessException;
     }
 
     public interface AuthorizedConsumer {

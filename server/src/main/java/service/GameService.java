@@ -14,7 +14,9 @@ import static service.Service.*;
 
 public class GameService {
     public static ListGamesResponse getAllGames(String authToken) throws ServiceException {
-        return tryAuthorized(authToken, ignored -> new ListGamesResponse(GameDAO.getInstance().listGames()));
+        return tryAuthorized(authToken, ignored -> {
+            return new ListGamesResponse(GameDAO.getInstance().listGames());
+        });
     }
 
     public static CreateGameResponse createGame(CreateGameRequest request, String authToken) throws ServiceException {
@@ -42,7 +44,6 @@ public class GameService {
             }
 
             gameDAO.updateGamePlayer(request.gameID(), color, username);
-            return null;
         });
     }
 
@@ -59,21 +60,19 @@ public class GameService {
                 throw new BadRequestException();
             }
             //If game is over, keep names for legacy
-            if (oldGame.game().isGameOver()) return null;
+            if (oldGame.game().isGameOver()) return;
             String color = switch (username) {
                 case String w when w.equals(oldGame.whiteUsername()) -> "WHITE";
                 case String b when b.equals(oldGame.blackUsername()) -> "BLACK";
                 default -> "";
             };
             gameDAO.updateGamePlayer(!color.isEmpty() ? gameID : -1, color, null);
-            return null;
         });
     }
 
     public static void updateGameState(String authToken, int gameID, ChessGame game) throws ServiceException {
         tryAuthorized(authToken, ignored -> {
             GameDAO.getInstance().updateGameBoard(gameID, serialize(game));
-            return null;
         });
     }
 }

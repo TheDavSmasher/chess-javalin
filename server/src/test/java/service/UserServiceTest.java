@@ -92,10 +92,8 @@ class UserServiceTest {
         Assertions.assertThrows(UnauthorizedException.class, () -> UserService.validateAuth(wrongToken));
 
         String authToken = UserService.register(enterRequest).authToken();
-        AuthData auth = UserService.validateAuth(authToken);
+        String authUser = UserService.validateAuth(authToken);
 
-        Assertions.assertNotNull(auth);
-        Assertions.assertEquals(username, auth.username());
-        Assertions.assertNotNull(auth.authToken());
+        Assertions.assertEquals(username, authUser);
     }
 }

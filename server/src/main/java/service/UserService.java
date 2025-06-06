@@ -46,7 +46,8 @@ public class UserService {
         });
     }
 
-    public static AuthData validateAuth(String authToken) throws ServiceException {
-        return tryCatch(() -> AuthDAO.getInstance().getAuth(authToken) instanceof AuthData auth ? auth : throwUnauthorized());
+    public static String validateAuth(String authToken) throws ServiceException {
+        return tryCatch(() -> AuthDAO.getInstance().getAuth(authToken) instanceof AuthData auth
+                ? auth.username() : throwUnauthorized());
     }
 }

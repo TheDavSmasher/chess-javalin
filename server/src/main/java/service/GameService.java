@@ -33,7 +33,7 @@ public class GameService {
 
     public static Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
         return tryCatch(() -> {
-            String username = UserService.validateAuth(authToken).username();
+            String username = UserService.validateAuth(authToken);
             GameDAO gameDAO = GameDAO.getInstance();
             GameData oldGame = gameDAO.getGame(request.gameID());
             if (request.playerColor() == null || oldGame == null) {
@@ -63,7 +63,7 @@ public class GameService {
     //WebSocket
     public static void leaveGame(String authToken, int gameID) throws ServiceException {
         tryCatch(() -> {
-            AuthData auth = UserService.validateAuth(authToken);
+            String username = UserService.validateAuth(authToken);
             GameDAO gameDAO = GameDAO.getInstance();
             GameData oldGame = gameDAO.getGame(gameID);
             if (oldGame == null) {
@@ -71,7 +71,7 @@ public class GameService {
             }
             //If game is over, keep names for legacy
             if (oldGame.game().isGameOver()) return null;
-            String color = switch (auth.username()) {
+            String color = switch (username) {
                 case String w when w.equals(oldGame.whiteUsername()) -> "WHITE";
                 case String b when b.equals(oldGame.blackUsername()) -> "BLACK";
                 default -> "";

@@ -1,6 +1,8 @@
-package server.websocket;
+package server.websocket.commands;
 
 import io.javalin.websocket.WsMessageContext;
+import server.websocket.ConnectionManager;
+import server.websocket.WSServer;
 import service.ServiceException;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.commands.UserGameCommand;

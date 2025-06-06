@@ -20,8 +20,7 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
     }
 
     protected String checkConnection(String authToken) throws WebsocketException {
-        Connection connection = connectionManager.getFromUsers(authToken);
-        if (connection == null) {
+        if (!(connectionManager.getFromUsers(authToken) instanceof Connection connection)) {
             throw new WebsocketException(UNAUTHORIZED);
         }
         return connection.username();

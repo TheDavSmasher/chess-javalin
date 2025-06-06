@@ -19,8 +19,9 @@ public class WSConnect extends WebSocketCommand<ConnectCommand> {
     @Override
     protected void execute(ConnectCommand command, Session session) throws ServiceException {
         AuthData auth = UserService.validateAuth(command.getAuthToken());
-        GameData data = GameService.getGame(command.getGameID());
-        if (data == null) throw new WebsocketException("Game does not exist.");
+        if (!(GameService.getGame(command.getGameID()) instanceof GameData data)) {
+            throw new WebsocketException("Game does not exist.");
+        }
 
         notifyGame(command.getGameID(), auth.username() + " is now observing the game.");
         connectionManager.addToGame(data, command.getAuthToken(), auth.username(), session);

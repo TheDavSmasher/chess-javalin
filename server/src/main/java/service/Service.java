@@ -3,7 +3,7 @@ package service;
 import dataaccess.DataAccessException;
 
 public final class Service {
-public interface EndpointCall<T> {
+    public interface EndpointCall<T> {
         T method() throws ServiceException, DataAccessException;
     }
 

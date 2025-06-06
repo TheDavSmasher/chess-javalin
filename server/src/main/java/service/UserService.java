@@ -12,35 +12,35 @@ import static service.Service.*;
 
 public class UserService {
     public static UserEnterResponse register(UserEnterRequest request) throws ServiceException {
-        return tryCatch(() -> {
-            throwIfInsufficient(request, true);
-
-            UserDAO userDAO = UserDAO.getInstance();
+        return enterUser(request, true, userDAO -> {
             if (userDAO.getUser(request.username()) != null) {
                 throw new PreexistingException();
             }
             userDAO.createUser(request.username(), request.password(), request.email());
-            return enterUser(request);
         });
     }
 
     public static UserEnterResponse login(UserEnterRequest request) throws ServiceException {
-        return tryCatch(() -> {
-            throwIfInsufficient(request, false);
-            return UserDAO.getInstance().getUser(request.username(), request.password()) == null
-                    ? throwUnauthorized() : enterUser(request);
+        return enterUser(request, false, userDAO -> {
+            if (userDAO.getUser(request.username(), request.password()) == null) {
+                throw new UnauthorizedException();
+            }
         });
     }
 
-    private static UserEnterResponse enterUser(UserEnterRequest request) throws DataAccessException {
-        AuthData authData = AuthDAO.getInstance().createAuth(request.username());
-        return new UserEnterResponse(authData.username(), authData.authToken());
+    private interface EnterLogic {
+        void enter(UserDAO userDAO) throws ServiceException, DataAccessException;
     }
 
-    private static void throwIfInsufficient(UserEnterRequest request, boolean checkEmail) throws ServiceException {
-        if (isBlank(request.username()) || isBlank(request.password()) || (checkEmail && isBlank(request.email()))) {
-            throw new BadRequestException();
-        }
+    private static UserEnterResponse enterUser(UserEnterRequest request, boolean checkEmail, EnterLogic logic) throws ServiceException {
+        return tryCatch(() -> {
+            if (isBlank(request.username()) || isBlank(request.password()) || (checkEmail && isBlank(request.email()))) {
+                throw new BadRequestException();
+            }
+            logic.enter(UserDAO.getInstance());
+            AuthData authData = AuthDAO.getInstance().createAuth(request.username());
+            return new UserEnterResponse(authData.username(), authData.authToken());
+        });
     }
 
     public static Void logout(String authToken) throws ServiceException {

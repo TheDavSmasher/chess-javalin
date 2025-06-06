@@ -17,6 +17,11 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
     public SQLGameDAO () throws DataAccessException {}
 
     @Override
+    protected String getTableName() {
+        return "games";
+    }
+
+    @Override
     public ArrayList<GameData> listGames() throws DataAccessException {
         return tryQuery("SELECT gameID, whiteUsername, blackUsername, gameName FROM games", rs -> {
             ArrayList<GameData> gameList = new ArrayList<>();
@@ -63,11 +68,6 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
     @Override
     public void updateGameBoard(int gameID, String gameJson) throws DataAccessException {
         tryUpdate("UPDATE games SET game=? WHERE gameID=?", SQLDAO::confirmUpdate, gameJson, gameID);
-    }
-
-    @Override
-    public void clear() throws DataAccessException {
-        tryUpdate("TRUNCATE games", SQLDAO::cleared);
     }
 
     public static GameDAO getInstance() throws DataAccessException {

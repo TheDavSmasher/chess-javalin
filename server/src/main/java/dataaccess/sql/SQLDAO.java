@@ -18,6 +18,12 @@ public abstract class SQLDAO {
         }
     }
 
+    public void clear() throws DataAccessException {
+        tryUpdate("TRUNCATE " + getTableName(), ignored -> {});
+    }
+
+    protected abstract String getTableName();
+
     protected static <T> T tryQuery(@Language("SQL") String sql, SqlQuery<T> query, Object... params) throws DataAccessException {
         try (PreparedStatement statement = getStatement(sql, params); ResultSet rs = statement.executeQuery()) {
             return query.execute(rs);
@@ -63,6 +69,4 @@ public abstract class SQLDAO {
             throw new DataAccessException("No rows were updated");
         }
     }
-
-    protected static void cleared(int ignored) {}
 }

@@ -11,6 +11,11 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
     public SQLUserDAO () throws DataAccessException {}
 
     @Override
+    protected String getTableName() {
+        return "users";
+    }
+
+    @Override
     public UserData getUser(String username) throws DataAccessException {
         return trySingleQuery("SELECT * FROM users WHERE username =?",
                 rs -> new UserData(
@@ -32,11 +37,6 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         tryUpdate("INSERT INTO users (username, password, email) VALUES (?, ?, ?)",
                 SQLDAO::confirmUpdate, username, hashedPassword, email);
-    }
-
-    @Override
-    public void clear() throws DataAccessException {
-        tryUpdate("TRUNCATE users", SQLDAO::cleared);
     }
 
     public static UserDAO getInstance() throws DataAccessException {

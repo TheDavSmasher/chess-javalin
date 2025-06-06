@@ -12,6 +12,11 @@ public class SQLAuthDAO extends SQLDAO implements AuthDAO {
     public SQLAuthDAO() throws DataAccessException {}
 
     @Override
+    protected String getTableName() {
+        return "auth";
+    }
+
+    @Override
     public AuthData getAuth(String token) throws DataAccessException {
         return trySingleQuery("SELECT * FROM auth WHERE authToken=?",
                 rs -> new AuthData(
@@ -30,11 +35,6 @@ public class SQLAuthDAO extends SQLDAO implements AuthDAO {
     @Override
     public void deleteAuth(String token) throws DataAccessException {
         tryUpdate("DELETE FROM auth WHERE authToken=?", SQLDAO::confirmUpdate, token);
-    }
-
-    @Override
-    public void clear() throws DataAccessException {
-        tryUpdate("TRUNCATE auth", SQLDAO::cleared);
     }
 
     public static AuthDAO getInstance() throws DataAccessException {

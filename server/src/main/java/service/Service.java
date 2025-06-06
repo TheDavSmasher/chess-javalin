@@ -20,4 +20,16 @@ public final class Service {
     public static <T> T throwUnauthorized() throws UnauthorizedException {
         throw new UnauthorizedException();
     }
+
+    public static <T> T throwBadRequest() throws BadRequestException {
+        throw new BadRequestException();
+    }
+
+    public interface AuthorizedCall<T> {
+        T call(String username) throws ServiceException, DataAccessException;
+    }
+
+    public static <T> T tryAuthorized(String authToken, AuthorizedCall<T> logic) throws ServiceException {
+        return tryCatch(() -> logic.call(UserService.validateAuth(authToken)));
+    }
 }

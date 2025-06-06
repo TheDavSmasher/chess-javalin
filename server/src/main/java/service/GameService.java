@@ -10,29 +10,20 @@ import model.response.ListGamesResponse;
 
 import static model.Serializer.serialize;
 import static org.eclipse.jetty.util.StringUtil.isEmpty;
-import static service.Service.tryCatch;
+import static service.Service.*;
 
 public class GameService {
     public static ListGamesResponse getAllGames(String authToken) throws ServiceException {
-        return tryCatch(() -> {
-            UserService.validateAuth(authToken);
-            return new ListGamesResponse(GameDAO.getInstance().listGames());
-        });
+        return tryAuthorized(authToken, ignored -> new ListGamesResponse(GameDAO.getInstance().listGames()));
     }
 
     public static CreateGameResponse createGame(CreateGameRequest request, String authToken) throws ServiceException {
-        return tryCatch(() -> {
-            UserService.validateAuth(authToken);
-            if (isEmpty(request.gameName())) {
-                throw new BadRequestException();
-            }
-            return new CreateGameResponse(GameDAO.getInstance().createGame(request.gameName()).gameID());
-        });
+        return tryAuthorized(authToken, ignored -> isEmpty(request.gameName()) ? throwBadRequest()
+                : new CreateGameResponse(GameDAO.getInstance().createGame(request.gameName()).gameID()));
     }
 
     public static Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
-        return tryCatch(() -> {
-            String username = UserService.validateAuth(authToken);
+        return tryAuthorized(authToken, username -> {
             GameDAO gameDAO = GameDAO.getInstance();
             GameData oldGame = gameDAO.getGame(request.gameID());
             if (request.playerColor() == null || oldGame == null) {
@@ -61,8 +52,7 @@ public class GameService {
 
     //WebSocket
     public static void leaveGame(String authToken, int gameID) throws ServiceException {
-        tryCatch(() -> {
-            String username = UserService.validateAuth(authToken);
+        tryAuthorized(authToken, username -> {
             GameDAO gameDAO = GameDAO.getInstance();
             GameData oldGame = gameDAO.getGame(gameID);
             if (oldGame == null) {
@@ -81,8 +71,7 @@ public class GameService {
     }
 
     public static void updateGameState(String authToken, int gameID, ChessGame game) throws ServiceException {
-        tryCatch(() -> {
-            UserService.validateAuth(authToken);
+        tryAuthorized(authToken, ignored -> {
             GameDAO.getInstance().updateGameBoard(gameID, serialize(game));
             return null;
         });

@@ -9,12 +9,9 @@ import java.sql.*;
 import static java.sql.Types.NULL;
 
 public abstract class SQLDAO {
-    private static boolean databaseConfigured = false;
-
-    protected SQLDAO() throws DataAccessException {
-        if (!databaseConfigured) {
-            DatabaseManager.configureDatabase();
-            databaseConfigured = true;
+    protected SQLDAO(boolean setupTable) throws DataAccessException {
+        if (setupTable) {
+            DatabaseManager.configureDatabaseTable(getTableSetup());
         }
     }
 
@@ -28,6 +25,9 @@ public abstract class SQLDAO {
     }
 
     protected abstract String getTableName();
+
+    @Language("SQL")
+    protected abstract String getTableSetup();
 
     protected static <T> T tryQuery(@Language("SQL") String sql, SqlQuery<T> query, Object... params) throws DataAccessException {
         try (PreparedStatement statement = getStatement(sql, params); ResultSet rs = statement.executeQuery()) {
@@ -52,7 +52,7 @@ public abstract class SQLDAO {
         }
     }
 
-    private static PreparedStatement getStatement(String sql, Object... params) throws DataAccessException, SQLException {
+    private static PreparedStatement getStatement(@Language("SQL") String sql, Object... params) throws DataAccessException, SQLException {
         Connection connection = DatabaseManager.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         for (int i = 0; i < params.length;) {

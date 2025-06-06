@@ -13,8 +13,12 @@ import static model.Serializer.serialize;
 
 public class SQLGameDAO extends SQLDAO implements GameDAO {
     private static SQLGameDAO instance;
+    private static boolean tableCreated = false;
 
-    public SQLGameDAO () throws DataAccessException {}
+    public SQLGameDAO () throws DataAccessException {
+        super(!tableCreated);
+        tableCreated = true;
+    }
 
     @Override
     protected String getTableName() {
@@ -67,6 +71,21 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
     @Override
     public void updateGameBoard(int gameID, String gameJson) throws DataAccessException {
         tryUpdate("UPDATE games SET game=? WHERE gameID=?", SQLDAO::confirmUpdate, gameJson, gameID);
+    }
+
+    @Override
+    protected String getTableSetup() {
+        return """
+                CREATE TABLE IF NOT EXISTS games (
+                  `gameID` int NOT NULL AUTO_INCREMENT,
+                  `whiteUsername` varchar(255),
+                  `blackUsername` varchar(255),
+                  `gameName` varchar(255) NOT NULL,
+                  `game` TEXT NOT NULL,
+                  PRIMARY KEY (`gameID`),
+                  INDEX (`gameName`)
+                )
+                """;
     }
 
     public static GameDAO getInstance() throws DataAccessException {

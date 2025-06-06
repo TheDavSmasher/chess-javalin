@@ -7,8 +7,12 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class SQLUserDAO extends SQLDAO implements UserDAO {
     private static SQLUserDAO instance;
+    private static boolean tableCreated = false;
 
-    public SQLUserDAO () throws DataAccessException {}
+    public SQLUserDAO () throws DataAccessException {
+        super(!tableCreated);
+        tableCreated = true;
+    }
 
     @Override
     protected String getTableName() {
@@ -36,6 +40,19 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         tryUpdate("INSERT INTO users (username, password, email) VALUES (?, ?, ?)",
                 SQLDAO::confirmUpdate, username, hashedPassword, email);
+    }
+
+    @Override
+    protected String getTableSetup() {
+        return """
+                CREATE TABLE IF NOT EXISTS users (
+                  `username` varchar(255) NOT NULL,
+                  `password` varchar(255) NOT NULL,
+                  `email` varchar(255) NOT NULL,
+                  PRIMARY KEY (`username`),
+                  INDEX (`username`)
+                )
+                """;
     }
 
     public static UserDAO getInstance() throws DataAccessException {

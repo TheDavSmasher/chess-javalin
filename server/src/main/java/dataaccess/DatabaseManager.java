@@ -1,16 +1,18 @@
 package dataaccess;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import org.intellij.lang.annotations.Language;
+
+import java.sql.*;
 import java.util.Properties;
+
+import static java.sql.Types.NULL;
 
 public class DatabaseManager {
     private static String databaseName;
     private static String dbUsername;
     private static String dbPassword;
     private static String connectionUrl;
+    private static boolean databaseExists;
 
     /*
      * Load the database information for the db.properties file.
@@ -23,6 +25,7 @@ public class DatabaseManager {
      * Creates the database if it does not already exist.
      */
     static public void createDatabase() throws DataAccessException {
+        if (databaseExists) return;
         var statement = "CREATE DATABASE IF NOT EXISTS " + databaseName;
         try (var conn = DriverManager.getConnection(connectionUrl, dbUsername, dbPassword);
              var preparedStatement = conn.prepareStatement(statement)) {
@@ -30,6 +33,7 @@ public class DatabaseManager {
         } catch (SQLException ex) {
             throw new DataAccessException("failed to create database", ex);
         }
+        databaseExists = true;
     }
 
     /**
@@ -78,56 +82,26 @@ public class DatabaseManager {
         connectionUrl = String.format("jdbc:mysql://%s:%d", host, port);
     }
 
-    public static void configureDatabase() throws DataAccessException {
-        DatabaseManager.createDatabase();
+    public static void configureDatabaseTable(@Language("SQL") String statement) throws DataAccessException {
+        createDatabase();
 
-        String[] createStatements = {
-                """
-                CREATE TABLE IF NOT EXISTS auth (
-                  `authToken` varchar(255) NOT NULL,
-                  `username` varchar(255) NOT NULL,
-                  PRIMARY KEY (`authToken`),
-                  INDEX (username)
-                )
-                """,
-                """
-                CREATE TABLE IF NOT EXISTS users (
-                  `username` varchar(255) NOT NULL,
-                  `password` varchar(255) NOT NULL,
-                  `email` varchar(255) NOT NULL,
-                  PRIMARY KEY (`username`),
-                  INDEX (`username`)
-                )
-                """,
-                """
-                CREATE TABLE IF NOT EXISTS games (
-                  `gameID` int NOT NULL AUTO_INCREMENT,
-                  `whiteUsername` varchar(255),
-                  `blackUsername` varchar(255),
-                  `gameName` varchar(255) NOT NULL,
-                  `game` TEXT NOT NULL,
-                  PRIMARY KEY (`gameID`),
-                  INDEX (`gameName`)
-                )
-                """
-        };
-
-        Connection connection = null;
-        try (Connection c = DatabaseManager.getConnection()) {
-            connection = c;
-            connection.setAutoCommit(false);
-            for (String statement : createStatements) {
-                try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-            connection.commit();
+        try (PreparedStatement preparedStatement = getStatement(statement)) {
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ignored) {
-            }
-            throw new DataAccessException("could not configure database", e);
+            throw new DataAccessException("could not configure database table", e);
         }
+    }
+
+    private static PreparedStatement getStatement(String sql, Object... params) throws DataAccessException, SQLException {
+        Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        for (int i = 0; i < params.length;) {
+            switch (params[i]) {
+                case String s -> statement.setString(++i, s);
+                case Integer s -> statement.setInt(++i, s);
+                default -> statement.setNull(++i, NULL);
+            }
+        }
+        return statement;
     }
 }

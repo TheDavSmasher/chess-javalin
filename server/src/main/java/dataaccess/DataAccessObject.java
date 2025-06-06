@@ -9,11 +9,12 @@ import dataaccess.sql.SQLUserDAO;
 import model.dataaccess.AuthData;
 import model.dataaccess.GameData;
 import model.dataaccess.UserData;
-import service.Service;
 
 import java.util.ArrayList;
 
 public interface DataAccessObject {
+    boolean UseSQL = true;
+
     interface ChessDAO {
         void clear() throws DataAccessException;
     }
@@ -23,7 +24,7 @@ public interface DataAccessObject {
         AuthData createAuth(String username) throws DataAccessException;
         void deleteAuth(String token) throws DataAccessException;
         static AuthDAO getInstance() throws DataAccessException {
-            return Service.UseSQL ? SQLAuthDAO.getInstance() : MemoryAuthDAO.getInstance();
+            return UseSQL ? SQLAuthDAO.getInstance() : MemoryAuthDAO.getInstance();
         }
     }
 
@@ -32,7 +33,7 @@ public interface DataAccessObject {
         UserData getUser(String username, String password) throws DataAccessException;
         void createUser(String username, String password, String email) throws DataAccessException;
         static UserDAO getInstance() throws DataAccessException {
-            return Service.UseSQL ? SQLUserDAO.getInstance() : MemoryUserDAO.getInstance();
+            return UseSQL ? SQLUserDAO.getInstance() : MemoryUserDAO.getInstance();
         }
     }
 
@@ -43,7 +44,7 @@ public interface DataAccessObject {
         void updateGamePlayer(int gameID, String color, String username) throws DataAccessException;
         void updateGameBoard(int gameID, String gameJson) throws DataAccessException;
         static GameDAO getInstance() throws DataAccessException {
-            return Service.UseSQL ? SQLGameDAO.getInstance() : MemoryGameDAO.getInstance();
+            return UseSQL ? SQLGameDAO.getInstance() : MemoryGameDAO.getInstance();
         }
     }
 }

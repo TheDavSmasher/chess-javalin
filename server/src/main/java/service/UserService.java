@@ -30,8 +30,7 @@ public class UserService {
             if (UserDAO.getInstance().getUser(request.username(), request.password()) == null) {
                 throw new UnauthorizedException();
             }
-            AuthData newAuth = AuthDAO.getInstance().createAuth(request.username());
-            return new UserEnterResponse(newAuth.username(), newAuth.authToken());
+            return UserEnterResponse.fromAuth(AuthDAO.getInstance().createAuth(request.username()));
         });
     }
 

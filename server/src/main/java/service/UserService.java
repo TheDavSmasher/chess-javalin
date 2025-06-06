@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.AuthDAO;
+import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
 import model.dataaccess.AuthData;
 import model.request.UserEnterRequest;
@@ -19,7 +20,7 @@ public class UserService {
                 throw new PreexistingException();
             }
             userDAO.createUser(request.username(), request.password(), request.email());
-            return login(request);
+            return enterUser(request);
         });
     }
 
@@ -27,9 +28,13 @@ public class UserService {
         return tryCatch(() -> {
             throwIfInsufficient(request, false);
             return UserDAO.getInstance().getUser(request.username(), request.password()) == null
-                    ? throwUnauthorized()
-                    : UserEnterResponse.fromAuth(AuthDAO.getInstance().createAuth(request.username()));
+                    ? throwUnauthorized() : enterUser(request);
         });
+    }
+
+    private static UserEnterResponse enterUser(UserEnterRequest request) throws DataAccessException {
+        AuthData authData = AuthDAO.getInstance().createAuth(request.username());
+        return new UserEnterResponse(authData.username(), authData.authToken());
     }
 
     private static void throwIfInsufficient(UserEnterRequest request, boolean checkEmail) throws ServiceException {

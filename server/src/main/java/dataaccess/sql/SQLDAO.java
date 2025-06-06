@@ -16,7 +16,7 @@ public abstract class SQLDAO implements ChessDAO {
         try (PreparedStatement preparedStatement = getStatement(getTableSetup())) {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataAccessException("could not configure database table", e);
+            throw new DataAccessException("could not configure database table " + getTableName(), e);
         }
     }
 

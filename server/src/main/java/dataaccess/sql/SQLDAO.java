@@ -22,6 +22,11 @@ public abstract class SQLDAO {
         tryUpdate("TRUNCATE " + getTableName(), ignored -> {});
     }
 
+    protected <T> T trySingleQuery(String whereCol, Object whereVal, SqlQuery<T> query) throws DataAccessException {
+        return tryQuery("SELECT * FROM " + getTableName() + " WHERE " + whereCol + "=?",
+                rs -> rs.next() ? query.execute(rs) : null, whereVal);
+    }
+
     protected abstract String getTableName();
 
     protected static <T> T tryQuery(@Language("SQL") String sql, SqlQuery<T> query, Object... params) throws DataAccessException {
@@ -30,11 +35,6 @@ public abstract class SQLDAO {
         } catch (SQLException e) {
             throw new DataAccessException("could not execute query", e);
         }
-    }
-
-    protected <T> T trySingleQuery(String whereCol, Object whereVal, SqlQuery<T> query) throws DataAccessException {
-        return tryQuery("SELECT * FROM " + getTableName() + " WHERE " + whereCol + "=?",
-                rs -> rs.next() ? query.execute(rs) : null, whereVal);
     }
 
     protected static void tryUpdate(@Language("SQL") String sql, SqlUpdate update, Object... params) throws DataAccessException {

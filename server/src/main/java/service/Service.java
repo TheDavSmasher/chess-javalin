@@ -5,6 +5,10 @@ import dataaccess.DataAccessException;
 public final class Service {
     public static final boolean UseSQL = true;
 
+    public interface EndpointCall<T> {
+        T method() throws ServiceException, DataAccessException;
+    }
+
     public static <T> T tryCatch(EndpointCall<T> call) throws ServiceException {
         try {
             return call.method();

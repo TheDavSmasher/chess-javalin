@@ -34,12 +34,20 @@ public abstract class SQLDAO implements ChessDAO {
     @Language("SQL")
     protected abstract String getTableSetup();
 
+    public interface SqlQuery<T> {
+        T execute(ResultSet resultSet) throws SQLException, DataAccessException;
+    }
+
     protected static <T> T tryQuery(@Language("SQL") String sql, SqlQuery<T> query, Object... params) throws DataAccessException {
         try (PreparedStatement statement = getStatement(sql, params); ResultSet rs = statement.executeQuery()) {
             return query.execute(rs);
         } catch (SQLException e) {
             throw new DataAccessException("could not execute query", e);
         }
+    }
+
+    public interface SqlUpdate {
+        void execute(int updated) throws SQLException, DataAccessException;
     }
 
     protected static void tryUpdate(@Language("SQL") String sql, SqlUpdate update, Object... params) throws DataAccessException {

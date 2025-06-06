@@ -1,5 +1,6 @@
 package dataaccess.sql;
 
+import dataaccess.ChessDAO;
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
 import org.intellij.lang.annotations.Language;
@@ -8,7 +9,7 @@ import java.sql.*;
 
 import static java.sql.Types.NULL;
 
-public abstract class SQLDAO {
+public abstract class SQLDAO implements ChessDAO {
     protected SQLDAO(boolean tableExists) throws DataAccessException {
         if (tableExists) return;
         DatabaseManager.createDatabase();

@@ -22,8 +22,8 @@ public class GameService {
                 : new CreateGameResponse(GameDAO.getInstance().createGame(request.gameName()).gameID()));
     }
 
-    public static Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
-        return tryAuthorized(authToken, username -> {
+    public static void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
+        tryAuthorized(authToken, username -> {
             GameDAO gameDAO = GameDAO.getInstance();
             GameData oldGame = gameDAO.getGame(request.gameID());
             if (request.playerColor() == null || oldGame == null) {

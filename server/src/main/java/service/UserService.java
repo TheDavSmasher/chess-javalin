@@ -42,11 +42,10 @@ public class UserService {
         });
     }
 
-    public static Void logout(String authToken) throws ServiceException {
-        return tryCatch(() -> {
+    public static void logout(String authToken) throws ServiceException {
+        tryCatch(() -> {
             validateAuth(authToken);
             AuthDAO.getInstance().deleteAuth(authToken);
-            return null;
         });
     }
 

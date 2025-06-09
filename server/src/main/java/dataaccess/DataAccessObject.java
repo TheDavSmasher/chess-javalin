@@ -1,15 +1,8 @@
 package dataaccess;
 
-import dataaccess.memory.MemoryAuthDAO;
-import dataaccess.memory.MemoryGameDAO;
-import dataaccess.memory.MemoryUserDAO;
-import dataaccess.sql.SQLAuthDAO;
-import dataaccess.sql.SQLGameDAO;
-import dataaccess.sql.SQLUserDAO;
-import model.dataaccess.AuthData;
-import model.dataaccess.GameData;
-import model.dataaccess.UserData;
-
+import dataaccess.memory.*;
+import dataaccess.sql.*;
+import model.dataaccess.*;
 import java.util.ArrayList;
 
 public interface DataAccessObject {

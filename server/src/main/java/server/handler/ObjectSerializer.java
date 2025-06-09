@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class ObjectSerializer<T> implements Handler {
     public void handle(@NotNull Context context) throws ServiceException {
-        context.contentType("application/json").status(HttpStatus.OK).json(serviceHandle(context));
+        context.contentType("application/json").status(HttpStatus.OK).json(serviceHandle(context) instanceof T res ? res : "");
     }
 
     protected abstract T serviceHandle(Context context) throws ServiceException;

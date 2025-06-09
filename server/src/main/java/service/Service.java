@@ -1,19 +1,21 @@
 package service;
 
 import dataaccess.DataAccessException;
-import dataaccess.DataAccessObject.*;
+import dataaccess.DataAccessObject;
+import dataaccess.memory.*;
+import dataaccess.sql.*;
 
 public abstract class Service {
-    protected static AuthDAO authDAO() throws DataAccessException {
-        return AuthDAO.getInstance();
+    protected static DataAccessObject.AuthDAO authDAO() throws DataAccessException {
+        return DataAccessObject.UseSQL ? SQLAuthDAO.getInstance() : MemoryAuthDAO.getInstance();
     }
 
-    protected static UserDAO userDAO() throws DataAccessException {
-        return UserDAO.getInstance();
+    protected static DataAccessObject.UserDAO userDAO() throws DataAccessException {
+        return DataAccessObject.UseSQL ? SQLUserDAO.getInstance() : MemoryUserDAO.getInstance();
     }
 
-    protected static GameDAO gameDAO() throws DataAccessException {
-        return GameDAO.getInstance();
+    protected static DataAccessObject.GameDAO gameDAO() throws DataAccessException {
+        return DataAccessObject.UseSQL ? SQLGameDAO.getInstance() : MemoryGameDAO.getInstance();
     }
 
     protected interface EndpointSupplier<T> {

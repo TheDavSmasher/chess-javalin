@@ -43,7 +43,10 @@ public class UserService {
     }
 
     public static void logout(String authToken) throws ServiceException {
-        tryAuthorized(authToken, ignored -> AuthDAO.getInstance().deleteAuth(authToken));
+        tryAuthorized(authToken, ignored -> {
+            AuthDAO.getInstance().deleteAuth(authToken);
+            return null;
+        });
     }
 
     public static String validateAuth(String authToken) throws ServiceException {

@@ -20,17 +20,7 @@ public final class Service {
     }
 
     public static <T> T tryAuthorized(String authToken, AuthorizedSupplier<T> logic) throws ServiceException {
-        return tryCatch(() -> {
-            UserService.validateAuth(authToken);
-            return logic.call();
-        });
-    }
-
-    public static void tryAuthorized(String authToken, AuthorizedConsumer logic) throws ServiceException {
-        tryCatch(() -> {
-            logic.call(UserService.validateAuth(authToken));
-            return null;
-        });
+        return tryCatch(() -> logic.call(UserService.validateAuth(authToken)));
     }
 
     //region Interfaces
@@ -39,11 +29,7 @@ public final class Service {
     }
 
     public interface AuthorizedSupplier<T> {
-        T call() throws ServiceException, DataAccessException;
-    }
-
-    public interface AuthorizedConsumer {
-        void call(String username) throws ServiceException, DataAccessException;
+        T call(String username) throws ServiceException, DataAccessException;
     }
     //endregion
 }

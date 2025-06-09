@@ -14,11 +14,11 @@ import static service.Service.*;
 
 public class GameService {
     public static ListGamesResponse getAllGames(String authToken) throws ServiceException {
-        return tryAuthorized(authToken, () -> new ListGamesResponse(GameDAO.getInstance().listGames()));
+        return tryAuthorized(authToken, ignored -> new ListGamesResponse(GameDAO.getInstance().listGames()));
     }
 
     public static CreateGameResponse createGame(CreateGameRequest request, String authToken) throws ServiceException {
-        return tryAuthorized(authToken, () -> isEmpty(request.gameName()) ? throwBadRequest()
+        return tryAuthorized(authToken, ignored -> isEmpty(request.gameName()) ? throwBadRequest()
                 : new CreateGameResponse(GameDAO.getInstance().createGame(request.gameName()).gameID()));
     }
 
@@ -41,6 +41,7 @@ public class GameService {
             }
 
             GameDAO.getInstance().updateGamePlayer(request.gameID(), color, username);
+            return null;
         });
     }
 
@@ -56,17 +57,21 @@ public class GameService {
                 throw new BadRequestException();
             }
             //If game is over, keep names for legacy
-            if (oldGame.game().isGameOver()) return;
+            if (oldGame.game().isGameOver()) return null;
             String color = switch (username) {
                 case String w when w.equals(oldGame.whiteUsername()) -> "WHITE";
                 case String b when b.equals(oldGame.blackUsername()) -> "BLACK";
                 default -> "";
             };
             GameDAO.getInstance().updateGamePlayer(!color.isEmpty() ? gameID : -1, color, null);
+            return null;
         });
     }
 
     public static void updateGameState(String authToken, int gameID, ChessGame game) throws ServiceException {
-        tryAuthorized(authToken, ignored -> GameDAO.getInstance().updateGameBoard(gameID, serialize(game)));
+        tryAuthorized(authToken, ignored -> {
+            GameDAO.getInstance().updateGameBoard(gameID, serialize(game));
+            return null;
+        });
     }
 }

@@ -8,7 +8,7 @@ import model.response.CreateGameResponse;
 import model.response.ListGamesResponse;
 
 import static model.Serializer.serialize;
-import static org.eclipse.jetty.util.StringUtil.isEmpty;
+import static org.eclipse.jetty.util.StringUtil.isBlank;
 import static service.UserService.tryAuthorized;
 
 public class GameService extends Service {
@@ -17,7 +17,7 @@ public class GameService extends Service {
     }
 
     public static CreateGameResponse createGame(CreateGameRequest request, String authToken) throws ServiceException {
-        return tryAuthorized(authToken, () -> isEmpty(request.gameName()) ? throwBadRequest()
+        return tryAuthorized(authToken, () -> isBlank(request.gameName()) ? throwBadRequest()
                 : new CreateGameResponse(gameDAO().createGame(request.gameName()).gameID()));
     }
 

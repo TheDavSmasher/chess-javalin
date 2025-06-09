@@ -34,8 +34,7 @@ public class GameService extends Service {
             })) {
                 throw new PreexistingException();
             }
-
-            gameDAO().updateGamePlayer(request.gameID(), color, username);
+            updateGamePlayer(request.gameID(), color, username);
         });
     }
 
@@ -56,7 +55,7 @@ public class GameService extends Service {
                 case String b when b.equals(oldGame.blackUsername()) -> "BLACK";
                 default -> "";
             };
-            gameDAO().updateGamePlayer(!color.isEmpty() ? gameID : -1, color, null);
+            updateGamePlayer(gameID, color, null);
         });
     }
 
@@ -65,7 +64,12 @@ public class GameService extends Service {
     }
     //endregion
 
-    private void updateGamePlayer(int gameID, String playerColor) throws ServiceException {
-
+    private static void updateGamePlayer(int gameID, String playerColor, String username) throws ServiceException {
+        tryCatch(() -> {
+            if (!playerColor.isEmpty()) {
+                gameDAO().updateGamePlayer(gameID, playerColor, username);
+            }
+            return null;
+        });
     }
 }

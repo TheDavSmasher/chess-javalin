@@ -23,7 +23,7 @@ public class GameService extends Service {
 
     public static Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
         return tryAuthorized(authToken, username -> {
-            GameData oldGame = gameDAO().getGame(request.gameID());
+            GameData oldGame = getGame(request.gameID());
             if (request.playerColor() == null || oldGame == null) {
                 throw new BadRequestException();
             }
@@ -47,10 +47,10 @@ public class GameService extends Service {
         return tryCatch(() -> gameDAO().getGame(gameID));
     }
 
-    //WebSocket
+    //region WebSocket
     public static void leaveGame(String authToken, int gameID) throws ServiceException {
         tryAuthorized(authToken, username -> {
-            GameData oldGame = gameDAO().getGame(gameID);
+            GameData oldGame = getGame(gameID);
             if (oldGame == null) {
                 throw new BadRequestException();
             }
@@ -67,5 +67,10 @@ public class GameService extends Service {
 
     public static void updateGameState(String authToken, int gameID, ChessGame game) throws ServiceException {
         tryAuthorized(authToken, ignored -> gameDAO().updateGameBoard(gameID, serialize(game)));
+    }
+    //endregion
+
+    private void updateGamePlayer(int gameID, String playerColor) throws ServiceException {
+
     }
 }

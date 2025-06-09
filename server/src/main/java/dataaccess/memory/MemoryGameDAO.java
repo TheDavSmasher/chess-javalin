@@ -41,7 +41,7 @@ public class MemoryGameDAO implements GameDAO {
     public void updateGamePlayer(int gameID, String color, String username) {
         GameData oldGame = getGame(gameID);
         deleteGame(gameID);
-        if (color.equals("WHITE")) {
+        if (color.equalsIgnoreCase("WHITE")) {
             data.add(new GameData(oldGame.gameID(), username, oldGame.blackUsername(), oldGame.gameName(), oldGame.game()));
         } else {
             data.add(new GameData(oldGame.gameID(), oldGame.whiteUsername(), username, oldGame.gameName(), oldGame.game()));

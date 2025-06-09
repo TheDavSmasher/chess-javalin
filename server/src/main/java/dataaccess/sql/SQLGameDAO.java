@@ -64,8 +64,8 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
 
     @Override
     public void updateGamePlayer(int gameID, String color, String username) throws DataAccessException {
-        tryUpdate("UPDATE games SET "+ (color.equals("WHITE") ? "whiteUsername" : "blackUsername") +"=? WHERE gameID=?",
-                SQLDAO::confirmUpdate, username, gameID);
+        tryUpdate("UPDATE games SET " + (color.equalsIgnoreCase("WHITE") ? "white" : "black")
+                        + "Username=? WHERE gameID=?", SQLDAO::confirmUpdate, username, gameID);
     }
 
     @Override

@@ -8,7 +8,7 @@ public class MemoryUserDAO implements UserDAO {
     static MemoryUserDAO instance;
     private final HashSet<UserData> data;
 
-    MemoryUserDAO() {
+    private MemoryUserDAO() {
         data = new HashSet<>();
     }
 

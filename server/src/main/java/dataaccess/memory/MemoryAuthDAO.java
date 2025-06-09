@@ -11,10 +11,10 @@ public class MemoryAuthDAO implements AuthDAO {
     static MemoryAuthDAO instance;
     private final HashSet<AuthData> data;
 
-    MemoryAuthDAO() {
+    private MemoryAuthDAO() {
         data = new HashSet<>();
-
     }
+
     @Override
     public AuthData getAuth(String token) {
         for (AuthData auth : data) {

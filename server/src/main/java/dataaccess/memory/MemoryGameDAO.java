@@ -11,9 +11,10 @@ public class MemoryGameDAO implements GameDAO {
     static MemoryGameDAO instance;
     private final HashSet<GameData> data;
 
-    MemoryGameDAO() {
+    private MemoryGameDAO() {
         data = new HashSet<>();
     }
+
     @Override
     public ArrayList<GameData> listGames() {
         ArrayList<GameData> gameList = new ArrayList<>();

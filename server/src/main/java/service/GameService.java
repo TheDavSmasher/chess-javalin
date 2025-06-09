@@ -50,12 +50,12 @@ public class GameService extends Service {
             }
             //If game is over, keep names for legacy
             if (oldGame.game().isGameOver()) return;
-            String color = switch (username) {
+
+            updateGamePlayer(gameID, switch (username) {
                 case String w when w.equals(oldGame.whiteUsername()) -> "WHITE";
                 case String b when b.equals(oldGame.blackUsername()) -> "BLACK";
                 default -> "";
-            };
-            updateGamePlayer(gameID, color, null);
+            }, null);
         });
     }
 

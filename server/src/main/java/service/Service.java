@@ -2,8 +2,8 @@ package service;
 
 import dataaccess.DataAccessException;
 
-public final class Service {
-    public static <T> T tryCatch(EndpointSupplier<T> call) throws ServiceException {
+public abstract class Service {
+    protected static <T> T tryCatch(EndpointSupplier<T> call) throws ServiceException {
         try {
             return call.method();
         } catch (DataAccessException e) {
@@ -11,25 +11,25 @@ public final class Service {
         }
     }
 
-    public static <T> T tryAuthorized(String authToken, AuthorizedSupplier<T> logic) throws ServiceException {
+    protected static <T> T tryAuthorized(String authToken, AuthorizedSupplier<T> logic) throws ServiceException {
         return tryCatch(() -> logic.call(UserService.validateAuth(authToken)));
     }
 
     //region Interfaces
-    public interface EndpointSupplier<T> {
+    protected interface EndpointSupplier<T> {
         T method() throws ServiceException, DataAccessException;
     }
 
-    public interface AuthorizedSupplier<T> {
+    protected interface AuthorizedSupplier<T> {
         T call(String username) throws ServiceException, DataAccessException;
     }
     //endregion
 
-    public static <T> T throwUnauthorized() throws UnauthorizedException {
+    protected static <T> T throwUnauthorized() throws UnauthorizedException {
         throw new UnauthorizedException();
     }
 
-    public static <T> T throwBadRequest() throws BadRequestException {
+    protected static <T> T throwBadRequest() throws BadRequestException {
         throw new BadRequestException();
     }
 }

@@ -7,9 +7,8 @@ import model.response.UserEnterResponse;
 import dataaccess.DataAccessObject.*;
 
 import static org.eclipse.jetty.util.StringUtil.isBlank;
-import static service.Service.*;
 
-public class UserService {
+public class UserService extends Service {
     public static UserEnterResponse register(UserEnterRequest request) throws ServiceException {
         return enterUser(request, true, () -> {
             if (UserDAO.getInstance().getUser(request.username()) != null) {

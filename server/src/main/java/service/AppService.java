@@ -1,9 +1,8 @@
 package service;
 
-import static service.Service.tryCatch;
 import dataaccess.DataAccessObject.*;
 
-public class AppService {
+public class AppService extends Service {
     public static Void clearData() throws ServiceException {
         return tryCatch(() -> {
             AuthDAO.getInstance().clear();

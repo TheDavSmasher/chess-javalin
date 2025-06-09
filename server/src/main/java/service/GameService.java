@@ -10,9 +10,8 @@ import model.response.ListGamesResponse;
 
 import static model.Serializer.serialize;
 import static org.eclipse.jetty.util.StringUtil.isEmpty;
-import static service.Service.*;
 
-public class GameService {
+public class GameService extends Service {
     public static ListGamesResponse getAllGames(String authToken) throws ServiceException {
         return tryAuthorized(authToken, ignored -> new ListGamesResponse(GameDAO.getInstance().listGames()));
     }

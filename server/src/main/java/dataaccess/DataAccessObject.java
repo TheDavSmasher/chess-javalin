@@ -4,8 +4,6 @@ import model.dataaccess.*;
 import java.util.ArrayList;
 
 public interface DataAccessObject {
-    boolean UseSQL = true;
-
     interface ChessDAO {
         void clear() throws DataAccessException;
     }

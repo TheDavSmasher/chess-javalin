@@ -1,22 +1,26 @@
 package service;
 
 import dataaccess.DataAccessException;
-import dataaccess.DataAccessObject;
+import dataaccess.DataAccessObject.*;
 import dataaccess.memory.*;
 import dataaccess.sql.*;
 
 public abstract class Service {
-    protected static DataAccessObject.AuthDAO authDAO() throws DataAccessException {
-        return DataAccessObject.UseSQL ? SQLAuthDAO.getInstance() : MemoryAuthDAO.getInstance();
+    //region DAO access
+    private static final boolean USE_SQL = true;
+
+    protected static AuthDAO authDAO() throws DataAccessException {
+        return USE_SQL ? SQLAuthDAO.getInstance() : MemoryAuthDAO.getInstance();
     }
 
-    protected static DataAccessObject.UserDAO userDAO() throws DataAccessException {
-        return DataAccessObject.UseSQL ? SQLUserDAO.getInstance() : MemoryUserDAO.getInstance();
+    protected static UserDAO userDAO() throws DataAccessException {
+        return USE_SQL ? SQLUserDAO.getInstance() : MemoryUserDAO.getInstance();
     }
 
-    protected static DataAccessObject.GameDAO gameDAO() throws DataAccessException {
-        return DataAccessObject.UseSQL ? SQLGameDAO.getInstance() : MemoryGameDAO.getInstance();
+    protected static GameDAO gameDAO() throws DataAccessException {
+        return USE_SQL ? SQLGameDAO.getInstance() : MemoryGameDAO.getInstance();
     }
+    //endregion
 
     protected interface EndpointSupplier<T> {
         T method() throws ServiceException, DataAccessException;

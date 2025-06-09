@@ -34,7 +34,7 @@ public class GameService extends Service {
             String color = getValidParameters(request.playerColor());
             GameData oldGame = getGame(request.gameID());
 
-            if (!username.equals(getValidParameters(playerColor(oldGame, color.toUpperCase(), false)))) {
+            if (!username.equals(getValidParameters(playerColor(oldGame, color, false)))) {
                 throw new PreexistingException();
             }
             updateGamePlayer(request.gameID(), color, username);
@@ -64,8 +64,8 @@ public class GameService extends Service {
             if (player.equals(data.whiteUsername())) return "WHITE";
             if (player.equals(data.blackUsername())) return "BLACK";
         } else {
-            if (player.equals("WHITE")) return data.whiteUsername();
-            if (player.equals("BLACK")) return data.blackUsername();
+            if (player.equalsIgnoreCase("WHITE")) return data.whiteUsername();
+            if (player.equalsIgnoreCase("BLACK")) return data.blackUsername();
         }
         return null;
     }

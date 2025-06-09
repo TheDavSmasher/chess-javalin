@@ -6,16 +6,18 @@ import dataaccess.memory.*;
 import dataaccess.sql.*;
 
 public abstract class Service {
+    private static final boolean USE_SQL = true;
+
     protected static DataAccessObject.AuthDAO authDAO() throws DataAccessException {
-        return DataAccessObject.UseSQL ? SQLAuthDAO.getInstance() : MemoryAuthDAO.getInstance();
+        return USE_SQL ? SQLAuthDAO.getInstance() : MemoryAuthDAO.getInstance();
     }
 
     protected static DataAccessObject.UserDAO userDAO() throws DataAccessException {
-        return DataAccessObject.UseSQL ? SQLUserDAO.getInstance() : MemoryUserDAO.getInstance();
+        return USE_SQL ? SQLUserDAO.getInstance() : MemoryUserDAO.getInstance();
     }
 
     protected static DataAccessObject.GameDAO gameDAO() throws DataAccessException {
-        return DataAccessObject.UseSQL ? SQLGameDAO.getInstance() : MemoryGameDAO.getInstance();
+        return USE_SQL ? SQLGameDAO.getInstance() : MemoryGameDAO.getInstance();
     }
 
     protected interface EndpointSupplier<T> {

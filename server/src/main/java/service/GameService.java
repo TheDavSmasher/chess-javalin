@@ -6,6 +6,8 @@ import model.request.CreateGameRequest;
 import model.request.JoinGameRequest;
 import model.response.CreateGameResponse;
 import model.response.ListGamesResponse;
+import websocket.commands.LeaveCommand;
+import websocket.commands.UserGameCommand;
 
 import static model.Serializer.serialize;
 import static service.UserService.tryAuthorized;
@@ -42,19 +44,19 @@ public class GameService extends Service {
     }
 
     //region WebSocket
-    public static void leaveGame(String authToken, int gameID) throws ServiceException {
-        tryAuthorized(authToken, username -> {
-            GameData oldGame = getGame(gameID);
+    public static void leaveGame(LeaveCommand command) throws ServiceException {
+        tryAuthorized(command.getAuthToken(), username -> {
+            GameData oldGame = getGame(command.getGameID());
             String color = playerColor(oldGame, username, true);
 
             if (oldGame.game().isGameOver()) return; //If game is over, keep names for legacy
 
-            updateGamePlayer(gameID, color, null);
+            updateGamePlayer(command.getGameID(), color, null);
         });
     }
 
-    public static void updateGameState(String authToken, int gameID, ChessGame game) throws ServiceException {
-        tryAuthorized(authToken, ignored -> gameDAO().updateGameBoard(gameID, serialize(game)));
+    public static void updateGameState(UserGameCommand command, ChessGame game) throws ServiceException {
+        tryAuthorized(command.getAuthToken(), ignored -> gameDAO().updateGameBoard(command.getGameID(), serialize(game)));
     }
     //endregion
 

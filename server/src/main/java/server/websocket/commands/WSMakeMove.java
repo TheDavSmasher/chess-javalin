@@ -29,7 +29,7 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
         } catch (InvalidMoveException e) {
             throw new WebsocketException(e.getMessage());
         }
-        GameService.updateGameState(command.getAuthToken(), command.getGameID(), game);
+        GameService.updateGameState(command, game);
 
         connectionManager.loadNewGame(gameData, command.getGameID());
 

@@ -52,4 +52,12 @@ public class UserService extends Service {
         return tryCatch(() -> AuthDAO.getInstance().getAuth(authToken) instanceof AuthData auth
                 ? auth.username() : throwUnauthorized());
     }
+
+    public interface AuthorizedSupplier<T> {
+        T call(String username) throws ServiceException, DataAccessException;
+    }
+
+    public static <T> T tryAuthorized(String authToken, AuthorizedSupplier<T> logic) throws ServiceException {
+        return tryCatch(() -> logic.call(validateAuth(authToken)));
+    }
 }

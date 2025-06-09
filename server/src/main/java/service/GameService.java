@@ -10,6 +10,7 @@ import model.response.ListGamesResponse;
 
 import static model.Serializer.serialize;
 import static org.eclipse.jetty.util.StringUtil.isEmpty;
+import static service.UserService.tryAuthorized;
 
 public class GameService extends Service {
     public static ListGamesResponse getAllGames(String authToken) throws ServiceException {

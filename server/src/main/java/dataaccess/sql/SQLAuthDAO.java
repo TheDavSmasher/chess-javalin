@@ -43,7 +43,7 @@ public class SQLAuthDAO extends SQLDAO implements AuthDAO {
     @Override
     protected String getTableSetup() {
         return """
-                CREATE TABLE IF NOT EXISTS auth (
+                (
                   `authToken` varchar(255) NOT NULL,
                   `username` varchar(255) NOT NULL,
                   PRIMARY KEY (`authToken`),

@@ -76,7 +76,7 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
     @Override
     protected String getTableSetup() {
         return """
-                CREATE TABLE IF NOT EXISTS games (
+                (
                   `gameID` int NOT NULL AUTO_INCREMENT,
                   `whiteUsername` varchar(255),
                   `blackUsername` varchar(255),

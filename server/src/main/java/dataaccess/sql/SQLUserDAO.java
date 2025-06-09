@@ -43,7 +43,7 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
     @Override
     protected String getTableSetup() {
         return """
-                CREATE TABLE IF NOT EXISTS users (
+                (
                   `username` varchar(255) NOT NULL,
                   `password` varchar(255) NOT NULL,
                   `email` varchar(255) NOT NULL,

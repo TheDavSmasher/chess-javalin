@@ -13,7 +13,7 @@ public abstract class SQLDAO implements ChessDAO {
     protected SQLDAO(boolean tableExists) throws DataAccessException {
         if (tableExists) return;
         DatabaseManager.createDatabase();
-        try (PreparedStatement preparedStatement = getStatement(getTableSetup())) {
+        try (PreparedStatement preparedStatement = getStatement("CREATE TABLE IF NOT EXISTS " + getTableName() + getTableSetup())) {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException("could not configure database table " + getTableName(), e);

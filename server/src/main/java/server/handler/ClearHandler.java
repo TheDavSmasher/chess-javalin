@@ -7,7 +7,6 @@ import service.AppService;
 public class ClearHandler extends ObjectSerializer<Void> {
     @Override
     public Void serviceHandle(Context ignored) throws ServiceException {
-        AppService.clearData();
-        return null;
+        return AppService.clearData();
     }
 }

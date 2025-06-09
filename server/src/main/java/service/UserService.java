@@ -42,8 +42,8 @@ public class UserService {
         });
     }
 
-    public static void logout(String authToken) throws ServiceException {
-        tryAuthorized(authToken, ignored -> {
+    public static Void logout(String authToken) throws ServiceException {
+        return tryAuthorized(authToken, ignored -> {
             AuthDAO.getInstance().deleteAuth(authToken);
             return null;
         });

@@ -7,7 +7,6 @@ import service.UserService;
 public class LogoutHandler extends ObjectSerializer<Void> {
     @Override
     public Void serviceHandle(Context context) throws ServiceException {
-        UserService.logout(getAuthToken(context));
-        return null;
+        return UserService.logout(getAuthToken(context));
     }
 }

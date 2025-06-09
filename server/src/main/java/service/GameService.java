@@ -33,32 +33,28 @@ public class GameService extends Service {
 
     public static Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
         return updateGameConnection(authToken, request.gameID(), true, (oldGame, username) ->
-                gamePlayer(oldGame, getValidParameters(request.playerColor())) instanceof String gameUser
-                        && !username.equals(gameUser) ? throwPreexisting() : request.playerColor());
+                (switch (getValidParameters(request.playerColor())) {
+                    case "WHITE" -> oldGame.whiteUsername();
+                    case "BLACK" -> oldGame.blackUsername();
+                    default -> throw new BadRequestException();
+                }) instanceof String gameUser && !username.equals(gameUser) ? throwPreexisting() : request.playerColor()
+        );
     }
 
     //region WebSocket
     public static void leaveGame(LeaveCommand command) throws ServiceException {
         updateGameConnection(command.getAuthToken(), command.getGameID(), false, (oldGame, username) ->
-                oldGame.game().isGameOver() ? null : playerColor(oldGame, username));
+                oldGame.game().isGameOver() ? null
+                        : username.equals(oldGame.whiteUsername()) ? "WHITE"
+                        : username.equals(oldGame.blackUsername()) ? "BLACK"
+                        : null
+        );
     }
 
     public static void updateGameState(UserGameCommand command, ChessGame game) throws ServiceException {
         tryAuthorized(command.getAuthToken(), ignored -> gameDAO().updateGameBoard(command.getGameID(), serialize(game)));
     }
     //endregion
-
-    private static String gamePlayer(GameData data, String player) throws BadRequestException {
-        if (player.equalsIgnoreCase("WHITE")) return data.whiteUsername();
-        if (player.equalsIgnoreCase("BLACK")) return data.blackUsername();
-        throw new BadRequestException();
-    }
-
-    private static String playerColor(GameData data, String player) {
-        if (player.equals(data.whiteUsername())) return "WHITE";
-        if (player.equals(data.blackUsername())) return "BLACK";
-        return null;
-    }
 
     private interface GameJoinUpdate {
         String update(GameData oldGame, String username) throws ServiceException;

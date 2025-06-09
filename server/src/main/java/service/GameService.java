@@ -34,11 +34,7 @@ public class GameService extends Service {
             String color = getValidParameters(request.playerColor());
             GameData oldGame = getGame(request.gameID());
 
-            if (!username.equals(switch (color.toUpperCase()) {
-                case "WHITE" -> oldGame.whiteUsername();
-                case "BLACK" -> oldGame.blackUsername();
-                default -> throw new BadRequestException();
-            })) {
+            if (!username.equals(getValidParameters(playerColor(oldGame, color.toUpperCase(), false)))) {
                 throw new PreexistingException();
             }
             updateGamePlayer(request.gameID(), color, username);
@@ -52,11 +48,9 @@ public class GameService extends Service {
             //If game is over, keep names for legacy
             if (oldGame.game().isGameOver()) return;
 
-            updateGamePlayer(gameID, switch (username) {
-                case String w when w.equals(oldGame.whiteUsername()) -> "WHITE";
-                case String b when b.equals(oldGame.blackUsername()) -> "BLACK";
-                default -> "";
-            }, null);
+            String color = playerColor(oldGame, username, true);
+
+            updateGamePlayer(gameID, color, null);
         });
     }
 
@@ -64,6 +58,17 @@ public class GameService extends Service {
         tryAuthorized(authToken, ignored -> gameDAO().updateGameBoard(gameID, serialize(game)));
     }
     //endregion
+
+    private static String playerColor(GameData data, String player, boolean playerToColor) {
+        if (playerToColor) {
+            if (player.equals(data.whiteUsername())) return "WHITE";
+            if (player.equals(data.blackUsername())) return "BLACK";
+        } else {
+            if (player.equals("WHITE")) return data.whiteUsername();
+            if (player.equals("BLACK")) return data.blackUsername();
+        }
+        return null;
+    }
 
     private static void updateGamePlayer(int gameID, String playerColor, String username) throws ServiceException {
         tryCatch(() -> {

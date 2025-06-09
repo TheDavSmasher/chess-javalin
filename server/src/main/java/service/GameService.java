@@ -31,10 +31,10 @@ public class GameService extends Service {
 
     public static Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
         return tryAuthorized(authToken, username -> {
-            String color = getValidParameters(request.playerColor());
             GameData oldGame = getGame(request.gameID());
+            String color = getValidParameters(request.playerColor());
 
-            if (!username.equals(getValidParameters(playerColor(oldGame, color, false)))) {
+            if (!username.equals(playerColor(oldGame, color, false))) {
                 throw new PreexistingException();
             }
             updateGamePlayer(request.gameID(), color, username);
@@ -45,10 +45,9 @@ public class GameService extends Service {
     public static void leaveGame(String authToken, int gameID) throws ServiceException {
         tryAuthorized(authToken, username -> {
             GameData oldGame = getGame(gameID);
-            //If game is over, keep names for legacy
-            if (oldGame.game().isGameOver()) return;
-
             String color = playerColor(oldGame, username, true);
+
+            if (oldGame.game().isGameOver()) return; //If game is over, keep names for legacy
 
             updateGamePlayer(gameID, color, null);
         });
@@ -59,13 +58,14 @@ public class GameService extends Service {
     }
     //endregion
 
-    private static String playerColor(GameData data, String player, boolean playerToColor) {
+    private static String playerColor(GameData data, String player, boolean playerToColor) throws BadRequestException {
         if (playerToColor) {
             if (player.equals(data.whiteUsername())) return "WHITE";
             if (player.equals(data.blackUsername())) return "BLACK";
         } else {
             if (player.equalsIgnoreCase("WHITE")) return data.whiteUsername();
             if (player.equalsIgnoreCase("BLACK")) return data.blackUsername();
+            throw new BadRequestException();
         }
         return null;
     }

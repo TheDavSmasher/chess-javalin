@@ -4,8 +4,9 @@ import dataaccess.DataAccessException;
 import dataaccess.DataAccessObject.*;
 import dataaccess.memory.*;
 import dataaccess.sql.*;
+import org.eclipse.jetty.util.StringUtil;
 
-import static org.eclipse.jetty.util.StringUtil.isBlank;
+import java.util.Arrays;
 
 public abstract class Service {
     //region DAO access
@@ -37,12 +38,7 @@ public abstract class Service {
     }
 
     protected static String getValidParameters(String... params) throws BadRequestException {
-        for (String param : params) {
-            if (isBlank(param)) {
-                throw new BadRequestException();
-            }
-        }
-        return params[0];
+        return Arrays.stream(params).anyMatch(StringUtil::isBlank) ? throwBadRequest() : params[0];
     }
 
     protected static <T> T throwUnauthorized() throws UnauthorizedException {
@@ -51,5 +47,9 @@ public abstract class Service {
 
     protected static <T> T throwPreexisting() throws PreexistingException {
         throw new PreexistingException();
+    }
+
+    protected static <T> T throwBadRequest() throws BadRequestException {
+        throw new BadRequestException();
     }
 }

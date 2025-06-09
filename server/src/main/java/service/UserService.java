@@ -9,7 +9,7 @@ public class UserService extends Service {
     public static UserEnterResponse register(UserEnterRequest request) throws ServiceException {
         return enterUser(request, true, () -> {
             if (userDAO().getUser(request.username()) != null) {
-                throw new PreexistingException();
+                throwPreexisting();
             }
             userDAO().createUser(request.username(), request.password(), request.email());
         });
@@ -18,7 +18,7 @@ public class UserService extends Service {
     public static UserEnterResponse login(UserEnterRequest request) throws ServiceException {
         return enterUser(request, false, () -> {
             if (userDAO().getUser(request.username(), request.password()) == null) {
-                throw new UnauthorizedException();
+                throwUnauthorized();
             }
         });
     }

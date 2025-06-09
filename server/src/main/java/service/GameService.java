@@ -23,12 +23,7 @@ public class GameService extends Service {
     }
 
     public static GameData getGame(int gameID) throws ServiceException {
-        return tryCatch(() -> {
-            if (!(gameDAO().getGame(gameID) instanceof GameData data)) {
-                throw new BadRequestException();
-            }
-            return data;
-        });
+        return tryCatch(() -> gameDAO().getGame(gameID) instanceof GameData data ? data : throwBadRequest());
     }
 
     public static Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
@@ -36,7 +31,7 @@ public class GameService extends Service {
                 (switch (getValidParameters(request.playerColor())) {
                     case "WHITE" -> oldGame.whiteUsername();
                     case "BLACK" -> oldGame.blackUsername();
-                    default -> throw new BadRequestException();
+                    default -> throwBadRequest();
                 }) instanceof String gameUser && !username.equals(gameUser) ? throwPreexisting() : request.playerColor()
         );
     }

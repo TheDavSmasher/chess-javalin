@@ -32,27 +32,15 @@ public class GameService extends Service {
     }
 
     public static Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
-        return tryAuthorized(authToken, username -> {
-            GameData oldGame = getGame(request.gameID());
-            String color = getValidParameters(request.playerColor());
-
-            if (!username.equals(playerColor(oldGame, color, false))) {
-                throw new PreexistingException();
-            }
-            updateGamePlayer(request.gameID(), color, username);
-        });
+        return updateGameConnection(authToken, request.gameID(), true, (oldGame, username) ->
+                username.equals(playerColor(oldGame, getValidParameters(request.playerColor()), false))
+                        ? throwPreexisting() : request.playerColor());
     }
 
     //region WebSocket
     public static void leaveGame(LeaveCommand command) throws ServiceException {
-        tryAuthorized(command.getAuthToken(), username -> {
-            GameData oldGame = getGame(command.getGameID());
-            String color = playerColor(oldGame, username, true);
-
-            if (oldGame.game().isGameOver()) return; //If game is over, keep names for legacy
-
-            updateGamePlayer(command.getGameID(), color, null);
-        });
+        updateGameConnection(command.getAuthToken(), command.getGameID(), false, (oldGame, username) ->
+                oldGame.game().isGameOver() ? null : playerColor(oldGame, username, true));
     }
 
     public static void updateGameState(UserGameCommand command, ChessGame game) throws ServiceException {
@@ -72,12 +60,15 @@ public class GameService extends Service {
         return null;
     }
 
-    private static void updateGamePlayer(int gameID, String playerColor, String username) throws ServiceException {
-        tryCatch(() -> {
-            if (!playerColor.isEmpty()) {
-                gameDAO().updateGamePlayer(gameID, playerColor, username);
+    private interface GameJoinUpdate {
+        String update(GameData oldGame, String username) throws ServiceException;
+    }
+
+    private static Void updateGameConnection(String authToken, int gameID, boolean isJoining, GameJoinUpdate color) throws ServiceException {
+        return tryAuthorized(authToken, username -> {
+            if (color.update(getGame(gameID), username) instanceof String playerColor) {
+                gameDAO().updateGamePlayer(gameID, playerColor, isJoining ? username : null);
             }
-            return null;
         });
     }
 }

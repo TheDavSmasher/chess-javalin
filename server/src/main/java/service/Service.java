@@ -48,4 +48,8 @@ public abstract class Service {
     protected static <T> T throwUnauthorized() throws UnauthorizedException {
         throw new UnauthorizedException();
     }
+
+    protected static <T> T throwPreexisting() throws PreexistingException {
+        throw new PreexistingException();
+    }
 }

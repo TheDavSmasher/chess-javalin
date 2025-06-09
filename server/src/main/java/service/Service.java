@@ -25,16 +25,39 @@ public abstract class Service {
     }
     //endregion
 
+    //region Interfaces
     protected interface EndpointSupplier<T> {
         T method() throws ServiceException, DataAccessException;
     }
 
+    public interface AuthorizedSupplier<T> {
+        T call() throws ServiceException, DataAccessException;
+    }
+
+    public interface AuthorizedConsumer {
+        void call(String username) throws ServiceException, DataAccessException;
+    }
+    //endregion
     protected static <T> T tryCatch(EndpointSupplier<T> call) throws ServiceException {
         try {
             return call.method();
         } catch (DataAccessException e) {
             throw new UnexpectedException(e.getMessage());
         }
+    }
+
+    public static <T> T tryAuthorized(String authToken, AuthorizedSupplier<T> logic) throws ServiceException {
+        return tryCatch(() -> {
+            UserService.validateAuth(authToken);
+            return logic.call();
+        });
+    }
+
+    public static <T> T tryAuthorized(String authToken, AuthorizedConsumer logic) throws ServiceException {
+        return tryCatch(() -> {
+            logic.call(UserService.validateAuth(authToken));
+            return null;
+        });
     }
 
     protected static String getValidParameters(String... params) throws BadRequestException {

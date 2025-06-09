@@ -43,28 +43,4 @@ public class UserService extends Service {
         return tryCatch(() -> authDAO().getAuth(authToken) instanceof AuthData auth
                 ? auth.username() : throwUnauthorized());
     }
-
-    //region Interfaces
-    public interface AuthorizedSupplier<T> {
-        T call() throws ServiceException, DataAccessException;
-    }
-
-    public interface AuthorizedConsumer {
-        void call(String username) throws ServiceException, DataAccessException;
-    }
-    //endregion
-
-    public static <T> T tryAuthorized(String authToken, AuthorizedSupplier<T> logic) throws ServiceException {
-        return tryCatch(() -> {
-            validateAuth(authToken);
-            return logic.call();
-        });
-    }
-
-    public static <T> T tryAuthorized(String authToken, AuthorizedConsumer logic) throws ServiceException {
-        return tryCatch(() -> {
-            logic.call(validateAuth(authToken));
-            return null;
-        });
-    }
 }

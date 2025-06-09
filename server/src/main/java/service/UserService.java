@@ -23,6 +23,15 @@ public class UserService extends Service {
         });
     }
 
+    public static Void logout(String authToken) throws ServiceException {
+        return tryAuthorized(authToken, ignored -> authDAO().deleteAuth(authToken));
+    }
+
+    public static String validateAuth(String authToken) throws ServiceException {
+        return tryCatch(() -> authDAO().getAuth(authToken) instanceof AuthData auth
+                ? auth.username() : throwUnauthorized());
+    }
+
     private interface EndpointRunnable {
         void method() throws ServiceException, DataAccessException;
     }
@@ -33,14 +42,5 @@ public class UserService extends Service {
             logic.method();
             return new UserEnterResponse(username, authDAO().createAuth(username).authToken());
         });
-    }
-
-    public static Void logout(String authToken) throws ServiceException {
-        return tryAuthorized(authToken, ignored -> authDAO().deleteAuth(authToken));
-    }
-
-    public static String validateAuth(String authToken) throws ServiceException {
-        return tryCatch(() -> authDAO().getAuth(authToken) instanceof AuthData auth
-                ? auth.username() : throwUnauthorized());
     }
 }

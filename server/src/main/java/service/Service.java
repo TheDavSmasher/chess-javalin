@@ -38,6 +38,8 @@ public abstract class Service {
         void call(String username) throws ServiceException, DataAccessException;
     }
     //endregion
+
+    //region Try Wrappers
     protected static <T> T tryCatch(EndpointSupplier<T> call) throws ServiceException {
         try {
             return call.method();
@@ -59,6 +61,7 @@ public abstract class Service {
             return null;
         });
     }
+    //endregion
 
     protected static String getValidParameters(String... params) throws BadRequestException {
         return Arrays.stream(params).anyMatch(StringUtil::isBlank) ? throwBadRequest() : params[0];

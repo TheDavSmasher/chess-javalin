@@ -27,13 +27,11 @@ public class GameService extends Service {
                 throw new BadRequestException();
             }
 
-            String gameUser = switch (color.toUpperCase()) {
+            if (!username.equals(switch (color.toUpperCase()) {
                 case "WHITE" -> oldGame.whiteUsername();
                 case "BLACK" -> oldGame.blackUsername();
                 default -> throw new BadRequestException();
-            };
-
-            if (!username.equals(gameUser)) {
+            })) {
                 throw new PreexistingException();
             }
 

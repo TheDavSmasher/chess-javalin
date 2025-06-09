@@ -24,8 +24,7 @@ public class GameService {
 
     public static void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
         tryAuthorized(authToken, username -> {
-            GameDAO gameDAO = GameDAO.getInstance();
-            GameData oldGame = gameDAO.getGame(request.gameID());
+            GameData oldGame = GameDAO.getInstance().getGame(request.gameID());
             if (request.playerColor() == null || oldGame == null) {
                 throw new BadRequestException();
             }
@@ -41,7 +40,7 @@ public class GameService {
                 throw new PreexistingException();
             }
 
-            gameDAO.updateGamePlayer(request.gameID(), color, username);
+            GameDAO.getInstance().updateGamePlayer(request.gameID(), color, username);
         });
     }
 
@@ -52,8 +51,7 @@ public class GameService {
     //WebSocket
     public static void leaveGame(String authToken, int gameID) throws ServiceException {
         tryAuthorized(authToken, username -> {
-            GameDAO gameDAO = GameDAO.getInstance();
-            GameData oldGame = gameDAO.getGame(gameID);
+            GameData oldGame = GameDAO.getInstance().getGame(gameID);
             if (oldGame == null) {
                 throw new BadRequestException();
             }
@@ -64,7 +62,7 @@ public class GameService {
                 case String b when b.equals(oldGame.blackUsername()) -> "BLACK";
                 default -> "";
             };
-            gameDAO.updateGamePlayer(!color.isEmpty() ? gameID : -1, color, null);
+            GameDAO.getInstance().updateGamePlayer(!color.isEmpty() ? gameID : -1, color, null);
         });
     }
 

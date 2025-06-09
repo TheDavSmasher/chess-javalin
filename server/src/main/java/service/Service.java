@@ -1,8 +1,21 @@
 package service;
 
 import dataaccess.DataAccessException;
+import dataaccess.DataAccessObject.*;
 
 public abstract class Service {
+    protected static AuthDAO authDAO() throws DataAccessException {
+        return AuthDAO.getInstance();
+    }
+
+    protected static UserDAO userDAO() throws DataAccessException {
+        return UserDAO.getInstance();
+    }
+
+    protected static GameDAO gameDAO() throws DataAccessException {
+        return GameDAO.getInstance();
+    }
+
     protected interface EndpointSupplier<T> {
         T method() throws ServiceException, DataAccessException;
     }

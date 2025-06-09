@@ -1,7 +1,6 @@
 package service;
 
 import chess.ChessGame;
-import dataaccess.DataAccessObject.*;
 import model.dataaccess.GameData;
 import model.request.CreateGameRequest;
 import model.request.JoinGameRequest;
@@ -14,17 +13,17 @@ import static service.UserService.tryAuthorized;
 
 public class GameService extends Service {
     public static ListGamesResponse getAllGames(String authToken) throws ServiceException {
-        return tryAuthorized(authToken, () -> new ListGamesResponse(GameDAO.getInstance().listGames()));
+        return tryAuthorized(authToken, () -> new ListGamesResponse(gameDAO().listGames()));
     }
 
     public static CreateGameResponse createGame(CreateGameRequest request, String authToken) throws ServiceException {
         return tryAuthorized(authToken, () -> isEmpty(request.gameName()) ? throwBadRequest()
-                : new CreateGameResponse(GameDAO.getInstance().createGame(request.gameName()).gameID()));
+                : new CreateGameResponse(gameDAO().createGame(request.gameName()).gameID()));
     }
 
     public static Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
         return tryAuthorized(authToken, username -> {
-            GameData oldGame = GameDAO.getInstance().getGame(request.gameID());
+            GameData oldGame = gameDAO().getGame(request.gameID());
             if (request.playerColor() == null || oldGame == null) {
                 throw new BadRequestException();
             }
@@ -40,18 +39,18 @@ public class GameService extends Service {
                 throw new PreexistingException();
             }
 
-            GameDAO.getInstance().updateGamePlayer(request.gameID(), color, username);
+            gameDAO().updateGamePlayer(request.gameID(), color, username);
         });
     }
 
     public static GameData getGame(int gameID) throws ServiceException {
-        return tryCatch(() -> GameDAO.getInstance().getGame(gameID));
+        return tryCatch(() -> gameDAO().getGame(gameID));
     }
 
     //WebSocket
     public static void leaveGame(String authToken, int gameID) throws ServiceException {
         tryAuthorized(authToken, username -> {
-            GameData oldGame = GameDAO.getInstance().getGame(gameID);
+            GameData oldGame = gameDAO().getGame(gameID);
             if (oldGame == null) {
                 throw new BadRequestException();
             }
@@ -62,11 +61,11 @@ public class GameService extends Service {
                 case String b when b.equals(oldGame.blackUsername()) -> "BLACK";
                 default -> "";
             };
-            GameDAO.getInstance().updateGamePlayer(!color.isEmpty() ? gameID : -1, color, null);
+            gameDAO().updateGamePlayer(!color.isEmpty() ? gameID : -1, color, null);
         });
     }
 
     public static void updateGameState(String authToken, int gameID, ChessGame game) throws ServiceException {
-        tryAuthorized(authToken, ignored -> GameDAO.getInstance().updateGameBoard(gameID, serialize(game)));
+        tryAuthorized(authToken, ignored -> gameDAO().updateGameBoard(gameID, serialize(game)));
     }
 }

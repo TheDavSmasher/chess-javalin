@@ -4,23 +4,22 @@ import dataaccess.DataAccessException;
 import model.dataaccess.AuthData;
 import model.request.UserEnterRequest;
 import model.response.UserEnterResponse;
-import dataaccess.DataAccessObject.*;
 
 import static org.eclipse.jetty.util.StringUtil.isBlank;
 
 public class UserService extends Service {
     public static UserEnterResponse register(UserEnterRequest request) throws ServiceException {
         return enterUser(request, true, () -> {
-            if (UserDAO.getInstance().getUser(request.username()) != null) {
+            if (userDAO().getUser(request.username()) != null) {
                 throw new PreexistingException();
             }
-            UserDAO.getInstance().createUser(request.username(), request.password(), request.email());
+            userDAO().createUser(request.username(), request.password(), request.email());
         });
     }
 
     public static UserEnterResponse login(UserEnterRequest request) throws ServiceException {
         return enterUser(request, false, () -> {
-            if (UserDAO.getInstance().getUser(request.username(), request.password()) == null) {
+            if (userDAO().getUser(request.username(), request.password()) == null) {
                 throw new UnauthorizedException();
             }
         });
@@ -36,17 +35,17 @@ public class UserService extends Service {
                 throw new BadRequestException();
             }
             logic.method();
-            AuthData authData = AuthDAO.getInstance().createAuth(request.username());
+            AuthData authData = authDAO().createAuth(request.username());
             return new UserEnterResponse(authData.username(), authData.authToken());
         });
     }
 
     public static Void logout(String authToken) throws ServiceException {
-        return tryAuthorized(authToken, ignored -> AuthDAO.getInstance().deleteAuth(authToken));
+        return tryAuthorized(authToken, ignored -> authDAO().deleteAuth(authToken));
     }
 
     public static String validateAuth(String authToken) throws ServiceException {
-        return tryCatch(() -> AuthDAO.getInstance().getAuth(authToken) instanceof AuthData auth
+        return tryCatch(() -> authDAO().getAuth(authToken) instanceof AuthData auth
                 ? auth.username() : throwUnauthorized());
     }
 

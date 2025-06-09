@@ -20,6 +20,15 @@ public class GameService extends Service {
                 new CreateGameResponse(gameDAO().createGame(getValidParameters(request.gameName())).gameID()));
     }
 
+    public static GameData getGame(int gameID) throws ServiceException {
+        return tryCatch(() -> {
+            if (!(gameDAO().getGame(gameID) instanceof GameData data)) {
+                throw new BadRequestException();
+            }
+            return data;
+        });
+    }
+
     public static Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
         return tryAuthorized(authToken, username -> {
             String color = getValidParameters(request.playerColor());
@@ -33,15 +42,6 @@ public class GameService extends Service {
                 throw new PreexistingException();
             }
             updateGamePlayer(request.gameID(), color, username);
-        });
-    }
-
-    public static GameData getGame(int gameID) throws ServiceException {
-        return tryCatch(() -> {
-            if (!(gameDAO().getGame(gameID) instanceof GameData data)) {
-                throw new BadRequestException();
-            }
-            return data;
         });
     }
 

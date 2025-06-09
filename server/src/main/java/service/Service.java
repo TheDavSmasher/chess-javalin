@@ -11,14 +11,6 @@ public final class Service {
         }
     }
 
-    public static <T> T throwUnauthorized() throws UnauthorizedException {
-        throw new UnauthorizedException();
-    }
-
-    public static <T> T throwBadRequest() throws BadRequestException {
-        throw new BadRequestException();
-    }
-
     public static <T> T tryAuthorized(String authToken, AuthorizedSupplier<T> logic) throws ServiceException {
         return tryCatch(() -> logic.call(UserService.validateAuth(authToken)));
     }
@@ -32,4 +24,12 @@ public final class Service {
         T call(String username) throws ServiceException, DataAccessException;
     }
     //endregion
+
+    public static <T> T throwUnauthorized() throws UnauthorizedException {
+        throw new UnauthorizedException();
+    }
+
+    public static <T> T throwBadRequest() throws BadRequestException {
+        throw new BadRequestException();
+    }
 }

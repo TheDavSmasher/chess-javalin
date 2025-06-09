@@ -5,6 +5,8 @@ import dataaccess.DataAccessObject.*;
 import dataaccess.memory.*;
 import dataaccess.sql.*;
 
+import static org.eclipse.jetty.util.StringUtil.isBlank;
+
 public abstract class Service {
     //region DAO access
     private static final boolean USE_SQL = true;
@@ -34,11 +36,16 @@ public abstract class Service {
         }
     }
 
-    protected static <T> T throwUnauthorized() throws UnauthorizedException {
-        throw new UnauthorizedException();
+    protected static String getValidParameters(String... params) throws BadRequestException {
+        for (String param : params) {
+            if (isBlank(param)) {
+                throw new BadRequestException();
+            }
+        }
+        return params[0];
     }
 
-    protected static <T> T throwBadRequest() throws BadRequestException {
-        throw new BadRequestException();
+    protected static <T> T throwUnauthorized() throws UnauthorizedException {
+        throw new UnauthorizedException();
     }
 }

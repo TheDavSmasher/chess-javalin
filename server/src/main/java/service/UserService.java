@@ -5,8 +5,6 @@ import model.dataaccess.AuthData;
 import model.request.UserEnterRequest;
 import model.response.UserEnterResponse;
 
-import static org.eclipse.jetty.util.StringUtil.isBlank;
-
 public class UserService extends Service {
     public static UserEnterResponse register(UserEnterRequest request) throws ServiceException {
         return enterUser(request, true, () -> {
@@ -31,12 +29,9 @@ public class UserService extends Service {
 
     private static UserEnterResponse enterUser(UserEnterRequest request, boolean checkEmail, EndpointRunnable logic) throws ServiceException {
         return tryCatch(() -> {
-            if (isBlank(request.username()) || isBlank(request.password()) || (checkEmail && isBlank(request.email()))) {
-                throw new BadRequestException();
-            }
+            String username = getValidParameters(request.username(), request.password(), checkEmail ? request.email() : ".");
             logic.method();
-            AuthData authData = authDAO().createAuth(request.username());
-            return new UserEnterResponse(authData.username(), authData.authToken());
+            return new UserEnterResponse(username, authDAO().createAuth(username).authToken());
         });
     }
 

@@ -8,7 +8,6 @@ import model.response.CreateGameResponse;
 import model.response.ListGamesResponse;
 
 import static model.Serializer.serialize;
-import static org.eclipse.jetty.util.StringUtil.isBlank;
 import static service.UserService.tryAuthorized;
 
 public class GameService extends Service {
@@ -17,13 +16,14 @@ public class GameService extends Service {
     }
 
     public static CreateGameResponse createGame(CreateGameRequest request, String authToken) throws ServiceException {
-        return tryAuthorized(authToken, () -> isBlank(request.gameName()) ? throwBadRequest()
-                : new CreateGameResponse(gameDAO().createGame(request.gameName()).gameID()));
+        return tryAuthorized(authToken, () ->
+                new CreateGameResponse(gameDAO().createGame(getValidParameters(request.gameName())).gameID()));
     }
 
     public static Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
         return tryAuthorized(authToken, username -> {
-            if (!(request.playerColor() instanceof String color) || !(getGame(request.gameID()) instanceof GameData oldGame)) {
+            String color = getValidParameters(request.playerColor());
+            if (!(getGame(request.gameID()) instanceof GameData oldGame)) {
                 throw new BadRequestException();
             }
 

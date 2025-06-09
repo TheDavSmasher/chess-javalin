@@ -64,9 +64,6 @@ public class MemoryGameDAO implements GameDAO {
     }
 
     public static GameDAO getInstance() {
-        if (instance == null) {
-            instance = new MemoryGameDAO();
-        }
-        return instance;
+        return instance == null ? (instance = new MemoryGameDAO()) :  instance;
     }
 }

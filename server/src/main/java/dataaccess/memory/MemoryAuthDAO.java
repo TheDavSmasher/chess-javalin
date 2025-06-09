@@ -44,9 +44,6 @@ public class MemoryAuthDAO implements AuthDAO {
     }
 
     static public AuthDAO getInstance() {
-        if (instance == null) {
-            instance = new MemoryAuthDAO();
-        }
-        return instance;
+        return instance == null ? (instance = new MemoryAuthDAO()) : instance;
     }
 }

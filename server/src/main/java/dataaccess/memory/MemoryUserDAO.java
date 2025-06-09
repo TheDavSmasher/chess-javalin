@@ -44,9 +44,6 @@ public class MemoryUserDAO implements UserDAO {
     }
 
     public static UserDAO getInstance() {
-        if (instance == null) {
-            instance = new MemoryUserDAO();
-        }
-        return instance;
+        return instance == null ? instance = new MemoryUserDAO() : instance;
     }
 }

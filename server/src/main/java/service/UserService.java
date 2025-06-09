@@ -42,10 +42,7 @@ public class UserService extends Service {
     }
 
     public static Void logout(String authToken) throws ServiceException {
-        return tryAuthorized(authToken, ignored -> {
-            AuthDAO.getInstance().deleteAuth(authToken);
-            return null;
-        });
+        return tryAuthorized(authToken, ignored -> AuthDAO.getInstance().deleteAuth(authToken));
     }
 
     public static String validateAuth(String authToken) throws ServiceException {
@@ -53,11 +50,27 @@ public class UserService extends Service {
                 ? auth.username() : throwUnauthorized());
     }
 
+    //region Interfaces
     public interface AuthorizedSupplier<T> {
-        T call(String username) throws ServiceException, DataAccessException;
+        T call() throws ServiceException, DataAccessException;
     }
 
+    public interface AuthorizedConsumer {
+        void call(String username) throws ServiceException, DataAccessException;
+    }
+    //endregion
+
     public static <T> T tryAuthorized(String authToken, AuthorizedSupplier<T> logic) throws ServiceException {
-        return tryCatch(() -> logic.call(validateAuth(authToken)));
+        return tryCatch(() -> {
+            validateAuth(authToken);
+            return logic.call();
+        });
+    }
+
+    public static <T> T tryAuthorized(String authToken, AuthorizedConsumer logic) throws ServiceException {
+        return tryCatch(() -> {
+            logic.call(validateAuth(authToken));
+            return null;
+        });
     }
 }

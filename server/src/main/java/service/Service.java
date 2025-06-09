@@ -38,10 +38,6 @@ public final class Service {
         T method() throws ServiceException, DataAccessException;
     }
 
-    public interface EndpointRunnable {
-        void method() throws ServiceException, DataAccessException;
-    }
-
     public interface AuthorizedSupplier<T> {
         T call() throws ServiceException, DataAccessException;
     }

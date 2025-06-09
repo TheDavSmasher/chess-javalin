@@ -1,5 +1,6 @@
 package service;
 
+import dataaccess.DataAccessException;
 import model.dataaccess.AuthData;
 import model.request.UserEnterRequest;
 import model.response.UserEnterResponse;
@@ -24,6 +25,10 @@ public class UserService {
                 throw new UnauthorizedException();
             }
         });
+    }
+
+    private interface EndpointRunnable {
+        void method() throws ServiceException, DataAccessException;
     }
 
     private static UserEnterResponse enterUser(UserEnterRequest request, boolean checkEmail, EndpointRunnable logic) throws ServiceException {

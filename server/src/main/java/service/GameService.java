@@ -33,7 +33,7 @@ public class GameService extends Service {
 
     public static Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
         return updateGameConnection(authToken, request.gameID(), true, (oldGame, username) ->
-                username.equals(playerColor(oldGame, getValidParameters(request.playerColor()), false))
+                playerColor(oldGame, getValidParameters(request.playerColor()), false) instanceof String gameUser && !username.equals(gameUser)
                         ? throwPreexisting() : request.playerColor());
     }
 

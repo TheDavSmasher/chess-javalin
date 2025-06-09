@@ -33,14 +33,14 @@ public class GameService extends Service {
 
     public static Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
         return updateGameConnection(authToken, request.gameID(), true, (oldGame, username) ->
-                playerColor(oldGame, getValidParameters(request.playerColor()), false) instanceof String gameUser
+                gamePlayer(oldGame, getValidParameters(request.playerColor())) instanceof String gameUser
                         && !username.equals(gameUser) ? throwPreexisting() : request.playerColor());
     }
 
     //region WebSocket
     public static void leaveGame(LeaveCommand command) throws ServiceException {
         updateGameConnection(command.getAuthToken(), command.getGameID(), false, (oldGame, username) ->
-                oldGame.game().isGameOver() ? null : playerColor(oldGame, username, true));
+                oldGame.game().isGameOver() ? null : playerColor(oldGame, username));
     }
 
     public static void updateGameState(UserGameCommand command, ChessGame game) throws ServiceException {
@@ -48,15 +48,15 @@ public class GameService extends Service {
     }
     //endregion
 
-    private static String playerColor(GameData data, String player, boolean playerToColor) throws BadRequestException {
-        if (playerToColor) {
-            if (player.equals(data.whiteUsername())) return "WHITE";
-            if (player.equals(data.blackUsername())) return "BLACK";
-        } else {
-            if (player.equalsIgnoreCase("WHITE")) return data.whiteUsername();
-            if (player.equalsIgnoreCase("BLACK")) return data.blackUsername();
-            throw new BadRequestException();
-        }
+    private static String gamePlayer(GameData data, String player) throws BadRequestException {
+        if (player.equalsIgnoreCase("WHITE")) return data.whiteUsername();
+        if (player.equalsIgnoreCase("BLACK")) return data.blackUsername();
+        throw new BadRequestException();
+    }
+
+    private static String playerColor(GameData data, String player) {
+        if (player.equals(data.whiteUsername())) return "WHITE";
+        if (player.equals(data.blackUsername())) return "BLACK";
         return null;
     }
 

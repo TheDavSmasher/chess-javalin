@@ -11,13 +11,6 @@ public final class Service {
         }
     }
 
-    public static void tryCatch(EndpointRunnable call) throws ServiceException {
-        tryCatch(() -> {
-            call.method();
-            return null;
-        });
-    }
-
     public static <T> T throwUnauthorized() throws UnauthorizedException {
         throw new UnauthorizedException();
     }
@@ -34,7 +27,10 @@ public final class Service {
     }
 
     public static void tryAuthorized(String authToken, AuthorizedConsumer logic) throws ServiceException {
-        tryCatch(() -> logic.call(UserService.validateAuth(authToken)));
+        tryCatch(() -> {
+            logic.call(UserService.validateAuth(authToken));
+            return null;
+        });
     }
 
     //region Interfaces

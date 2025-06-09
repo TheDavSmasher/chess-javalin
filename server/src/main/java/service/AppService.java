@@ -9,6 +9,7 @@ public class AppService {
             AuthDAO.getInstance().clear();
             UserDAO.getInstance().clear();
             GameDAO.getInstance().clear();
+            return null;
         });
     }
 }

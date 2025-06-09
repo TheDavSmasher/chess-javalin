@@ -23,9 +23,7 @@ public class GameService extends Service {
     public static Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
         return tryAuthorized(authToken, username -> {
             String color = getValidParameters(request.playerColor());
-            if (!(getGame(request.gameID()) instanceof GameData oldGame)) {
-                throw new BadRequestException();
-            }
+            GameData oldGame = getGame(request.gameID());
 
             if (!username.equals(switch (color.toUpperCase()) {
                 case "WHITE" -> oldGame.whiteUsername();
@@ -39,15 +37,18 @@ public class GameService extends Service {
     }
 
     public static GameData getGame(int gameID) throws ServiceException {
-        return tryCatch(() -> gameDAO().getGame(gameID));
+        return tryCatch(() -> {
+            if (!(gameDAO().getGame(gameID) instanceof GameData data)) {
+                throw new BadRequestException();
+            }
+            return data;
+        });
     }
 
     //region WebSocket
     public static void leaveGame(String authToken, int gameID) throws ServiceException {
         tryAuthorized(authToken, username -> {
-            if (!(getGame(gameID) instanceof GameData oldGame)) {
-                throw new BadRequestException();
-            }
+            GameData oldGame = getGame(gameID);
             //If game is over, keep names for legacy
             if (oldGame.game().isGameOver()) return;
 

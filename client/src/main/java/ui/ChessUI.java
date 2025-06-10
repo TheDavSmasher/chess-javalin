@@ -6,7 +6,6 @@ import chess.ChessMove;
 import chess.ChessPosition;
 
 import java.io.PrintStream;
-import java.util.Collection;
 
 import static chess.ChessBoard.BOARD_SIZE;
 import static java.lang.Character.isUpperCase;
@@ -31,12 +30,9 @@ public final class ChessUI {
         if (start != null) {
             moves[start.getRow() - 1][start.getColumn() - 1] = true;
 
-            Collection<ChessMove> pieceMoves = chessGame.validMoves(start);
-            if (pieceMoves != null) {
-                for (ChessMove move : pieceMoves) {
-                    ChessPosition position = move.getEndPosition();
-                    moves[position.getRow() - 1][position.getColumn() - 1] = false;
-                }
+            for (ChessMove move : chessGame.validMoves(start)) {
+                ChessPosition position = move.getEndPosition();
+                moves[position.getRow() - 1][position.getColumn() - 1] = false;
             }
         }
 

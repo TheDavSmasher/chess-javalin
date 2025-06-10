@@ -12,10 +12,6 @@ import static java.lang.Character.isUpperCase;
 import static ui.EscapeSequences.*;
 
 public class ChessUI {
-    public static void printChessBoard(PrintStream out, ChessBoard board, boolean whiteBottom) {
-        printChessBoard(out, board, null, whiteBottom);
-    }
-
     public static void printChessBoard(PrintStream out, ChessBoard chessBoard, Collection<ChessMove> pieceMoves, boolean whiteBottom) {
         out.println();
         printTopHeader(out, whiteBottom);

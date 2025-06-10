@@ -265,7 +265,7 @@ public class ChessClient implements ServerMessageObserver {
     }
 
     private void redrawBoard() {
-        ChessUI.printChessBoard(out, currentGame.getBoard(), whitePlayer);
+        ChessUI.printChessBoard(out, currentGame.getBoard(), null, whitePlayer);
     }
 
     private void makeMove(String[] params) throws ClientException, IOException {
@@ -343,7 +343,7 @@ public class ChessClient implements ServerMessageObserver {
 
     private void loadGame(LoadGameMessage message) {
         currentGame = deserialize(message.getGame(), ChessGame.class);
-        ChessUI.printChessBoard(out, currentGame.getBoard(), whitePlayer);
+        redrawBoard();
         help(true);
     }
 }

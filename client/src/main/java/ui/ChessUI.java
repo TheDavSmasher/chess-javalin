@@ -21,14 +21,10 @@ public class ChessUI {
         printTopHeader(out, whiteBottom);
 
         Boolean[][] moves = new Boolean[BOARD_SIZE][BOARD_SIZE];
-        if (pieceMoves != null) {
-            boolean firstMove = true;
+        if (pieceMoves != null && !pieceMoves.isEmpty()) {
+            ChessPosition start = pieceMoves.iterator().next().getStartPosition();
+            moves[start.getRow() - 1][start.getColumn() - 1] = true;
             for (ChessMove move : pieceMoves) {
-                if (firstMove) {
-                    ChessPosition start = move.getStartPosition();
-                    moves[start.getRow() - 1][start.getColumn() - 1] = true;
-                    firstMove = false;
-                }
                 ChessPosition position = move.getEndPosition();
                 moves[position.getRow() - 1][position.getColumn() - 1] = false;
             }

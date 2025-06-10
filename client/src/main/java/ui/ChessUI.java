@@ -50,7 +50,6 @@ public final class ChessUI {
         }
         printSquare(null);
         resetColor();
-        out.println();
     }
 
     private void drawChessRow(int col, ChessBoard board, Boolean[][] moves, boolean firstIsWhite, boolean whiteBottom) {
@@ -62,7 +61,6 @@ public final class ChessUI {
         }
         drawSideHeader(col, whiteBottom);
         resetColor();
-        out.println();
     }
 
     private void drawSideHeader(int col, boolean whiteBottom) {
@@ -99,6 +97,7 @@ public final class ChessUI {
     public void resetColor() {
         out.print(UNSET_BG_COLOR);
         out.print(UNSET_TEXT_COLOR);
+        out.println();
     }
 
     private void printSquare(Object value) {

@@ -4,7 +4,6 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPosition;
-
 import java.io.PrintStream;
 
 import static chess.ChessBoard.BOARD_SIZE;
@@ -16,10 +15,6 @@ public final class ChessUI {
 
     public ChessUI(PrintStream out) {
         this.out = out;
-    }
-
-    public void printChessBoard(ChessGame chessGame, boolean whiteBottom) {
-        printChessBoard(chessGame, null, whiteBottom);
     }
 
     public void printChessBoard(ChessGame chessGame, ChessPosition start, boolean whiteBottom) {

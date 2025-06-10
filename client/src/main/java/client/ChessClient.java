@@ -267,7 +267,7 @@ public class ChessClient implements ServerMessageObserver {
     }
 
     private void redrawBoard() {
-        chessUI.printChessBoard(currentGame, whitePlayer);
+        chessUI.printChessBoard(currentGame, null, whitePlayer);
     }
 
     private void makeMove(String[] params) throws ClientException, IOException {

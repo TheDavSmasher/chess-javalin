@@ -2,7 +2,6 @@ package ui;
 
 import chess.ChessBoard;
 import chess.ChessMove;
-import chess.ChessPiece;
 import chess.ChessPosition;
 
 import java.io.PrintStream;
@@ -21,16 +20,6 @@ public class ChessUI {
         out.println();
         printTopHeader(out, whiteBottom);
 
-        String[][] board = new String[BOARD_SIZE][BOARD_SIZE];
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            for (int j = 0; j < BOARD_SIZE; j++) {
-                ChessPiece tempPiece = chessBoard.getPiece(new ChessPosition(i+1, j+1));
-                if (tempPiece != null) {
-                    board[i][j] = tempPiece.toString();
-                }
-            }
-        }
-
         String[][] moves = new String[BOARD_SIZE][BOARD_SIZE];
         if (pieceMoves != null) {
             boolean firstMove = true;
@@ -46,7 +35,7 @@ public class ChessUI {
         }
 
         for (int i = 0; i < BOARD_SIZE; i++) {
-            drawChessRow(out, i, board, moves, i % 2 == 0, whiteBottom);
+            drawChessRow(out, i, chessBoard, moves, i % 2 == 0, whiteBottom);
         }
 
         printTopHeader(out, whiteBottom);
@@ -70,12 +59,12 @@ public class ChessUI {
         out.print(" " + actual + " ");
     }
 
-    private static void drawChessRow(PrintStream out, int col, String[][] board, String[][] moves, boolean firstIsWhite, boolean whiteBottom) {
+    private static void drawChessRow(PrintStream out, int col, ChessBoard board, String[][] moves, boolean firstIsWhite, boolean whiteBottom) {
         drawSideHeader(out, col, whiteBottom);
         int boardRow = whiteBottom ? (BOARD_SIZE - col - 1) : col;
         for (int i = 0; i < BOARD_SIZE; i++) {
             int boardCol = whiteBottom ? i : (BOARD_SIZE - i - 1);
-            drawChessSquare(out, board[boardRow][boardCol], moves[boardRow][boardCol], (i % 2 == 0) == firstIsWhite);
+            drawChessSquare(out, board.getPiece(boardRow, boardCol).toString(), moves[boardRow][boardCol], (i % 2 == 0) == firstIsWhite);
         }
         drawSideHeader(out, col, whiteBottom);
         resetColor(out);

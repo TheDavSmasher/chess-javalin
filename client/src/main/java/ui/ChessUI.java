@@ -20,17 +20,17 @@ public class ChessUI {
         out.println();
         printTopHeader(out, whiteBottom);
 
-        String[][] moves = new String[BOARD_SIZE][BOARD_SIZE];
+        Boolean[][] moves = new Boolean[BOARD_SIZE][BOARD_SIZE];
         if (pieceMoves != null) {
             boolean firstMove = true;
             for (ChessMove move : pieceMoves) {
                 if (firstMove) {
                     ChessPosition start = move.getStartPosition();
-                    moves[start.getRow() - 1][start.getColumn() - 1] = "S";
+                    moves[start.getRow() - 1][start.getColumn() - 1] = true;
                     firstMove = false;
                 }
                 ChessPosition position = move.getEndPosition();
-                moves[position.getRow() - 1][position.getColumn() - 1] = "V";
+                moves[position.getRow() - 1][position.getColumn() - 1] = false;
             }
         }
 
@@ -59,7 +59,7 @@ public class ChessUI {
         out.print(" " + actual + " ");
     }
 
-    private static void drawChessRow(PrintStream out, int col, ChessBoard board, String[][] moves, boolean firstIsWhite, boolean whiteBottom) {
+    private static void drawChessRow(PrintStream out, int col, ChessBoard board, Boolean[][] moves, boolean firstIsWhite, boolean whiteBottom) {
         drawSideHeader(out, col, whiteBottom);
         int boardRow = whiteBottom ? (BOARD_SIZE - col - 1) : col;
         for (int i = 0; i < BOARD_SIZE; i++) {
@@ -71,18 +71,17 @@ public class ChessUI {
         out.println();
     }
 
-    private static void drawChessSquare(PrintStream out, String pieceString, String moveString, boolean isWhite) {
-        boolean isMove = moveString != null;
-        boolean moveSpot = !(isMove && "S".equals(moveString));
+    private static void drawChessSquare(PrintStream out, String pieceString, Boolean moveSpot, boolean isWhite) {
+        boolean isMove = moveSpot != null;
 
         if (isMove) {
             out.print(SET_TEXT_COLOR_BLACK);
-            if (moveString.equals("S")) {
+            if (moveSpot) {
                 out.print(SET_BG_COLOR_YELLOW);
             }
         }
 
-        if (moveSpot) {
+        if (!isMove || !moveSpot) {
             out.print(isWhite
                     ? isMove ? SET_BG_COLOR_GREEN : SET_BG_COLOR_WHITE
                     : isMove ? SET_BG_COLOR_DARK_GREEN : SET_BG_COLOR_BLACK);
@@ -90,7 +89,7 @@ public class ChessUI {
                 out.print(isUpperCase(pieceString.charAt(0)) ? SET_TEXT_COLOR_RED : SET_TEXT_COLOR_BLUE);
             }
         }
-        out.print(pieceString != null ? " "+pieceString.toUpperCase()+" " : "   ");
+        out.print(pieceString != null ? " " + pieceString.toUpperCase() + " " : "   ");
     }
 
     private static void setGreyBG(PrintStream out) {

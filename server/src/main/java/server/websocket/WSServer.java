@@ -17,8 +17,7 @@ import static model.Serializer.serialize;
 public class WSServer implements WsMessageHandler {
     @Override
     public void handleMessage(@NotNull WsMessageContext context) {
-        UserGameCommand gameCommand = context.messageAsClass(UserGameCommand.class);
-        (switch (gameCommand.getCommandType()) {
+        (switch (context.messageAsClass(UserGameCommand.class).getCommandType()) {
             case CONNECT -> new WSConnect();
             case MAKE_MOVE -> new WSMakeMove();
             case LEAVE -> new WSLeave();

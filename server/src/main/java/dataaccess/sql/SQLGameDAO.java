@@ -4,6 +4,7 @@ import chess.ChessGame;
 import dataaccess.DataAccessException;
 import model.dataaccess.GameData;
 import dataaccess.DataAccessObject.*;
+import org.intellij.lang.annotations.Language;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -64,13 +65,16 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
 
     @Override
     public void updateGamePlayer(int gameID, String color, String username) throws DataAccessException {
-        tryUpdate("UPDATE games SET " + (color.equalsIgnoreCase("WHITE") ? "white" : "black")
-                        + "Username=? WHERE gameID=?", SQLDAO::confirmUpdate, username, gameID);
+        updateGame(gameID, (color.equalsIgnoreCase("WHITE") ? "white" : "black") + "Username", username);
     }
 
     @Override
     public void updateGameBoard(int gameID, String gameJson) throws DataAccessException {
-        tryUpdate("UPDATE games SET game=? WHERE gameID=?", SQLDAO::confirmUpdate, gameJson, gameID);
+        updateGame(gameID, "game", gameJson);
+    }
+
+    private void updateGame(int gameID, @Language("SQL") String column, String value) throws DataAccessException {
+        tryUpdate("UPDATE games SET " + column + "=? WHERE gameID=?", SQLDAO::confirmUpdate, value, gameID);
     }
 
     @Override

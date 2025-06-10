@@ -36,8 +36,8 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
 
     @Override
     public void createUser(String username, String password, String email) throws DataAccessException {
-        tryInsert("username, password, email",
-                SQLDAO::confirmUpdate, username, BCrypt.hashpw(password, BCrypt.gensalt()), email);
+        tryInsert("username, password, email", SQLDAO::confirmUpdate,
+                username, BCrypt.hashpw(password, BCrypt.gensalt()), email);
     }
 
     @Override

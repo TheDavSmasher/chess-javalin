@@ -10,32 +10,29 @@ import java.sql.*;
 import static java.sql.Types.NULL;
 
 public abstract class SQLDAO implements ChessDAO {
-    protected SQLDAO(boolean tableExists) throws DataAccessException {
-        if (tableExists) return;
-        DatabaseManager.createDatabase();
-        try (PreparedStatement preparedStatement = getStatement("CREATE TABLE IF NOT EXISTS " + getTableName() + getTableSetup())) {
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataAccessException("could not configure database table " + getTableName(), e);
-        }
-    }
-
-    public void clear() throws DataAccessException {
-        tryUpdate("TRUNCATE " + getTableName(), ignored -> {});
-    }
-
-    protected <T> T trySingleQuery(@Language("SQL") String whereCol, Object whereVal, SqlQuery<T> query) throws DataAccessException {
-        return tryQuery("SELECT * FROM " + getTableName() + " WHERE " + whereCol + "=?",
-                rs -> rs.next() ? query.execute(rs) : null, whereVal);
-    }
-
     @Language("SQL")
     protected abstract String getTableName();
 
     @Language("SQL")
     protected abstract String getTableSetup();
 
-    public interface SqlQuery<T> {
+    protected SQLDAO(boolean tableExists) throws DataAccessException {
+        if (tableExists) return;
+        DatabaseManager.createDatabase();
+        try (PreparedStatement preparedStatement =
+                     getStatement("CREATE TABLE IF NOT EXISTS " + getTableName() + getTableSetup())) {
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("could not configure database table " + getTableName(), e);
+        }
+    }
+
+    @Override
+    public void clear() throws DataAccessException {
+        tryUpdate("TRUNCATE " + getTableName(), ignored -> {});
+    }
+
+    protected interface SqlQuery<T> {
         T execute(ResultSet resultSet) throws SQLException, DataAccessException;
     }
 
@@ -45,6 +42,11 @@ public abstract class SQLDAO implements ChessDAO {
         } catch (SQLException e) {
             throw new DataAccessException("could not execute query", e);
         }
+    }
+
+    protected <T> T trySingleQuery(@Language("SQL") String whereCol, Object whereVal, SqlQuery<T> query) throws DataAccessException {
+        return tryQuery("SELECT * FROM " + getTableName() + " WHERE " + whereCol + "=?",
+                rs -> rs.next() ? query.execute(rs) : null, whereVal);
     }
 
     protected interface SqlUpdate {

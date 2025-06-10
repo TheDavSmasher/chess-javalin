@@ -69,12 +69,7 @@ public abstract class SQLDAO implements ChessDAO {
     }
 
     protected void tryInsert(@Language("SQL") String rows, SqlUpdate update, Object... values) throws DataAccessException {
-        tryUpdate("INSERT INTO " + getTableName() + "(" + rows + ") VALUES (" + getValueSlots(values.length) + ")", update, values);
-    }
-
-    @Language("SQL")
-    private static String getValueSlots(int length) {
-        return "?" + ", ?".repeat(Math.max(0, length - 1));
+        tryUpdate("INSERT INTO " + getTableName() + "(" + rows + ") VALUES (" + "?" + ", ?".repeat(Math.max(0, values.length - 1)) + ")", update, values);
     }
 
     private static PreparedStatement getStatement(@Language("SQL") String sql, Object... params) throws DataAccessException, SQLException {

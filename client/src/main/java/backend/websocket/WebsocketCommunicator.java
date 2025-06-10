@@ -21,16 +21,6 @@ public class WebsocketCommunicator extends Endpoint implements MessageHandler.Wh
         socketUrl = url.replace("http", "ws");
     }
 
-    private void connectToServer() throws IOException {
-        try {
-            session = ContainerProvider.getWebSocketContainer().connectToServer(this, URI.create(socketUrl + "ws"));
-            session.addMessageHandler(this);
-        } catch (DeploymentException e) {
-            throw new IOException(e.getMessage());
-        }
-        connected = true;
-    }
-
     @Override
     public void onMessage(String message) {
         Class<? extends ServerMessage> messageClass =
@@ -43,14 +33,21 @@ public class WebsocketCommunicator extends Endpoint implements MessageHandler.Wh
     }
 
     @Override
-    public void onOpen(Session session, EndpointConfig endpointConfig) {
-        //Method needed to call, but no functionality is required
-    }
+    public void onOpen(Session session, EndpointConfig endpointConfig) {}
 
     public void sendCommand(UserGameCommand command) throws IOException {
-        if (!connected) {
-            connectToServer();
-        }
+        connectToServer();
         session.getBasicRemote().sendText(serialize(command));
+    }
+
+    private void connectToServer() throws IOException {
+        if (connected) return;
+        try {
+            session = ContainerProvider.getWebSocketContainer().connectToServer(this, URI.create(socketUrl + "ws"));
+            session.addMessageHandler(this);
+        } catch (DeploymentException e) {
+            throw new IOException(e.getMessage());
+        }
+        connected = true;
     }
 }

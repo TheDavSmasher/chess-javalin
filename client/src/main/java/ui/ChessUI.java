@@ -18,14 +18,20 @@ public final class ChessUI {
         this.out = out;
     }
 
-    public void printChessBoard(ChessBoard chessBoard, Collection<ChessMove> pieceMoves, boolean whiteBottom) {
+    public void printChessBoard(ChessBoard chessBoard, boolean whiteBottom) {
+        printChessBoard(chessBoard, null, null, whiteBottom);
+    }
+
+    public void printChessBoard(ChessBoard chessBoard, ChessPosition start, Collection<ChessMove> pieceMoves, boolean whiteBottom) {
         out.println();
         printTopHeader(whiteBottom);
 
         Boolean[][] moves = new Boolean[BOARD_SIZE][BOARD_SIZE];
-        if (pieceMoves != null && !pieceMoves.isEmpty()) {
-            ChessPosition start = pieceMoves.iterator().next().getStartPosition();
+        if (start != null) {
             moves[start.getRow() - 1][start.getColumn() - 1] = true;
+        }
+
+        if (pieceMoves != null) {
             for (ChessMove move : pieceMoves) {
                 ChessPosition position = move.getEndPosition();
                 moves[position.getRow() - 1][position.getColumn() - 1] = false;

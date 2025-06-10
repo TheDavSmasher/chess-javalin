@@ -267,7 +267,7 @@ public class ChessClient implements ServerMessageObserver {
     }
 
     private void redrawBoard() {
-        chessUI.printChessBoard(currentGame.getBoard(), null, whitePlayer);
+        chessUI.printChessBoard(currentGame.getBoard(), whitePlayer);
     }
 
     private void makeMove(String[] params) throws ClientException, IOException {
@@ -289,7 +289,7 @@ public class ChessClient implements ServerMessageObserver {
         }
         String startPos = params[0];
         ChessPosition start = positionFromString(startPos);
-        chessUI.printChessBoard(currentGame.getBoard(), currentGame.validMoves(start), whitePlayer);
+        chessUI.printChessBoard(currentGame.getBoard(), start, currentGame.validMoves(start),  whitePlayer);
     }
 
     private void leaveGame() throws IOException {

@@ -304,22 +304,14 @@ public class ChessClient implements ServerMessageObserver {
         if (moveString.length() != 2) {
             throw new IOException("Wrong move format!");
         }
-        char column = Character.toUpperCase(moveString.charAt(0));
-        char row = moveString.charAt(1);
-        int colInt = switch (column) {
-            case 'A' -> 1;
-            case 'B' -> 2;
-            case 'C' -> 3;
-            case 'D' -> 4;
-            case 'E' -> 5;
-            case 'F' -> 6;
-            case 'G' -> 7;
-            case 'H' -> 8;
-            default -> throw new IOException("Column does not exist!");
-        };
-        int rowInt = Integer.parseInt(String.valueOf(row));
-        if (rowInt > 8 || rowInt < 1) throw new IOException("Row does not exist!");
-        return new ChessPosition(rowInt, colInt);
+        ChessPosition position = new ChessPosition(
+                Character.getNumericValue(moveString.charAt(1)),
+                Character.getNumericValue(moveString.charAt(0)) - 9 //A is 10
+        );
+        if (position.outOfBounds()) {
+            throw new IOException("Position is invalid!");
+        }
+        return position;
     }
 
     private ChessPiece.PieceType typeFromString(String type) throws IOException {

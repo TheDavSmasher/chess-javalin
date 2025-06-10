@@ -53,11 +53,6 @@ public final class ChessUI {
         out.println();
     }
 
-    private void drawSideHeader(int col, boolean whiteBottom) {
-        setGreyBG();
-        printSquare(whiteBottom ? (BOARD_SIZE - col) : (col + 1));
-    }
-
     private void drawChessRow(int col, ChessBoard board, Boolean[][] moves, boolean firstIsWhite, boolean whiteBottom) {
         drawSideHeader(col, whiteBottom);
         int boardRow = whiteBottom ? (BOARD_SIZE - col - 1) : col;
@@ -68,6 +63,11 @@ public final class ChessUI {
         drawSideHeader(col, whiteBottom);
         resetColor();
         out.println();
+    }
+
+    private void drawSideHeader(int col, boolean whiteBottom) {
+        setGreyBG();
+        printSquare(whiteBottom ? (BOARD_SIZE - col) : (col + 1));
     }
 
     private void drawChessSquare(String pieceString, Boolean moveSpot, boolean isWhite) {

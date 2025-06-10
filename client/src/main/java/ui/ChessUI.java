@@ -21,6 +21,15 @@ public final class ChessUI {
         out.println();
         printTopHeader(whiteBottom);
 
+        Boolean[][] moves = getMovesAsBooleans(chessGame, start);
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            drawChessRow(i, chessGame.getBoard(), moves, i % 2 == 0, whiteBottom);
+        }
+
+        printTopHeader(whiteBottom);
+    }
+
+    private Boolean[][] getMovesAsBooleans(ChessGame chessGame, ChessPosition start) {
         Boolean[][] moves = new Boolean[BOARD_SIZE][BOARD_SIZE];
         if (start != null) {
             moves[start.getRow() - 1][start.getColumn() - 1] = true;
@@ -30,29 +39,23 @@ public final class ChessUI {
                 moves[position.getRow() - 1][position.getColumn() - 1] = false;
             }
         }
-
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            drawChessRow(i, chessGame.getBoard(), moves, i % 2 == 0, whiteBottom);
-        }
-
-        printTopHeader(whiteBottom);
+        return moves;
     }
 
     private void printTopHeader(boolean whiteBottom) {
         setGreyBG();
-        out.print("   ");
+        printSquare(null);
         for (int i = 0; i < BOARD_SIZE; i++) {
-            out.print(" " + (char) ('a' + (whiteBottom ? i : BOARD_SIZE - i - 1)) + " ");
+            printSquare((char) ('a' + (whiteBottom ? i : BOARD_SIZE - i - 1)));
         }
-        out.print("   ");
+        printSquare(null);
         resetColor();
         out.println();
     }
 
     private void drawSideHeader(int col, boolean whiteBottom) {
         setGreyBG();
-        int actual = whiteBottom ? (BOARD_SIZE - col) : (col + 1);
-        out.print(" " + actual + " ");
+        printSquare(whiteBottom ? (BOARD_SIZE - col) : (col + 1));
     }
 
     private void drawChessRow(int col, ChessBoard board, Boolean[][] moves, boolean firstIsWhite, boolean whiteBottom) {
@@ -85,7 +88,7 @@ public final class ChessUI {
                 out.print(isUpperCase(pieceString.charAt(0)) ? SET_TEXT_COLOR_RED : SET_TEXT_COLOR_BLUE);
             }
         }
-        out.print(pieceString != null ? " " + pieceString.toUpperCase() + " " : "   ");
+        printSquare(pieceString);
     }
 
     private void setGreyBG() {
@@ -96,5 +99,9 @@ public final class ChessUI {
     public void resetColor() {
         out.print(UNSET_BG_COLOR);
         out.print(UNSET_TEXT_COLOR);
+    }
+
+    private void printSquare(Object value) {
+        out.print(" " + (value == null ? " " : value.toString().toUpperCase()) + " ");
     }
 }

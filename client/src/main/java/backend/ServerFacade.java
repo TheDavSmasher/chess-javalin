@@ -1,15 +1,11 @@
 package backend;
 
-import backend.websocket.ServerMessageObserver;
-import backend.websocket.WebsocketCommunicator;
+import backend.websocket.*;
 import chess.ChessMove;
 import model.dataaccess.GameData;
-import model.request.CreateGameRequest;
-import model.request.JoinGameRequest;
-import model.request.UserEnterRequest;
-import model.response.CreateGameResponse;
-import model.response.ListGamesResponse;
-import model.response.UserEnterResponse;
+import model.request.*;
+import model.response.*;
+import websocket.commands.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,18 +61,18 @@ public class ServerFacade {
 
     //Websocket
     public void connectToGame(String authToken, int gameID) throws IOException {
-        websocket.connectToGame(authToken, gameID);
+        websocket.sendCommand(new ConnectCommand(authToken, gameID));
     }
 
     public void makeMove(String authToken, int gameID, ChessMove move) throws IOException {
-        websocket.makeMove(authToken, gameID, move);
+        websocket.sendCommand(new MakeMoveCommand(authToken, gameID, move));
     }
 
     public void leaveGame(String authToken, int gameID) throws IOException {
-        websocket.leaveGame(authToken, gameID);
+        websocket.sendCommand(new LeaveCommand(authToken, gameID));
     }
 
     public void resignGame(String authToken, int gameID) throws IOException {
-        websocket.resignGame(authToken, gameID);
+        websocket.sendCommand(new ResignCommand(authToken, gameID));
     }
 }

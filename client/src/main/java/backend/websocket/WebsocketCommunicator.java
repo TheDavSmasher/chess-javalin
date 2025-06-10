@@ -1,12 +1,8 @@
 package backend.websocket;
 
-import chess.ChessMove;
 import jakarta.websocket.*;
-import websocket.commands.*;
-import websocket.messages.ErrorMessage;
-import websocket.messages.LoadGameMessage;
-import websocket.messages.Notification;
-import websocket.messages.ServerMessage;
+import websocket.commands.UserGameCommand;
+import websocket.messages.*;
 
 import java.io.IOException;
 import java.net.URI;
@@ -51,23 +47,7 @@ public class WebsocketCommunicator extends Endpoint implements MessageHandler.Wh
         //Method needed to call, but no functionality is required
     }
 
-    public void connectToGame(String authToken, int gameID) throws IOException {
-        sendCommand(new ConnectCommand(authToken, gameID));
-    }
-
-    public void makeMove(String authToken, int gameID, ChessMove move) throws IOException {
-        sendCommand(new MakeMoveCommand(authToken, gameID, move));
-    }
-
-    public void leaveGame(String authToken, int gameID) throws IOException {
-        sendCommand(new LeaveCommand(authToken, gameID));
-    }
-
-    public void resignGame(String authToken, int gameID) throws IOException {
-        sendCommand(new ResignCommand(authToken, gameID));
-    }
-
-    private void sendCommand(UserGameCommand command) throws IOException {
+    public void sendCommand(UserGameCommand command) throws IOException {
         if (!connected) {
             connectToServer();
         }

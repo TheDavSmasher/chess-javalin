@@ -30,10 +30,12 @@ public class ChessClient implements ServerMessageObserver {
     private MenuState currentState = MenuState.PRE_LOGIN;
     private ChessGame currentGame = null;
     private final ServerFacade serverFacade;
+    private final ChessUI chessUI;
 
     public ChessClient(PrintStream out) {
         serverFacade = new ServerFacade(this);
         this.out = out;
+        chessUI = new ChessUI(out);
     }
 
     public void evaluate(String input) throws ClientException {
@@ -265,7 +267,7 @@ public class ChessClient implements ServerMessageObserver {
     }
 
     private void redrawBoard() {
-        ChessUI.printChessBoard(out, currentGame.getBoard(), null, whitePlayer);
+        chessUI.printChessBoard(currentGame.getBoard(), null, whitePlayer);
     }
 
     private void makeMove(String[] params) throws ClientException, IOException {
@@ -287,7 +289,7 @@ public class ChessClient implements ServerMessageObserver {
         }
         String startPos = params[0];
         ChessPosition start = positionFromString(startPos);
-        ChessUI.printChessBoard(out, currentGame.getBoard(), currentGame.validMoves(start), whitePlayer);
+        chessUI.printChessBoard(currentGame.getBoard(), currentGame.validMoves(start), whitePlayer);
     }
 
     private void leaveGame() throws IOException {
@@ -338,7 +340,7 @@ public class ChessClient implements ServerMessageObserver {
     private void displayError(ErrorMessage errorMessage) {
         out.print(SET_TEXT_COLOR_RED);
         out.println(errorMessage.getError());
-        ChessUI.resetColor(out);
+        chessUI.resetColor();
     }
 
     private void loadGame(LoadGameMessage message) {

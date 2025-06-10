@@ -11,10 +11,16 @@ import static chess.ChessBoard.BOARD_SIZE;
 import static java.lang.Character.isUpperCase;
 import static ui.EscapeSequences.*;
 
-public class ChessUI {
-    public static void printChessBoard(PrintStream out, ChessBoard chessBoard, Collection<ChessMove> pieceMoves, boolean whiteBottom) {
+public final class ChessUI {
+    private final PrintStream out;
+
+    public ChessUI(PrintStream out) {
+        this.out = out;
+    }
+
+    public void printChessBoard(ChessBoard chessBoard, Collection<ChessMove> pieceMoves, boolean whiteBottom) {
         out.println();
-        printTopHeader(out, whiteBottom);
+        printTopHeader(whiteBottom);
 
         Boolean[][] moves = new Boolean[BOARD_SIZE][BOARD_SIZE];
         if (pieceMoves != null && !pieceMoves.isEmpty()) {
@@ -27,42 +33,42 @@ public class ChessUI {
         }
 
         for (int i = 0; i < BOARD_SIZE; i++) {
-            drawChessRow(out, i, chessBoard, moves, i % 2 == 0, whiteBottom);
+            drawChessRow(i, chessBoard, moves, i % 2 == 0, whiteBottom);
         }
 
-        printTopHeader(out, whiteBottom);
+        printTopHeader(whiteBottom);
     }
 
-    private static void printTopHeader(PrintStream out, boolean whiteBottom) {
-        setGreyBG(out);
+    private void printTopHeader(boolean whiteBottom) {
+        setGreyBG();
         out.print("   ");
         for (int i = 0; i < BOARD_SIZE; i++) {
             out.print(" " + (char) ('a' + (whiteBottom ? i : BOARD_SIZE - i - 1)) + " ");
         }
         out.print("   ");
-        resetColor(out);
+        resetColor();
         out.println();
     }
 
-    private static void drawSideHeader(PrintStream out, int col, boolean whiteBottom) {
-        setGreyBG(out);
+    private void drawSideHeader(int col, boolean whiteBottom) {
+        setGreyBG();
         int actual = whiteBottom ? (BOARD_SIZE - col) : (col + 1);
         out.print(" " + actual + " ");
     }
 
-    private static void drawChessRow(PrintStream out, int col, ChessBoard board, Boolean[][] moves, boolean firstIsWhite, boolean whiteBottom) {
-        drawSideHeader(out, col, whiteBottom);
+    private void drawChessRow(int col, ChessBoard board, Boolean[][] moves, boolean firstIsWhite, boolean whiteBottom) {
+        drawSideHeader(col, whiteBottom);
         int boardRow = whiteBottom ? (BOARD_SIZE - col - 1) : col;
         for (int i = 0; i < BOARD_SIZE; i++) {
             int boardCol = whiteBottom ? i : (BOARD_SIZE - i - 1);
-            drawChessSquare(out, board.getPiece(boardRow, boardCol).toString(), moves[boardRow][boardCol], (i % 2 == 0) == firstIsWhite);
+            drawChessSquare(board.getPiece(boardRow, boardCol).toString(), moves[boardRow][boardCol], (i % 2 == 0) == firstIsWhite);
         }
-        drawSideHeader(out, col, whiteBottom);
-        resetColor(out);
+        drawSideHeader(col, whiteBottom);
+        resetColor();
         out.println();
     }
 
-    private static void drawChessSquare(PrintStream out, String pieceString, Boolean moveSpot, boolean isWhite) {
+    private void drawChessSquare(String pieceString, Boolean moveSpot, boolean isWhite) {
         boolean isMove = moveSpot != null;
 
         if (isMove) {
@@ -83,12 +89,12 @@ public class ChessUI {
         out.print(pieceString != null ? " " + pieceString.toUpperCase() + " " : "   ");
     }
 
-    private static void setGreyBG(PrintStream out) {
+    private void setGreyBG() {
         out.print(SET_BG_COLOR_LIGHT_GREY);
         out.print(SET_TEXT_COLOR_BLACK);
     }
 
-    public static void resetColor(PrintStream out) {
+    public void resetColor() {
         out.print(UNSET_BG_COLOR);
         out.print(UNSET_TEXT_COLOR);
     }

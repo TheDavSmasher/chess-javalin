@@ -12,15 +12,11 @@ import org.jetbrains.annotations.NotNull;
 public class ExceptionHandler implements io.javalin.http.ExceptionHandler<ServiceException> {
     @Override
     public void handle(@NotNull ServiceException e, @NotNull Context context) {
-        context.status(getStatusCode(e)).json(new ErrorResponse("Error: " + e.getMessage()));
-    }
-
-    private static HttpStatus getStatusCode(ServiceException e) {
-        return switch (e) {
+        context.status(switch (e) {
             case BadRequestException ignore -> HttpStatus.BAD_REQUEST;
             case UnauthorizedException ignore -> HttpStatus.UNAUTHORIZED;
             case PreexistingException ignore -> HttpStatus.FORBIDDEN;
             default -> HttpStatus.INTERNAL_SERVER_ERROR;
-        };
+        }).json(new ErrorResponse("Error: " + e.getMessage()));
     }
 }

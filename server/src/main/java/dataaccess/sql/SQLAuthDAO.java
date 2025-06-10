@@ -31,7 +31,7 @@ public class SQLAuthDAO extends SQLDAO implements AuthDAO {
     @Override
     public AuthData createAuth(String username) throws DataAccessException {
         String token = UUID.randomUUID().toString();
-        tryUpdate("INSERT INTO auth (authToken, username) VALUES (?, ?)", SQLDAO::confirmUpdate, token, username);
+        tryInsert("authToken, username", SQLDAO::confirmUpdate, token, username);
         return new AuthData(username, token);
     }
 

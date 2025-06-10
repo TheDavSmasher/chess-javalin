@@ -55,7 +55,7 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
     @Override
     public GameData createGame(String gameName) throws DataAccessException {
         AtomicInteger id = new AtomicInteger();
-        tryUpdate("INSERT INTO games (gameName, game) VALUES (?, ?)", updateResKey -> {
+        tryInsert("gameName, game", updateResKey -> {
             SQLDAO.confirmUpdate(updateResKey);
             id.set(updateResKey);
         }, gameName, serialize(new ChessGame()));

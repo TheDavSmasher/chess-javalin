@@ -24,11 +24,12 @@ public abstract class SQLDAO implements ChessDAO {
         tryUpdate("TRUNCATE " + getTableName(), ignored -> {});
     }
 
-    protected <T> T trySingleQuery(String whereCol, Object whereVal, SqlQuery<T> query) throws DataAccessException {
+    protected <T> T trySingleQuery(@Language("SQL") String whereCol, Object whereVal, SqlQuery<T> query) throws DataAccessException {
         return tryQuery("SELECT * FROM " + getTableName() + " WHERE " + whereCol + "=?",
                 rs -> rs.next() ? query.execute(rs) : null, whereVal);
     }
 
+    @Language("SQL")
     protected abstract String getTableName();
 
     @Language("SQL")
@@ -46,7 +47,7 @@ public abstract class SQLDAO implements ChessDAO {
         }
     }
 
-    public interface SqlUpdate {
+    protected interface SqlUpdate {
         void execute(int updated) throws SQLException, DataAccessException;
     }
 
@@ -63,6 +64,15 @@ public abstract class SQLDAO implements ChessDAO {
         } catch (SQLException e) {
             throw new DataAccessException("could not execute update", e);
         }
+    }
+
+    protected void tryInsert(@Language("SQL") String rows, SqlUpdate update, Object... values) throws DataAccessException {
+        tryUpdate("INSERT INTO " + getTableName() + "(" + rows + ") VALUES (" + getValueSlots(values.length) + ")", update, values);
+    }
+
+    @Language("SQL")
+    private static String getValueSlots(int length) {
+        return "?" + ", ?".repeat(Math.max(0, length - 1));
     }
 
     private static PreparedStatement getStatement(@Language("SQL") String sql, Object... params) throws DataAccessException, SQLException {

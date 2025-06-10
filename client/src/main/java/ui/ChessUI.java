@@ -1,6 +1,7 @@
 package ui;
 
 import chess.ChessBoard;
+import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPosition;
 
@@ -18,28 +19,29 @@ public final class ChessUI {
         this.out = out;
     }
 
-    public void printChessBoard(ChessBoard chessBoard, boolean whiteBottom) {
-        printChessBoard(chessBoard, null, null, whiteBottom);
+    public void printChessBoard(ChessGame chessGame, boolean whiteBottom) {
+        printChessBoard(chessGame, null, whiteBottom);
     }
 
-    public void printChessBoard(ChessBoard chessBoard, ChessPosition start, Collection<ChessMove> pieceMoves, boolean whiteBottom) {
+    public void printChessBoard(ChessGame chessGame, ChessPosition start, boolean whiteBottom) {
         out.println();
         printTopHeader(whiteBottom);
 
         Boolean[][] moves = new Boolean[BOARD_SIZE][BOARD_SIZE];
         if (start != null) {
             moves[start.getRow() - 1][start.getColumn() - 1] = true;
-        }
 
-        if (pieceMoves != null) {
-            for (ChessMove move : pieceMoves) {
-                ChessPosition position = move.getEndPosition();
-                moves[position.getRow() - 1][position.getColumn() - 1] = false;
+            Collection<ChessMove> pieceMoves = chessGame.validMoves(start);
+            if (pieceMoves != null) {
+                for (ChessMove move : pieceMoves) {
+                    ChessPosition position = move.getEndPosition();
+                    moves[position.getRow() - 1][position.getColumn() - 1] = false;
+                }
             }
         }
 
         for (int i = 0; i < BOARD_SIZE; i++) {
-            drawChessRow(i, chessBoard, moves, i % 2 == 0, whiteBottom);
+            drawChessRow(i, chessGame.getBoard(), moves, i % 2 == 0, whiteBottom);
         }
 
         printTopHeader(whiteBottom);

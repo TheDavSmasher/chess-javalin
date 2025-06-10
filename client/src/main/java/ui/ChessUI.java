@@ -5,6 +5,7 @@ import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPosition;
 import java.io.PrintStream;
+import java.util.function.Consumer;
 
 import static chess.ChessBoard.BOARD_SIZE;
 import static java.lang.Character.isUpperCase;
@@ -43,31 +44,33 @@ public final class ChessUI {
     }
 
     private void printTopHeader(boolean whiteBottom) {
-        setGreyBG();
-        setBlackText();
-        printSquare(null);
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            printSquare((char) ('a' + (whiteBottom ? i : BOARD_SIZE - i - 1)));
-        }
-        printSquare(null);
-        resetColor();
+        printRow(null, i -> {
+            int boardCol = whiteBottom ? i : BOARD_SIZE - i - 1;
+            printSquare((char) ('a' + boardCol));
+        });
     }
 
     private void drawChessRow(int col, ChessBoard board, Boolean[][] moves, boolean firstIsWhite, boolean whiteBottom) {
-        drawSideHeader(col, whiteBottom);
         int boardRow = whiteBottom ? (BOARD_SIZE - col - 1) : col;
-        for (int i = 0; i < BOARD_SIZE; i++) {
+        printRow(whiteBottom ? (BOARD_SIZE - col) : (col + 1), i -> {
             int boardCol = whiteBottom ? i : (BOARD_SIZE - i - 1);
             drawChessSquare(board.getPiece(boardRow, boardCol).toString(), moves[boardRow][boardCol], (i % 2 == 0) == firstIsWhite);
-        }
-        drawSideHeader(col, whiteBottom);
-        resetColor();
+        });
     }
 
-    private void drawSideHeader(int col, boolean whiteBottom) {
+    private void printRowBorders(Object border) {
         setGreyBG();
         setBlackText();
-        printSquare(whiteBottom ? (BOARD_SIZE - col) : (col + 1));
+        printSquare(border);
+    }
+
+    private void printRow(Object borders, Consumer<Integer> rowPrinter) {
+        printRowBorders(borders);
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            rowPrinter.accept(i);
+        }
+        printRowBorders(borders);
+        resetColor();
     }
 
     private void drawChessSquare(String pieceString, Boolean moveSpot, boolean isWhite) {

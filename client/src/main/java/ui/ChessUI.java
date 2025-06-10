@@ -44,6 +44,7 @@ public final class ChessUI {
 
     private void printTopHeader(boolean whiteBottom) {
         setGreyBG();
+        setBlackText();
         printSquare(null);
         for (int i = 0; i < BOARD_SIZE; i++) {
             printSquare((char) ('a' + (whiteBottom ? i : BOARD_SIZE - i - 1)));
@@ -65,6 +66,7 @@ public final class ChessUI {
 
     private void drawSideHeader(int col, boolean whiteBottom) {
         setGreyBG();
+        setBlackText();
         printSquare(whiteBottom ? (BOARD_SIZE - col) : (col + 1));
     }
 
@@ -72,7 +74,7 @@ public final class ChessUI {
         boolean isMove = moveSpot != null;
 
         if (isMove) {
-            out.print(SET_TEXT_COLOR_BLACK);
+            setBlackText();
             if (moveSpot) {
                 out.print(SET_BG_COLOR_YELLOW);
             }
@@ -91,6 +93,9 @@ public final class ChessUI {
 
     private void setGreyBG() {
         out.print(SET_BG_COLOR_LIGHT_GREY);
+    }
+
+    private void setBlackText() {
         out.print(SET_TEXT_COLOR_BLACK);
     }
 

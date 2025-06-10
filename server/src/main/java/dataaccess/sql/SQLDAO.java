@@ -36,8 +36,9 @@ public abstract class SQLDAO implements ChessDAO {
         T execute(ResultSet resultSet) throws SQLException, DataAccessException;
     }
 
-    protected static <T> T tryQuery(@Language("SQL") String sql, SqlQuery<T> query, Object... params) throws DataAccessException {
-        try (PreparedStatement statement = getStatement(sql, params); ResultSet rs = statement.executeQuery()) {
+    protected <T> T tryQuery(@Language("SQL") String sql, SqlQuery<T> query, Object... params) throws DataAccessException {
+        try (PreparedStatement statement = getStatement("SELECT * FROM " + getTableName() + sql, params);
+             ResultSet rs = statement.executeQuery()) {
             return query.execute(rs);
         } catch (SQLException e) {
             throw new DataAccessException("could not execute query", e);
@@ -45,8 +46,7 @@ public abstract class SQLDAO implements ChessDAO {
     }
 
     protected <T> T trySingleQuery(@Language("SQL") String whereCol, Object whereVal, SqlQuery<T> query) throws DataAccessException {
-        return tryQuery("SELECT * FROM " + getTableName() + " WHERE " + whereCol + "=?",
-                rs -> rs.next() ? query.execute(rs) : null, whereVal);
+        return tryQuery(" WHERE " + whereCol + "=?", rs -> rs.next() ? query.execute(rs) : null, whereVal);
     }
 
     protected interface SqlUpdate {

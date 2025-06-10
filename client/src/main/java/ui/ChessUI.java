@@ -42,11 +42,10 @@ public class ChessUI {
     }
 
     private static void printTopHeader(PrintStream out, boolean whiteBottom) {
-        String[] columns = { " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h "};
         setGreyBG(out);
         out.print("   ");
         for (int i = 0; i < BOARD_SIZE; i++) {
-            out.print(columns[whiteBottom ? i : BOARD_SIZE - i - 1]);
+            out.print(" " + (char) ('a' + (whiteBottom ? i : BOARD_SIZE - i - 1)) + " ");
         }
         out.print("   ");
         resetColor(out);

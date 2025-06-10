@@ -3,7 +3,7 @@ package server.handler;
 import io.javalin.http.Context;
 import service.ServiceException;
 
-public abstract class RequestDeserializer<T, U>  extends ObjectSerializer<U> {
+public abstract class RequestHandler<T, U>  extends ResponseHandler<U> {
     @Override
     protected U serviceHandle(Context context) throws ServiceException {
         return serviceCall(context.bodyAsClass(getRequestClass()), getAuthToken(context));

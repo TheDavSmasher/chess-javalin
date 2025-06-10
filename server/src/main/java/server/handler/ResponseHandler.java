@@ -6,7 +6,7 @@ import io.javalin.http.HttpStatus;
 import service.ServiceException;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class ObjectSerializer<T> implements Handler {
+public abstract class ResponseHandler<T> implements Handler {
     public void handle(@NotNull Context context) throws ServiceException {
         context.contentType("application/json").status(HttpStatus.OK).json(serviceHandle(context) instanceof T res ? res : "");
     }

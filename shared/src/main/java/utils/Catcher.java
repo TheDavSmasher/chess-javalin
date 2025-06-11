@@ -71,7 +71,7 @@ public final class Catcher {
         try {
             runnable.run();
         } catch (Throwable e) {
-            if (rethrowClass.isInstance(e)) {
+            if (rethrowClass != null && rethrowClass.isInstance(e)) {
                 throw rethrowClass.cast(e);
             }
             if (catchClass.isInstance(e)) {
@@ -85,12 +85,6 @@ public final class Catcher {
             Class<? extends Throwable> catchClass,
             Consumer<Throwable> postAction
     ) {
-        try {
-            runnable.run();
-        } catch (Throwable e) {
-            if (catchClass.isInstance(e)) {
-                postAction.accept(e);
-            }
-        }
+        catchAndDo(runnable, catchClass, postAction, null);
     }
 }

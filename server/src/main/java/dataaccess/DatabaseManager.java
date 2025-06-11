@@ -1,5 +1,7 @@
 package dataaccess;
 
+import utils.Catcher;
+
 import java.sql.*;
 import java.util.Properties;
 
@@ -45,14 +47,12 @@ public class DatabaseManager {
      * </code>
      */
     public static Connection getConnection() throws DataAccessException {
-        try {
+        return Catcher.tryCatchRethrow(() -> {
             //do not wrap the following line with a try-with-resources
             var conn = DriverManager.getConnection(connectionUrl, dbUsername, dbPassword);
             conn.setCatalog(databaseName);
             return conn;
-        } catch (SQLException ex) {
-            throw new DataAccessException("failed to get connection", ex);
-        }
+        }, SQLException.class, DataAccessException.class, e -> "failed to get connection");
     }
 
     private static void loadPropertiesFromResources() {

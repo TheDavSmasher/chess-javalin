@@ -85,4 +85,11 @@ public final class Catcher {
     ) {
         tryCatchDo(runnable, catchClass, postAction, null);
     }
+
+    public static void tryCatchIgnore(
+            ErrorRunnable runnable,
+            Class<? extends Throwable> catchClass
+    ) {
+        tryCatchDo(runnable, catchClass, e -> {}, null);
+    }
 }

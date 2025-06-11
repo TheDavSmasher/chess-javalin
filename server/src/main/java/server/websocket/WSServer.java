@@ -23,7 +23,7 @@ public class WSServer implements WsMessageHandler {
     }
 
     public static void send(Session session, Object message) {
-        Catcher.tryCatchDo(() -> session.getRemote().sendString(serialize(message)),
-                IOException.class, e -> {});
+        Catcher.tryCatchIgnore(() -> session.getRemote().sendString(serialize(message)),
+                IOException.class);
     }
 }

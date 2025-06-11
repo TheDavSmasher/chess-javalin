@@ -16,11 +16,11 @@ public final class Catcher {
         return catchRethrow(supplier, catchClass, rethrowClass, rethrowClass, Throwable::getMessage);
     }
 
-    public static <T, R extends Throwable, S extends R> T catchRethrow(
+    public static <T, R extends Throwable> T catchRethrow(
             ErrorSupplier<T> supplier,
             Class<? extends Throwable> catchClass,
             Class<R> rethrowClass,
-            Class<S> subclass
+            Class<? extends R> subclass
     ) throws R {
         return catchRethrow(supplier, catchClass, rethrowClass, subclass, Throwable::getMessage);
     }
@@ -34,11 +34,11 @@ public final class Catcher {
         return catchRethrow(supplier, catchClass, rethrowClass, rethrowClass, errorMessage);
     }
 
-    public static <T, R extends Throwable, S extends R> T catchRethrow(
+    public static <T, R extends Throwable> T catchRethrow(
             ErrorSupplier<T> supplier,
             Class<? extends Throwable> catchClass,
             Class<R> rethrowClass,
-            Class<S> subclass,
+            Class<? extends R> subclass,
             Function<Throwable, String> errorMessage
     ) throws R {
         try {

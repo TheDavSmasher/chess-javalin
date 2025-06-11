@@ -21,12 +21,12 @@ public class Repl {
             try {
                 client.evaluate(scanner.nextLine());
             } catch (ExitException ignored) {
-                break;
+                out.println();
+                System.exit(0);
             } catch (Throwable e) {
                 out.print(e);
             }
         }
-        out.println();
     }
 
     private void printPrompt(PrintStream out) {

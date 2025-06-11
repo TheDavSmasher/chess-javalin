@@ -49,6 +49,9 @@ public final class Catcher {
             }
             if (catchClass.isInstance(e)) {
                 try {
+                    throw subclass.getConstructor(String.class, Throwable.class).newInstance(errorMessage.apply(e), e);
+                } catch (ReflectiveOperationException ignored) {}
+                try {
                     throw subclass.getConstructor(String.class).newInstance(errorMessage.apply(e));
                 } catch (ReflectiveOperationException ignored) {}
             }

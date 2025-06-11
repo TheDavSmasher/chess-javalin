@@ -24,7 +24,7 @@ public class Repl {
                 out.println();
                 System.exit(0);
             } catch (Throwable e) {
-                out.print(e);
+                out.print(e.getMessage());
             }
         }
     }

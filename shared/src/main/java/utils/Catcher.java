@@ -42,20 +42,6 @@ public final class Catcher {
     ) throws R {
         return tryCatchRethrowInner(supplier, catchClass, rethrowClass, rethrowClass, errorMessage);
     }
-
-    private static <T, R extends Throwable> T tryCatchRethrowInner(
-            ErrorSupplier<T> supplier, Class<? extends Throwable> catchClass, Class<R> rethrowClass,
-            Class<? extends R> throwAsClass, Function<Throwable, String> errorMessage
-    ) throws R {
-        return tryCatchInner(supplier, catchClass, rethrowClass, e -> {
-            try {
-                throw throwAsClass.getConstructor(String.class, Throwable.class).newInstance(errorMessage.apply(e), e);
-            } catch (ReflectiveOperationException ignored) {}
-            try {
-                throw throwAsClass.getConstructor(String.class).newInstance(errorMessage.apply(e));
-            } catch (ReflectiveOperationException ignored) {}
-        });
-    }
     //endregion
 
     //region Do
@@ -70,13 +56,6 @@ public final class Catcher {
             ErrorRunnable runnable, Class<? extends Throwable> catchClass, Consumer<Throwable> postAction
     ) {
         tryCatchDoInner(runnable, catchClass, postAction, null);
-    }
-
-    private static <R extends Throwable> void tryCatchDoInner(
-            ErrorRunnable runnable, Class<? extends Throwable> catchClass,
-            Consumer<Throwable> postAction, Class<R> rethrowClass
-    ) throws R {
-        tryCatchInner(() -> { runnable.run(); return null; }, catchClass, rethrowClass, postAction::accept);
     }
     //endregion
 
@@ -94,6 +73,29 @@ public final class Catcher {
     ) throws R {
         return tryCatchResourcesInner(supplier, r -> r, function, catchClass, rethrowClass, errorMessage);
     }
+    //endregion
+
+    //region Inner Methods
+    private static <T, R extends Throwable> T tryCatchRethrowInner(
+            ErrorSupplier<T> supplier, Class<? extends Throwable> catchClass, Class<R> rethrowClass,
+            Class<? extends R> throwAsClass, Function<Throwable, String> errorMessage
+    ) throws R {
+        return tryCatchInner(supplier, catchClass, rethrowClass, e -> {
+            try {
+                throw throwAsClass.getConstructor(String.class, Throwable.class).newInstance(errorMessage.apply(e), e);
+            } catch (ReflectiveOperationException ignored) {}
+            try {
+                throw throwAsClass.getConstructor(String.class).newInstance(errorMessage.apply(e));
+            } catch (ReflectiveOperationException ignored) {}
+        });
+    }
+
+    private static <R extends Throwable> void tryCatchDoInner(
+            ErrorRunnable runnable, Class<? extends Throwable> catchClass,
+            Consumer<Throwable> postAction, Class<R> rethrowClass
+    ) throws R {
+        tryCatchInner(() -> { runnable.run(); return null; }, catchClass, rethrowClass, postAction::accept);
+    }
 
     private static <T, M extends AutoCloseable, A extends AutoCloseable, R extends Throwable> T tryCatchResourcesInner(
             ErrorSupplier<M> supplier, ErrorFunction<M, A> subSupplier, ErrorFunction<A, T> function,
@@ -105,7 +107,6 @@ public final class Catcher {
             }
         }, catchClass, rethrowClass, rethrowClass, errorMessage);
     }
-    //endregion
 
     private static <T, R extends Throwable> T tryCatchInner(
             ErrorSupplier<T> supplier, Class<? extends Throwable> catchClass,
@@ -126,4 +127,5 @@ public final class Catcher {
             throw new RuntimeException(e);
         }
     }
+    //endregion
 }

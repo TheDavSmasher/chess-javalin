@@ -91,18 +91,25 @@ public final class Catcher {
             ErrorSupplier<M> supplier, ErrorFunction<M, A> subSupplier, ErrorFunction<A, T> function,
             Class<? extends Throwable> catchClass, Class<R> rethrowClass, Function<Throwable, String> errorMessage
     ) throws R {
-        return tryCatchRethrow(() -> {
-            try (M first = supplier.get(); A resource = subSupplier.apply(first)) {
-                return function.apply(resource);
-            }
-        }, catchClass, rethrowClass, errorMessage);
+        return tryCatchResourcesInner(supplier, subSupplier, function, catchClass, rethrowClass, errorMessage);
     }
 
     public static <T, A extends AutoCloseable, R extends Throwable> T tryCatchResources(
             ErrorSupplier<A> supplier, ErrorFunction<A, T> function, Class<? extends Throwable> catchClass,
             Class<R> rethrowClass, Function<Throwable, String> errorMessage
     ) throws R {
-        return tryCatchResources(supplier, r -> r, function, catchClass, rethrowClass, errorMessage);
+        return tryCatchResourcesInner(supplier, r -> r, function, catchClass, rethrowClass, errorMessage);
+    }
+
+    private static <T, M extends AutoCloseable, A extends AutoCloseable, R extends Throwable> T tryCatchResourcesInner(
+            ErrorSupplier<M> supplier, ErrorFunction<M, A> subSupplier, ErrorFunction<A, T> function,
+            Class<? extends Throwable> catchClass, Class<R> rethrowClass, Function<Throwable, String> errorMessage
+    ) throws R {
+        return tryCatchRethrowInner(() -> {
+            try (M first = supplier.get(); A resource = subSupplier.apply(first)) {
+                return function.apply(resource);
+            }
+        }, catchClass, rethrowClass, rethrowClass, errorMessage);
     }
     //endregion
 

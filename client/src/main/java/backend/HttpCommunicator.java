@@ -10,6 +10,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
+import static model.Catcher.catchRethrow;
 import static model.Serializer.deserialize;
 import static model.Serializer.serialize;
 
@@ -52,12 +53,8 @@ public class HttpCommunicator {
             builder.header("Authorization", authToken);
         }
 
-        HttpResponse<String> response;
-        try {
-            response = client.send(builder.build(), HttpResponse.BodyHandlers.ofString());
-        } catch (InterruptedException e) {
-            throw new IOException(e.getMessage());
-        }
+        HttpResponse<String> response = catchRethrow(() -> client.send(builder.build(), HttpResponse.BodyHandlers.ofString()),
+                InterruptedException.class, IOException.class);
 
         if (response.statusCode() != HttpURLConnection.HTTP_OK) {
             throw new IOException(deserialize(response.body(), ErrorResponse.class).message());

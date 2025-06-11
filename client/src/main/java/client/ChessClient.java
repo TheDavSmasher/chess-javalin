@@ -6,7 +6,7 @@ import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
-import model.Catcher;
+import utils.Catcher;
 import model.dataaccess.GameData;
 import ui.ChessUI;
 import websocket.messages.ErrorMessage;
@@ -19,7 +19,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static model.Serializer.deserialize;
+import static utils.Serializer.deserialize;
 import static ui.EscapeSequences.SET_TEXT_COLOR_RED;
 
 public class ChessClient implements ServerMessageObserver {

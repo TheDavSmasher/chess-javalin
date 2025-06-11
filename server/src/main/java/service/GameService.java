@@ -9,7 +9,7 @@ import model.response.ListGamesResponse;
 import websocket.commands.LeaveCommand;
 import websocket.commands.UserGameCommand;
 
-import static model.Serializer.serialize;
+import static utils.Serializer.serialize;
 
 public class GameService extends Service {
     public static ListGamesResponse getAllGames(String authToken) throws ServiceException {

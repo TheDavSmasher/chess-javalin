@@ -9,8 +9,8 @@ import org.intellij.lang.annotations.Language;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static model.Serializer.deserialize;
-import static model.Serializer.serialize;
+import static utils.Serializer.deserialize;
+import static utils.Serializer.serialize;
 
 public class SQLGameDAO extends SQLDAO implements GameDAO {
     private static SQLGameDAO instance;

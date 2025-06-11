@@ -8,7 +8,7 @@ import websocket.commands.UserGameCommand;
 
 import java.io.IOException;
 
-import static model.Serializer.serialize;
+import static utils.Serializer.serialize;
 
 public class WSServer implements WsMessageHandler {
     @Override

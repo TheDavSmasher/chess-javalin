@@ -8,7 +8,7 @@ import websocket.messages.Notification;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static model.Serializer.serialize;
+import static utils.Serializer.serialize;
 
 public class ConnectionManager {
     private final ConcurrentHashMap<String, Connection> userConnections = new ConcurrentHashMap<>();

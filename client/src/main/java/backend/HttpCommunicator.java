@@ -10,9 +10,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-import static model.Catcher.catchRethrow;
-import static model.Serializer.deserialize;
-import static model.Serializer.serialize;
+import static utils.Catcher.catchRethrow;
+import static utils.Serializer.deserialize;
+import static utils.Serializer.serialize;
 
 public class HttpCommunicator {
     private static final HttpClient client = HttpClient.newHttpClient();

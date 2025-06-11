@@ -7,9 +7,9 @@ import websocket.messages.*;
 import java.io.IOException;
 import java.net.URI;
 
-import static model.Serializer.deserialize;
-import static model.Serializer.serialize;
-import static model.Catcher.catchRethrow;
+import static utils.Serializer.deserialize;
+import static utils.Serializer.serialize;
+import static utils.Catcher.catchRethrow;
 
 public class WebsocketCommunicator extends Endpoint implements MessageHandler.Whole<String> {
     private Session session;

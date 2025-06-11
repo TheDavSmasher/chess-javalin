@@ -1,6 +1,7 @@
 package backend;
 
 import model.response.ErrorResponse;
+import utils.Catcher;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -10,7 +11,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-import static utils.Catcher.catchRethrow;
 import static utils.Serializer.deserialize;
 import static utils.Serializer.serialize;
 
@@ -53,7 +53,8 @@ public class HttpCommunicator {
             builder.header("Authorization", authToken);
         }
 
-        HttpResponse<String> response = catchRethrow(() -> client.send(builder.build(), HttpResponse.BodyHandlers.ofString()),
+        HttpResponse<String> response = Catcher.catchRethrow(
+                () -> client.send(builder.build(), HttpResponse.BodyHandlers.ofString()),
                 InterruptedException.class, IOException.class);
 
         if (response.statusCode() != HttpURLConnection.HTTP_OK) {

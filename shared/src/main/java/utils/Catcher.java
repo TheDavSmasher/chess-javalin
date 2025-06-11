@@ -44,6 +44,9 @@ public final class Catcher {
         try {
             return supplier.get();
         } catch (Throwable e) {
+            if (RuntimeException.class.isAssignableFrom(e.getClass())) {
+                throw (RuntimeException) e;
+            }
             if (rethrowClass.isAssignableFrom(e.getClass())) {
                 throw rethrowClass.cast(e);
             }

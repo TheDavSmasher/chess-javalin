@@ -1,14 +1,11 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessPosition;
+import chess.*;
+
 import java.io.PrintStream;
 import java.util.function.Consumer;
 
 import static chess.ChessBoard.BOARD_SIZE;
-import static java.lang.Character.isUpperCase;
 import static ui.EscapeSequences.*;
 
 public final class ChessUI {
@@ -54,7 +51,7 @@ public final class ChessUI {
         int boardRow = invertIf(!whiteBottom, col);
         printRow(boardRow + 1, i -> {
             int boardCol = invertIf(whiteBottom, i);
-            drawChessSquare(board.getPiece(boardRow, boardCol).toString(), moves[boardRow][boardCol], (i % 2 == 0) == firstIsWhite);
+            drawChessSquare(board.getPiece(boardRow, boardCol), moves[boardRow][boardCol], (i % 2 == 0) == firstIsWhite);
         });
     }
 
@@ -77,19 +74,19 @@ public final class ChessUI {
         resetColor();
     }
 
-    private void drawChessSquare(String pieceString, Boolean moveSpot, boolean isWhite) {
+    private void drawChessSquare(ChessPiece piece, Boolean moveSpot, boolean isWhite) {
         boolean isMove = moveSpot != null;
 
         if (isMove) {
-            out.print(SET_TEXT_COLOR_BLACK);
             out.print(moveSpot ? SET_BG_COLOR_YELLOW : isWhite ? SET_BG_COLOR_GREEN : SET_BG_COLOR_DARK_GREEN);
+            out.print(SET_TEXT_COLOR_BLACK);
         } else {
-            if (pieceString != null) {
-                out.print(isUpperCase(pieceString.charAt(0)) ? SET_TEXT_COLOR_RED : SET_TEXT_COLOR_BLUE);
-            }
             out.print(isWhite ? SET_BG_COLOR_WHITE : SET_BG_COLOR_BLACK);
+            if (piece != null) {
+                out.print(piece.color() == ChessGame.TeamColor.WHITE ? SET_TEXT_COLOR_RED : SET_TEXT_COLOR_BLUE);
+            }
         }
-        printSquare(pieceString);
+        printSquare(piece);
     }
 
     public void resetColor() {

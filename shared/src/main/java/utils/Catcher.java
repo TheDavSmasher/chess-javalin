@@ -69,6 +69,30 @@ public final class Catcher {
             Consumer<Throwable> postAction,
             Class<R> rethrowClass
     ) throws R {
+        tryCatchDoInner(runnable, catchClass, postAction, rethrowClass);
+    }
+
+    public static void tryCatchDo(
+            ErrorRunnable runnable,
+            Class<? extends Throwable> catchClass,
+            Consumer<Throwable> postAction
+    ) {
+        tryCatchDoInner(runnable, catchClass, postAction, null);
+    }
+
+    public static void tryCatchIgnore(
+            ErrorRunnable runnable,
+            Class<? extends Throwable> catchClass
+    ) {
+        tryCatchDoInner(runnable, catchClass, e -> {}, null);
+    }
+
+    private static <R extends Throwable> void tryCatchDoInner(
+            ErrorRunnable runnable,
+            Class<? extends Throwable> catchClass,
+            Consumer<Throwable> postAction,
+            Class<R> rethrowClass
+    ) throws R {
         try {
             runnable.run();
         } catch (Throwable e) {
@@ -79,20 +103,5 @@ public final class Catcher {
                 postAction.accept(e);
             }
         }
-    }
-
-    public static void tryCatchDo(
-            ErrorRunnable runnable,
-            Class<? extends Throwable> catchClass,
-            Consumer<Throwable> postAction
-    ) {
-        tryCatchDo(runnable, catchClass, postAction, null);
-    }
-
-    public static void tryCatchIgnore(
-            ErrorRunnable runnable,
-            Class<? extends Throwable> catchClass
-    ) {
-        tryCatchDo(runnable, catchClass, e -> {}, null);
     }
 }

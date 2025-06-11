@@ -7,6 +7,7 @@ import dataaccess.DataAccessObject.*;
 
 import java.sql.*;
 
+import static utils.Catcher.*;
 import static java.sql.Types.NULL;
 
 public abstract class SQLDAO implements ChessDAO {
@@ -19,12 +20,9 @@ public abstract class SQLDAO implements ChessDAO {
     protected SQLDAO(boolean tableExists) throws DataAccessException {
         if (tableExists) return;
         DatabaseManager.createDatabase();
-        try (PreparedStatement preparedStatement =
-                     getStatement("CREATE TABLE IF NOT EXISTS " + getTableName() + getTableSetup())) {
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataAccessException("could not configure database table " + getTableName(), e);
-        }
+        tryCatchResources(() -> getStatement("CREATE TABLE IF NOT EXISTS " + getTableName() + getTableSetup()),
+                PreparedStatement::executeUpdate,
+                SQLException.class, DataAccessException.class, e -> "could not configure table " + getTableName());
     }
 
     @Override
@@ -37,12 +35,9 @@ public abstract class SQLDAO implements ChessDAO {
     }
 
     protected <T> T tryQuery(@Language("SQL") String sql, SqlQuery<T> query, Object... params) throws DataAccessException {
-        try (PreparedStatement statement = getStatement("SELECT * FROM " + getTableName() + sql, params);
-             ResultSet rs = statement.executeQuery()) {
-            return query.execute(rs);
-        } catch (SQLException e) {
-            throw new DataAccessException("could not execute query", e);
-        }
+        return tryCatchResources(() -> getStatement("SELECT * FROM " + getTableName() + sql, params),
+                PreparedStatement::executeQuery, query::execute,
+                SQLException.class, DataAccessException.class, e -> "could not execute query");
     }
 
     protected <T> T trySingleQuery(@Language("SQL") String whereCol, Object whereVal, SqlQuery<T> query) throws DataAccessException {
@@ -54,18 +49,15 @@ public abstract class SQLDAO implements ChessDAO {
     }
 
     protected static void tryUpdate(@Language("SQL") String sql, SqlUpdate update, Object... params) throws DataAccessException {
-        try (PreparedStatement statement = getStatement(sql, params)) {
+        tryCatchResources(() -> getStatement(sql, params), statement -> {
             int result = statement.executeUpdate();
 
-            try (ResultSet rs = statement.getGeneratedKeys()) {
-                if (rs.next())
-                    result = rs.getInt(1);
-            }
+            int finalResult = tryCatchResources(statement::getGeneratedKeys, rs ->
+                    rs.next() ? rs.getInt(1) : result, null, SQLException.class, Throwable::getMessage);
 
-            update.execute(result);
-        } catch (SQLException e) {
-            throw new DataAccessException("could not execute update", e);
-        }
+            update.execute(finalResult);
+            return null;
+        }, SQLException.class, DataAccessException.class, e -> "could not execute update");
     }
 
     protected void tryInsert(@Language("SQL") String rows, SqlUpdate update, Object... values) throws DataAccessException {

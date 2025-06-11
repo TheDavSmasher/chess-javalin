@@ -25,12 +25,10 @@ public class DatabaseManager {
     static public void createDatabase() throws DataAccessException {
         if (databaseExists) return;
         var statement = "CREATE DATABASE IF NOT EXISTS " + databaseName;
-        try (var conn = DriverManager.getConnection(connectionUrl, dbUsername, dbPassword);
-             var preparedStatement = conn.prepareStatement(statement)) {
-            preparedStatement.executeUpdate();
-        } catch (SQLException ex) {
-            throw new DataAccessException("failed to create database", ex);
-        }
+        tryCatchResources(() -> DriverManager.getConnection(connectionUrl, dbUsername, dbPassword),
+                conn -> conn.prepareStatement(statement),
+                PreparedStatement::executeUpdate,
+                SQLException.class, DataAccessException.class, e -> "failed to create database");
         databaseExists = true;
     }
 
@@ -56,16 +54,15 @@ public class DatabaseManager {
     }
 
     private static void loadPropertiesFromResources() {
-        try (var propStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("db.properties")) {
+        tryCatchResources(() -> Thread.currentThread().getContextClassLoader().getResourceAsStream("db.properties"), propStream -> {
             if (propStream == null) {
                 throw new Exception("Unable to load db.properties");
             }
             Properties props = new Properties();
             props.load(propStream);
             loadProperties(props);
-        } catch (Exception ex) {
-            throw new RuntimeException("unable to process db.properties", ex);
-        }
+            return null;
+        }, Exception.class, RuntimeException.class, e -> "unable to process db.properties");
     }
 
     private static void loadProperties(Properties props) {

@@ -107,4 +107,33 @@ public final class Catcher {
             }
         }
     }
+
+    public interface ErrorFunction<T, V> {
+        V apply(T t) throws Throwable;
+    }
+
+    public static <T, M extends AutoCloseable, A extends AutoCloseable, R extends Throwable> T tryCatchResources(
+            ErrorSupplier<M> supplier,
+            ErrorFunction<M, A> subSupplier,
+            ErrorFunction<A, T> function,
+            Class<? extends Throwable> catchClass,
+            Class<R> rethrowClass,
+            Function<Throwable, String> errorMessage
+    ) throws R {
+        return tryCatchRethrow(() -> {
+            try (M first = supplier.get(); A resource = subSupplier.apply(first)) {
+                return function.apply(resource);
+            }
+        }, catchClass, rethrowClass, errorMessage);
+    }
+
+    public static <T, A extends AutoCloseable, R extends Throwable> T tryCatchResources(
+            ErrorSupplier<A> supplier,
+            ErrorFunction<A, T> function,
+            Class<? extends Throwable> catchClass,
+            Class<R> rethrowClass,
+            Function<Throwable, String> errorMessage
+    ) throws R {
+        return tryCatchResources(supplier, r -> r, function, catchClass, rethrowClass, errorMessage);
+    }
 }

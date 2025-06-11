@@ -5,45 +5,45 @@ import java.util.function.Function;
 
 public final class Catcher {
     public interface ErrorSupplier<T> {
-        T get() throws Exception;
+        T get() throws Throwable;
     }
 
-    public static <T, R extends Exception> T catchRethrow(
+    public static <T, R extends Throwable> T catchRethrow(
             ErrorSupplier<T> supplier,
-            Class<? extends Exception> catchClass,
+            Class<? extends Throwable> catchClass,
             Class<R> rethrowClass
     ) throws R {
         return catchRethrow(supplier, catchClass, rethrowClass, rethrowClass, Throwable::getMessage);
     }
 
-    public static <T, R extends Exception, S extends R> T catchRethrow(
+    public static <T, R extends Throwable, S extends R> T catchRethrow(
             ErrorSupplier<T> supplier,
-            Class<? extends Exception> catchClass,
+            Class<? extends Throwable> catchClass,
             Class<R> rethrowClass,
             Class<S> subclass
     ) throws R {
         return catchRethrow(supplier, catchClass, rethrowClass, subclass, Throwable::getMessage);
     }
 
-    public static <T, R extends Exception> T catchRethrow(
+    public static <T, R extends Throwable> T catchRethrow(
             ErrorSupplier<T> supplier,
-            Class<? extends Exception> catchClass,
+            Class<? extends Throwable> catchClass,
             Class<R> rethrowClass,
-            Function<Exception, String> errorMessage
+            Function<Throwable, String> errorMessage
     ) throws R {
         return catchRethrow(supplier, catchClass, rethrowClass, rethrowClass, errorMessage);
     }
 
-    public static <T, R extends Exception, S extends R> T catchRethrow(
+    public static <T, R extends Throwable, S extends R> T catchRethrow(
             ErrorSupplier<T> supplier,
-            Class<? extends Exception> catchClass,
+            Class<? extends Throwable> catchClass,
             Class<R> rethrowClass,
             Class<S> subclass,
-            Function<Exception, String> errorMessage
+            Function<Throwable, String> errorMessage
     ) throws R {
         try {
             return supplier.get();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             if (rethrowClass.isAssignableFrom(e.getClass())) {
                 throw rethrowClass.cast(e);
             }

@@ -82,18 +82,12 @@ public final class ChessUI {
 
         if (isMove) {
             out.print(SET_TEXT_COLOR_BLACK);
-            if (moveSpot) {
-                out.print(SET_BG_COLOR_YELLOW);
-            }
-        }
-
-        if (!isMove || !moveSpot) {
-            out.print(isWhite
-                    ? isMove ? SET_BG_COLOR_GREEN : SET_BG_COLOR_WHITE
-                    : isMove ? SET_BG_COLOR_DARK_GREEN : SET_BG_COLOR_BLACK);
+            out.print(moveSpot ? SET_BG_COLOR_YELLOW : isWhite ? SET_BG_COLOR_GREEN : SET_BG_COLOR_DARK_GREEN);
+        } else {
             if (pieceString != null) {
                 out.print(isUpperCase(pieceString.charAt(0)) ? SET_TEXT_COLOR_RED : SET_TEXT_COLOR_BLUE);
             }
+            out.print(isWhite ? SET_BG_COLOR_WHITE : SET_BG_COLOR_BLACK);
         }
         printSquare(pieceString);
     }

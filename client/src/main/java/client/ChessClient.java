@@ -1,18 +1,11 @@
 package client;
 
-import backend.ServerFacade;
-import backend.ServerMessageObserver;
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import backend.*;
+import chess.*;
 import utils.Catcher;
 import model.dataaccess.GameData;
 import ui.ChessUI;
-import websocket.messages.ErrorMessage;
-import websocket.messages.LoadGameMessage;
-import websocket.messages.Notification;
-import websocket.messages.ServerMessage;
+import websocket.messages.*;
 
 import java.io.IOError;
 import java.io.IOException;

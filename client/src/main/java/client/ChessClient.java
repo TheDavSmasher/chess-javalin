@@ -6,6 +6,7 @@ import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
+import model.Catcher;
 import model.dataaccess.GameData;
 import ui.ChessUI;
 import websocket.messages.ErrorMessage;
@@ -317,11 +318,8 @@ public class ChessClient implements ServerMessageObserver {
     }
 
     private ChessPiece.PieceType typeFromString(String type) throws IOException {
-        try {
-            return ChessPiece.PieceType.valueOf(type);
-        } catch (IllegalArgumentException e) {
-            throw new IOException("That Piece Type does not exist.");
-        }
+        return Catcher.catchRethrow(() -> ChessPiece.PieceType.valueOf(type),
+                IllegalArgumentException.class, IOException.class, _ -> "That Piece Type does not exist.");
     }
 
     @Override

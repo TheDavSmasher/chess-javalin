@@ -25,7 +25,7 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
 
         ChessGame game = gameData.game();
         ChessMove move = command.getMove();
-        Catcher.catchRethrow(() -> {
+        Catcher.tryCatchRethrow(() -> {
             game.makeMove(move);
             return null;
         }, InvalidMoveException.class, WebsocketException.class);

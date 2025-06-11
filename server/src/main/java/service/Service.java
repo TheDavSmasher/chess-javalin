@@ -42,7 +42,7 @@ public abstract class Service {
 
     //region Try Wrappers
     protected static <T> T tryCatch(EndpointSupplier<T> call) throws ServiceException {
-        return Catcher.catchRethrow(call::method, DataAccessException.class, ServiceException.class, UnexpectedException.class);
+        return Catcher.tryCatchRethrow(call::method, DataAccessException.class, ServiceException.class, UnexpectedException.class);
     }
 
     public static <T> T tryAuthorized(String authToken, AuthorizedSupplier<T> logic) throws ServiceException {

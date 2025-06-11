@@ -42,7 +42,7 @@ public class ChessClient implements ServerMessageObserver {
 
     public void evaluate(String input) throws ClientException {
         String[] tokens = input.toLowerCase().split(" ");
-        Catcher.catchAndDo(() -> Catcher.catchRethrow(() -> {
+        Catcher.tryCatchDo(() -> Catcher.tryCatchRethrow(() -> {
             int command = (tokens.length > 0) ? Integer.parseInt(tokens[0]) : 0;
             String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
             switch (currentState) {
@@ -317,7 +317,7 @@ public class ChessClient implements ServerMessageObserver {
     }
 
     private ChessPiece.PieceType typeFromString(String type) throws IOException {
-        return Catcher.catchRethrow(() -> ChessPiece.PieceType.valueOf(type),
+        return Catcher.tryCatchRethrow(() -> ChessPiece.PieceType.valueOf(type),
                 IllegalArgumentException.class, IOException.class, _ -> "That Piece Type does not exist.");
     }
 

@@ -18,7 +18,7 @@ public abstract class WebSocketCommand<T extends UserGameCommand> {
     protected abstract void execute(T command, Session session) throws ServiceException;
 
     public void handle(WsMessageContext context) {
-        Catcher.catchAndDo(() -> execute(context.messageAsClass(getCommandClass()), context.session),
+        Catcher.tryCatchDo(() -> execute(context.messageAsClass(getCommandClass()), context.session),
                 ServiceException.class, e -> WSServer.send(context.session, new ErrorMessage(e.getMessage())));
     }
 

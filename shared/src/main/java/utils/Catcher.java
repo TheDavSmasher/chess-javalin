@@ -8,33 +8,33 @@ public final class Catcher {
         T get() throws Throwable;
     }
 
-    public static <T, R extends Throwable> T catchRethrow(
+    public static <T, R extends Throwable> T tryCatchRethrow(
             ErrorSupplier<T> supplier,
             Class<? extends Throwable> catchClass,
             Class<R> rethrowClass
     ) throws R {
-        return catchRethrow(supplier, catchClass, rethrowClass, rethrowClass, Throwable::getMessage);
+        return tryCatchRethrow(supplier, catchClass, rethrowClass, rethrowClass, Throwable::getMessage);
     }
 
-    public static <T, R extends Throwable> T catchRethrow(
+    public static <T, R extends Throwable> T tryCatchRethrow(
             ErrorSupplier<T> supplier,
             Class<? extends Throwable> catchClass,
             Class<R> rethrowClass,
             Class<? extends R> subclass
     ) throws R {
-        return catchRethrow(supplier, catchClass, rethrowClass, subclass, Throwable::getMessage);
+        return tryCatchRethrow(supplier, catchClass, rethrowClass, subclass, Throwable::getMessage);
     }
 
-    public static <T, R extends Throwable> T catchRethrow(
+    public static <T, R extends Throwable> T tryCatchRethrow(
             ErrorSupplier<T> supplier,
             Class<? extends Throwable> catchClass,
             Class<R> rethrowClass,
             Function<Throwable, String> errorMessage
     ) throws R {
-        return catchRethrow(supplier, catchClass, rethrowClass, rethrowClass, errorMessage);
+        return tryCatchRethrow(supplier, catchClass, rethrowClass, rethrowClass, errorMessage);
     }
 
-    private static <T, R extends Throwable> T catchRethrow(
+    private static <T, R extends Throwable> T tryCatchRethrow(
             ErrorSupplier<T> supplier,
             Class<? extends Throwable> catchClass,
             Class<R> rethrowClass,
@@ -60,7 +60,7 @@ public final class Catcher {
         void run() throws Throwable;
     }
 
-    public static <R extends Throwable> void catchAndDo(
+    public static <R extends Throwable> void tryCatchDo(
             ErrorRunnable runnable,
             Class<? extends Throwable> catchClass,
             Consumer<Throwable> postAction,
@@ -78,11 +78,11 @@ public final class Catcher {
         }
     }
 
-    public static void catchAndDo(
+    public static void tryCatchDo(
             ErrorRunnable runnable,
             Class<? extends Throwable> catchClass,
             Consumer<Throwable> postAction
     ) {
-        catchAndDo(runnable, catchClass, postAction, null);
+        tryCatchDo(runnable, catchClass, postAction, null);
     }
 }

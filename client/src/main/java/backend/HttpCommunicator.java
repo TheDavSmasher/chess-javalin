@@ -53,7 +53,7 @@ public class HttpCommunicator {
             builder.header("Authorization", authToken);
         }
 
-        HttpResponse<String> response = Catcher.catchRethrow(
+        HttpResponse<String> response = Catcher.tryCatchRethrow(
                 () -> client.send(builder.build(), HttpResponse.BodyHandlers.ofString()),
                 InterruptedException.class, IOException.class);
 

@@ -91,7 +91,7 @@ public class ChessBoard implements Cloneable {
 
     @Override
     public ChessBoard clone() {
-        return Catcher.catchRethrow(() -> {
+        return Catcher.tryCatchRethrow(() -> {
             ChessBoard clone = (ChessBoard) super.clone();
             clone.board = Arrays.copyOf(board, board.length);
             for (int i = 0; i < BOARD_SIZE; i++) {

@@ -43,7 +43,7 @@ public class WebsocketCommunicator extends Endpoint implements MessageHandler.Wh
 
     private void connectToServer() throws IOException {
         if (connected) return;
-        session = Catcher.catchRethrow(
+        session = Catcher.tryCatchRethrow(
                 () -> ContainerProvider.getWebSocketContainer().connectToServer(this, URI.create(socketUrl + "ws")),
                 DeploymentException.class, IOException.class);
         session.addMessageHandler(this);

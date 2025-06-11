@@ -1,7 +1,7 @@
 package client;
 
 import backend.ServerFacade;
-import backend.websocket.ServerMessageObserver;
+import backend.ServerMessageObserver;
 import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPiece;

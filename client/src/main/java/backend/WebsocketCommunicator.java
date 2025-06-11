@@ -1,4 +1,4 @@
-package backend.websocket;
+package backend;
 
 import jakarta.websocket.*;
 import websocket.commands.UserGameCommand;

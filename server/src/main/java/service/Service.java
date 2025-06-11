@@ -5,6 +5,7 @@ import dataaccess.DataAccessObject.*;
 import dataaccess.memory.*;
 import dataaccess.sql.*;
 import org.eclipse.jetty.util.StringUtil;
+import utils.Catcher;
 
 import java.util.Arrays;
 
@@ -41,11 +42,7 @@ public abstract class Service {
 
     //region Try Wrappers
     protected static <T> T tryCatch(EndpointSupplier<T> call) throws ServiceException {
-        try {
-            return call.method();
-        } catch (DataAccessException e) {
-            throw new UnexpectedException(e.getMessage());
-        }
+        return Catcher.catchRethrow(call::method, DataAccessException.class, ServiceException.class, UnexpectedException.class);
     }
 
     public static <T> T tryAuthorized(String authToken, AuthorizedSupplier<T> logic) throws ServiceException {

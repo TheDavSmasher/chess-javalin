@@ -17,10 +17,9 @@ public class Repl {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             printPrompt(out);
-            String line = scanner.nextLine();
 
             try {
-                client.evaluate(line);
+                client.evaluate(scanner.nextLine());
             } catch (ExitException ignored) {
                 break;
             } catch (Throwable e) {

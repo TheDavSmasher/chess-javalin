@@ -1,5 +1,7 @@
 package client;
 
+import utils.Catcher;
+
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -18,14 +20,14 @@ public class Repl {
         while (true) {
             printPrompt(out);
 
-            try {
-                client.evaluate(scanner.nextLine());
-            } catch (ExitException ignored) {
-                out.println();
-                System.exit(0);
-            } catch (Throwable e) {
-                out.print(e.getMessage());
-            }
+            Catcher.tryCatchDo(() -> Catcher.tryCatchDo(
+                    () -> client.evaluate(scanner.nextLine()),
+                    ExitException.class, ignore -> {
+                        out.println();
+                        System.exit(0);
+                    }, Throwable.class), Throwable.class,
+                    e -> out.print(e.getMessage())
+            );
         }
     }
 

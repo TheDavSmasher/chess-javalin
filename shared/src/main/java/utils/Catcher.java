@@ -1,6 +1,5 @@
 package utils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -51,8 +50,7 @@ public final class Catcher {
             if (catchClass.isInstance(e)) {
                 try {
                     throw subclass.getConstructor(String.class).newInstance(errorMessage.apply(e));
-                } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
-                         InvocationTargetException ignored) {}
+                } catch (ReflectiveOperationException ignored) {}
             }
             throw new RuntimeException(e);
         }

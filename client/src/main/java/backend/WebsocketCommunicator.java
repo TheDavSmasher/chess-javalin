@@ -9,6 +9,7 @@ import java.net.URI;
 
 import static model.Serializer.deserialize;
 import static model.Serializer.serialize;
+import static model.Catcher.catchRethrow;
 
 public class WebsocketCommunicator extends Endpoint implements MessageHandler.Whole<String> {
     private Session session;
@@ -42,12 +43,10 @@ public class WebsocketCommunicator extends Endpoint implements MessageHandler.Wh
 
     private void connectToServer() throws IOException {
         if (connected) return;
-        try {
-            session = ContainerProvider.getWebSocketContainer().connectToServer(this, URI.create(socketUrl + "ws"));
-            session.addMessageHandler(this);
-        } catch (DeploymentException e) {
-            throw new IOException(e.getMessage());
-        }
+        session = catchRethrow(
+                () -> ContainerProvider.getWebSocketContainer().connectToServer(this, URI.create(socketUrl + "ws")),
+                DeploymentException.class, IOException.class);
+        session.addMessageHandler(this);
         connected = true;
     }
 }

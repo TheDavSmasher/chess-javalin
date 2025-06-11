@@ -5,9 +5,10 @@ import dataaccess.DataAccessObject.*;
 import dataaccess.memory.*;
 import dataaccess.sql.*;
 import org.eclipse.jetty.util.StringUtil;
-import utils.Catcher;
 
 import java.util.Arrays;
+
+import static utils.Catcher.*;
 
 public abstract class Service {
     //region DAO access
@@ -42,7 +43,7 @@ public abstract class Service {
 
     //region Try Wrappers
     protected static <T> T tryCatch(EndpointSupplier<T> call) throws ServiceException {
-        return Catcher.tryCatchRethrow(call::method, DataAccessException.class, ServiceException.class, UnexpectedException.class);
+        return tryCatchRethrow(call::method, DataAccessException.class, ServiceException.class, UnexpectedException.class);
     }
 
     public static <T> T tryAuthorized(String authToken, AuthorizedSupplier<T> logic) throws ServiceException {

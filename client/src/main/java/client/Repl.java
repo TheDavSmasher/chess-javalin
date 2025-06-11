@@ -1,11 +1,10 @@
 package client;
 
-import utils.Catcher;
-
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
+import static utils.Catcher.*;
 import static ui.EscapeSequences.UNSET_TEXT_COLOR;
 
 public class Repl {
@@ -20,7 +19,7 @@ public class Repl {
         while (true) {
             printPrompt(out);
 
-            Catcher.tryCatchDo(() -> Catcher.tryCatchDo(
+            tryCatchDo(() -> tryCatchDo(
                     () -> client.evaluate(scanner.nextLine()),
                     ExitException.class, ignore -> {
                         out.println();

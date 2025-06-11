@@ -1,9 +1,9 @@
 package dataaccess;
 
-import utils.Catcher;
-
 import java.sql.*;
 import java.util.Properties;
+
+import static utils.Catcher.*;
 
 public class DatabaseManager {
     private static String databaseName;
@@ -47,7 +47,7 @@ public class DatabaseManager {
      * </code>
      */
     public static Connection getConnection() throws DataAccessException {
-        return Catcher.tryCatchRethrow(() -> {
+        return tryCatchRethrow(() -> {
             //do not wrap the following line with a try-with-resources
             var conn = DriverManager.getConnection(connectionUrl, dbUsername, dbPassword);
             conn.setCatalog(databaseName);

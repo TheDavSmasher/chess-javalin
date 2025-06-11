@@ -1,13 +1,13 @@
 package backend;
 
 import jakarta.websocket.*;
-import utils.Catcher;
 import websocket.commands.UserGameCommand;
 import websocket.messages.*;
 
 import java.io.IOException;
 import java.net.URI;
 
+import static utils.Catcher.*;
 import static utils.Serializer.deserialize;
 import static utils.Serializer.serialize;
 
@@ -43,7 +43,7 @@ public class WebsocketCommunicator extends Endpoint implements MessageHandler.Wh
 
     private void connectToServer() throws IOException {
         if (connected) return;
-        session = Catcher.tryCatchRethrow(
+        session = tryCatchRethrow(
                 () -> ContainerProvider.getWebSocketContainer().connectToServer(this, URI.create(socketUrl + "ws")),
                 DeploymentException.class, IOException.class);
         session.addMessageHandler(this);

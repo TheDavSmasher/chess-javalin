@@ -4,11 +4,11 @@ import io.javalin.websocket.WsMessageContext;
 import io.javalin.websocket.WsMessageHandler;
 import org.eclipse.jetty.websocket.api.Session;
 import server.websocket.commands.*;
-import utils.Catcher;
 import websocket.commands.UserGameCommand;
 
 import java.io.IOException;
 
+import static utils.Catcher.*;
 import static utils.Serializer.serialize;
 
 public class WSServer implements WsMessageHandler {
@@ -23,7 +23,7 @@ public class WSServer implements WsMessageHandler {
     }
 
     public static void send(Session session, Object message) {
-        Catcher.tryCatchIgnore(() -> session.getRemote().sendString(serialize(message)),
+        tryCatchIgnore(() -> session.getRemote().sendString(serialize(message)),
                 IOException.class);
     }
 }

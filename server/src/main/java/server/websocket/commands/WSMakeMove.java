@@ -9,8 +9,9 @@ import server.websocket.WebsocketException;
 import service.ServiceException;
 import org.eclipse.jetty.websocket.api.Session;
 import service.GameService;
-import utils.Catcher;
 import websocket.commands.MakeMoveCommand;
+
+import static utils.Catcher.*;
 
 public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
     @Override
@@ -25,7 +26,7 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
 
         ChessGame game = gameData.game();
         ChessMove move = command.getMove();
-        Catcher.tryCatchRethrow(() -> {
+        tryCatchRethrow(() -> {
             game.makeMove(move);
             return null;
         }, InvalidMoveException.class, WebsocketException.class);

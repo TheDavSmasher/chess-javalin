@@ -1,8 +1,8 @@
 package chess;
 
-import utils.Catcher;
-
 import java.util.Arrays;
+
+import static utils.Catcher.*;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -91,7 +91,7 @@ public class ChessBoard implements Cloneable {
 
     @Override
     public ChessBoard clone() {
-        return Catcher.tryCatchRethrow(() -> {
+        return tryCatchRethrow(() -> {
             ChessBoard clone = (ChessBoard) super.clone();
             clone.board = Arrays.copyOf(board, board.length);
             for (int i = 0; i < BOARD_SIZE; i++) {

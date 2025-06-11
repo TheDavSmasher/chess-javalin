@@ -2,7 +2,6 @@ package client;
 
 import backend.*;
 import chess.*;
-import utils.Catcher;
 import model.dataaccess.GameData;
 import ui.ChessUI;
 import websocket.messages.*;
@@ -14,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static utils.Serializer.deserialize;
+import static utils.Catcher.*;
 import static ui.EscapeSequences.SET_TEXT_COLOR_RED;
 
 public class ChessClient implements ServerMessageObserver {
@@ -35,7 +35,7 @@ public class ChessClient implements ServerMessageObserver {
 
     public void evaluate(String input) throws ClientException {
         String[] tokens = input.toLowerCase().split(" ");
-        Catcher.tryCatchDo(() -> Catcher.tryCatchRethrow(() -> {
+        tryCatchDo(() -> tryCatchRethrow(() -> {
             int command = (tokens.length > 0) ? Integer.parseInt(tokens[0]) : 0;
             String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
             switch (currentState) {
@@ -310,7 +310,7 @@ public class ChessClient implements ServerMessageObserver {
     }
 
     private ChessPiece.PieceType typeFromString(String type) throws IOException {
-        return Catcher.tryCatchRethrow(() -> ChessPiece.PieceType.valueOf(type),
+        return tryCatchRethrow(() -> ChessPiece.PieceType.valueOf(type),
                 IllegalArgumentException.class, IOException.class, _ -> "That Piece Type does not exist.");
     }
 

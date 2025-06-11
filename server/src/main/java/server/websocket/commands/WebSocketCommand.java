@@ -5,10 +5,11 @@ import server.websocket.ConnectionManager;
 import server.websocket.WSServer;
 import service.ServiceException;
 import org.eclipse.jetty.websocket.api.Session;
-import utils.Catcher;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ErrorMessage;
 import websocket.messages.Notification;
+
+import static utils.Catcher.*;
 
 public abstract class WebSocketCommand<T extends UserGameCommand> {
     protected static final ConnectionManager connectionManager = new ConnectionManager();
@@ -18,7 +19,7 @@ public abstract class WebSocketCommand<T extends UserGameCommand> {
     protected abstract void execute(T command, Session session) throws ServiceException;
 
     public void handle(WsMessageContext context) {
-        Catcher.tryCatchDo(() -> execute(context.messageAsClass(getCommandClass()), context.session),
+        tryCatchDo(() -> execute(context.messageAsClass(getCommandClass()), context.session),
                 ServiceException.class, e -> WSServer.send(context.session, new ErrorMessage(e.getMessage())));
     }
 

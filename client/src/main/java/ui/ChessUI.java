@@ -63,8 +63,8 @@ public final class ChessUI {
     }
 
     private void printRowBorders(Object border) {
-        setGreyBG();
-        setBlackText();
+        out.print(SET_BG_COLOR_LIGHT_GREY);
+        out.print(SET_TEXT_COLOR_BLACK);
         printSquare(border);
     }
 
@@ -81,7 +81,7 @@ public final class ChessUI {
         boolean isMove = moveSpot != null;
 
         if (isMove) {
-            setBlackText();
+            out.print(SET_TEXT_COLOR_BLACK);
             if (moveSpot) {
                 out.print(SET_BG_COLOR_YELLOW);
             }
@@ -96,14 +96,6 @@ public final class ChessUI {
             }
         }
         printSquare(pieceString);
-    }
-
-    private void setGreyBG() {
-        out.print(SET_BG_COLOR_LIGHT_GREY);
-    }
-
-    private void setBlackText() {
-        out.print(SET_TEXT_COLOR_BLACK);
     }
 
     public void resetColor() {

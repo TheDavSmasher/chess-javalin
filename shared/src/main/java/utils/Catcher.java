@@ -72,12 +72,6 @@ public final class Catcher {
         tryCatchDoInner(runnable, catchClass, postAction, null);
     }
 
-    public static void tryCatchIgnore(
-            ErrorRunnable runnable, Class<? extends Throwable> catchClass
-    ) {
-        tryCatchDoInner(runnable, catchClass, e -> {}, null);
-    }
-
     private static <R extends Throwable> void tryCatchDoInner(
             ErrorRunnable runnable, Class<? extends Throwable> catchClass,
             Consumer<Throwable> postAction, Class<R> rethrowClass

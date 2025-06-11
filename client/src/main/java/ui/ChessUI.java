@@ -45,17 +45,21 @@ public final class ChessUI {
 
     private void printTopHeader(boolean whiteBottom) {
         printRow(null, i -> {
-            int boardCol = whiteBottom ? i : BOARD_SIZE - i - 1;
+            int boardCol = invertIf(whiteBottom, i);
             printSquare((char) ('a' + boardCol));
         });
     }
 
     private void drawChessRow(int col, ChessBoard board, Boolean[][] moves, boolean firstIsWhite, boolean whiteBottom) {
-        int boardRow = whiteBottom ? (BOARD_SIZE - col - 1) : col;
-        printRow(whiteBottom ? (BOARD_SIZE - col) : (col + 1), i -> {
-            int boardCol = whiteBottom ? i : (BOARD_SIZE - i - 1);
+        int boardRow = invertIf(!whiteBottom, col);
+        printRow(boardRow + 1, i -> {
+            int boardCol = invertIf(whiteBottom, i);
             drawChessSquare(board.getPiece(boardRow, boardCol).toString(), moves[boardRow][boardCol], (i % 2 == 0) == firstIsWhite);
         });
+    }
+
+    private int invertIf(boolean invert, int i) {
+        return invert ? i : BOARD_SIZE - i - 1;
     }
 
     private void printRowBorders(Object border) {

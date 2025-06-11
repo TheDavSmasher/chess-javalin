@@ -50,7 +50,7 @@ public final class Catcher {
             if (rethrowClass.isAssignableFrom(e.getClass())) {
                 throw rethrowClass.cast(e);
             }
-            if (catchClass.isInstance(e)) {
+            if (catchClass != null && catchClass.isInstance(e)) {
                 try {
                     throw throwAsClass.getConstructor(String.class, Throwable.class).newInstance(errorMessage.apply(e), e);
                 } catch (ReflectiveOperationException ignored) {}

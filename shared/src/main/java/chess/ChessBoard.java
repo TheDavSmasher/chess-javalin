@@ -1,5 +1,7 @@
 package chess;
 
+import utils.Catcher;
+
 import java.util.Arrays;
 
 /**
@@ -89,15 +91,13 @@ public class ChessBoard implements Cloneable {
 
     @Override
     public ChessBoard clone() {
-        try {
+        return Catcher.catchRethrow(() -> {
             ChessBoard clone = (ChessBoard) super.clone();
             clone.board = Arrays.copyOf(board, board.length);
             for (int i = 0; i < BOARD_SIZE; i++) {
                 clone.board[i] = Arrays.copyOf(board[i], board[i].length);
             }
             return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+        }, CloneNotSupportedException.class, AssertionError.class);
     }
 }

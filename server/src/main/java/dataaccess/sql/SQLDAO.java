@@ -52,10 +52,9 @@ public abstract class SQLDAO implements ChessDAO {
         tryCatchResources(() -> getStatement(sql, params), statement -> {
             int result = statement.executeUpdate();
 
-            int finalResult = tryCatchResources(statement::getGeneratedKeys, rs ->
-                    rs.next() ? rs.getInt(1) : result, null, SQLException.class, Throwable::getMessage);
-
-            update.execute(finalResult);
+            update.execute(tryCatchResources(statement::getGeneratedKeys, rs ->
+                    rs.next() ? rs.getInt(1) : result,
+                    null, SQLException.class, Throwable::getMessage));
             return null;
         }, SQLException.class, DataAccessException.class, e -> "could not execute update");
     }

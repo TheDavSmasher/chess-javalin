@@ -1,6 +1,5 @@
 package backend;
 
-import backend.websocket.*;
 import chess.ChessMove;
 import model.dataaccess.GameData;
 import model.request.*;

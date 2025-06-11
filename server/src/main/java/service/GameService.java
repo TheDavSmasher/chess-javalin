@@ -27,7 +27,7 @@ public class GameService extends Service {
 
     public static Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
         return updateGameConnection(authToken, request.gameID(), true, (oldGame, username) ->
-                (switch (getValidParameters(request.playerColor().toUpperCase())) {
+                (switch (getValidParameters(request.playerColor()).toUpperCase()) {
                     case "WHITE" -> oldGame.whiteUsername();
                     case "BLACK" -> oldGame.blackUsername();
                     default -> throwBadRequest();

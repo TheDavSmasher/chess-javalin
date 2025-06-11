@@ -4,10 +4,25 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public final class Catcher {
+    //region Interfaces
     public interface ErrorSupplier<T> {
         T get() throws Throwable;
     }
 
+    public interface ErrorRunnable {
+        void run() throws Throwable;
+    }
+
+    public interface ErrorFunction<T, V> {
+        V apply(T t) throws Throwable;
+    }
+
+    private interface ErrorConsumer<E extends Throwable> {
+        void accept(Throwable t) throws E;
+    }
+    //endregion
+
+    //region Rethrow
     public static <T, R extends Throwable> T tryCatchRethrow(
             ErrorSupplier<T> supplier, Class<? extends Throwable> catchClass, Class<R> rethrowClass
     ) throws R {
@@ -41,11 +56,9 @@ public final class Catcher {
             } catch (ReflectiveOperationException ignored) {}
         });
     }
+    //endregion
 
-    public interface ErrorRunnable {
-        void run() throws Throwable;
-    }
-
+    //region Do
     public static <R extends Throwable> void tryCatchDo(
             ErrorRunnable runnable, Class<? extends Throwable> catchClass,
             Consumer<Throwable> postAction, Class<R> rethrowClass
@@ -71,11 +84,9 @@ public final class Catcher {
     ) throws R {
         tryCatchInner(() -> { runnable.run(); return null; }, catchClass, rethrowClass, postAction::accept);
     }
+    //endregion
 
-    public interface ErrorFunction<T, V> {
-        V apply(T t) throws Throwable;
-    }
-
+    //region Resources
     public static <T, M extends AutoCloseable, A extends AutoCloseable, R extends Throwable> T tryCatchResources(
             ErrorSupplier<M> supplier, ErrorFunction<M, A> subSupplier, ErrorFunction<A, T> function,
             Class<? extends Throwable> catchClass, Class<R> rethrowClass, Function<Throwable, String> errorMessage
@@ -93,10 +104,7 @@ public final class Catcher {
     ) throws R {
         return tryCatchResources(supplier, r -> r, function, catchClass, rethrowClass, errorMessage);
     }
-
-    private interface ErrorConsumer<E extends Throwable> {
-        void accept(Throwable t) throws E;
-    }
+    //endregion
 
     private static <T, R extends Throwable> T tryCatchInner(
             ErrorSupplier<T> supplier, Class<? extends Throwable> catchClass,

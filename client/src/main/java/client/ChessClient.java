@@ -14,6 +14,7 @@ import websocket.messages.LoadGameMessage;
 import websocket.messages.Notification;
 import websocket.messages.ServerMessage;
 
+import java.io.IOError;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class ChessClient implements ServerMessageObserver {
 
     public void evaluate(String input) throws ClientException {
         String[] tokens = input.toLowerCase().split(" ");
-        try {
+        Catcher.catchAndDo(() -> Catcher.catchRethrow(() -> {
             int command = (tokens.length > 0) ? Integer.parseInt(tokens[0]) : 0;
             String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
             switch (currentState) {
@@ -82,11 +83,9 @@ public class ChessClient implements ServerMessageObserver {
                     }
                 }
             }
-        } catch (IOException e) {
-            throw new ClientException(e.getMessage());
-        } catch (NumberFormatException e) {
-            help(false);
-        }
+            return null;
+        }, IOError.class, ClientException.class),
+                NumberFormatException.class, _ -> help(true), ClientException.class);
     }
 
     private enum MenuState {

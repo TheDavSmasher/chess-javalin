@@ -1,6 +1,7 @@
 package utils;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public final class Catcher {
@@ -54,6 +55,42 @@ public final class Catcher {
                          InvocationTargetException ignored) {}
             }
             throw new RuntimeException(e);
+        }
+    }
+
+    public interface ErrorRunnable {
+        void run() throws Throwable;
+    }
+
+    public static <R extends Throwable> void catchAndDo(
+            ErrorRunnable runnable,
+            Class<? extends Throwable> catchClass,
+            Consumer<Throwable> postAction,
+            Class<R> rethrowClass
+    ) throws R {
+        try {
+            runnable.run();
+        } catch (Throwable e) {
+            if (rethrowClass.isInstance(e)) {
+                throw rethrowClass.cast(e);
+            }
+            if (catchClass.isInstance(e)) {
+                postAction.accept(e);
+            }
+        }
+    }
+
+    public static void catchAndDo(
+            ErrorRunnable runnable,
+            Class<? extends Throwable> catchClass,
+            Consumer<Throwable> postAction
+    ) {
+        try {
+            runnable.run();
+        } catch (Throwable e) {
+            if (catchClass.isInstance(e)) {
+                postAction.accept(e);
+            }
         }
     }
 }

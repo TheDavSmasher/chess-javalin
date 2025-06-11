@@ -38,7 +38,7 @@ public final class Catcher {
             ErrorSupplier<T> supplier,
             Class<? extends Throwable> catchClass,
             Class<R> rethrowClass,
-            Class<? extends R> subclass,
+            Class<? extends R> throwAsClass,
             Function<Throwable, String> errorMessage
     ) throws R {
         try {
@@ -49,10 +49,10 @@ public final class Catcher {
             }
             if (catchClass.isInstance(e)) {
                 try {
-                    throw subclass.getConstructor(String.class, Throwable.class).newInstance(errorMessage.apply(e), e);
+                    throw throwAsClass.getConstructor(String.class, Throwable.class).newInstance(errorMessage.apply(e), e);
                 } catch (ReflectiveOperationException ignored) {}
                 try {
-                    throw subclass.getConstructor(String.class).newInstance(errorMessage.apply(e));
+                    throw throwAsClass.getConstructor(String.class).newInstance(errorMessage.apply(e));
                 } catch (ReflectiveOperationException ignored) {}
             }
             throw new RuntimeException(e);

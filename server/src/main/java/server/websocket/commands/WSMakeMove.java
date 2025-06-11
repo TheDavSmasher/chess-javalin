@@ -9,6 +9,7 @@ import server.websocket.WebsocketException;
 import service.ServiceException;
 import org.eclipse.jetty.websocket.api.Session;
 import service.GameService;
+import utils.Catcher;
 import websocket.commands.MakeMoveCommand;
 
 public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
@@ -24,11 +25,11 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
 
         ChessGame game = gameData.game();
         ChessMove move = command.getMove();
-        try {
+        Catcher.catchRethrow(() -> {
             game.makeMove(move);
-        } catch (InvalidMoveException e) {
-            throw new WebsocketException(e.getMessage());
-        }
+            return null;
+        }, InvalidMoveException.class, WebsocketException.class);
+
         GameService.updateGameState(command, game);
 
         connectionManager.loadNewGame(gameData, command.getGameID());

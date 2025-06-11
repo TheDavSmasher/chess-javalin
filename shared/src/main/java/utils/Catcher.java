@@ -9,37 +9,28 @@ public final class Catcher {
     }
 
     public static <T, R extends Throwable> T tryCatchRethrow(
-            ErrorSupplier<T> supplier,
-            Class<? extends Throwable> catchClass,
-            Class<R> rethrowClass
+            ErrorSupplier<T> supplier, Class<? extends Throwable> catchClass, Class<R> rethrowClass
     ) throws R {
         return tryCatchRethrowInner(supplier, catchClass, rethrowClass, rethrowClass, Throwable::getMessage);
     }
 
     public static <T, R extends Throwable> T tryCatchRethrow(
-            ErrorSupplier<T> supplier,
-            Class<? extends Throwable> catchClass,
-            Class<R> rethrowClass,
-            Class<? extends R> subclass
+            ErrorSupplier<T> supplier, Class<? extends Throwable> catchClass,
+            Class<R> rethrowClass, Class<? extends R> subclass
     ) throws R {
         return tryCatchRethrowInner(supplier, catchClass, rethrowClass, subclass, Throwable::getMessage);
     }
 
     public static <T, R extends Throwable> T tryCatchRethrow(
-            ErrorSupplier<T> supplier,
-            Class<? extends Throwable> catchClass,
-            Class<R> rethrowClass,
-            Function<Throwable, String> errorMessage
+            ErrorSupplier<T> supplier, Class<? extends Throwable> catchClass,
+            Class<R> rethrowClass, Function<Throwable, String> errorMessage
     ) throws R {
         return tryCatchRethrowInner(supplier, catchClass, rethrowClass, rethrowClass, errorMessage);
     }
 
     private static <T, R extends Throwable> T tryCatchRethrowInner(
-            ErrorSupplier<T> supplier,
-            Class<? extends Throwable> catchClass,
-            Class<R> rethrowClass,
-            Class<? extends R> throwAsClass,
-            Function<Throwable, String> errorMessage
+            ErrorSupplier<T> supplier, Class<? extends Throwable> catchClass, Class<R> rethrowClass,
+            Class<? extends R> throwAsClass, Function<Throwable, String> errorMessage
     ) throws R {
         return tryCatchInner(supplier, catchClass, rethrowClass, e -> {
             try {
@@ -56,34 +47,27 @@ public final class Catcher {
     }
 
     public static <R extends Throwable> void tryCatchDo(
-            ErrorRunnable runnable,
-            Class<? extends Throwable> catchClass,
-            Consumer<Throwable> postAction,
-            Class<R> rethrowClass
+            ErrorRunnable runnable, Class<? extends Throwable> catchClass,
+            Consumer<Throwable> postAction, Class<R> rethrowClass
     ) throws R {
         tryCatchDoInner(runnable, catchClass, postAction, rethrowClass);
     }
 
     public static void tryCatchDo(
-            ErrorRunnable runnable,
-            Class<? extends Throwable> catchClass,
-            Consumer<Throwable> postAction
+            ErrorRunnable runnable, Class<? extends Throwable> catchClass, Consumer<Throwable> postAction
     ) {
         tryCatchDoInner(runnable, catchClass, postAction, null);
     }
 
     public static void tryCatchIgnore(
-            ErrorRunnable runnable,
-            Class<? extends Throwable> catchClass
+            ErrorRunnable runnable, Class<? extends Throwable> catchClass
     ) {
         tryCatchDoInner(runnable, catchClass, e -> {}, null);
     }
 
     private static <R extends Throwable> void tryCatchDoInner(
-            ErrorRunnable runnable,
-            Class<? extends Throwable> catchClass,
-            Consumer<Throwable> postAction,
-            Class<R> rethrowClass
+            ErrorRunnable runnable, Class<? extends Throwable> catchClass,
+            Consumer<Throwable> postAction, Class<R> rethrowClass
     ) throws R {
         tryCatchInner(() -> { runnable.run(); return null; }, catchClass, rethrowClass, postAction::accept);
     }
@@ -93,12 +77,8 @@ public final class Catcher {
     }
 
     public static <T, M extends AutoCloseable, A extends AutoCloseable, R extends Throwable> T tryCatchResources(
-            ErrorSupplier<M> supplier,
-            ErrorFunction<M, A> subSupplier,
-            ErrorFunction<A, T> function,
-            Class<? extends Throwable> catchClass,
-            Class<R> rethrowClass,
-            Function<Throwable, String> errorMessage
+            ErrorSupplier<M> supplier, ErrorFunction<M, A> subSupplier, ErrorFunction<A, T> function,
+            Class<? extends Throwable> catchClass, Class<R> rethrowClass, Function<Throwable, String> errorMessage
     ) throws R {
         return tryCatchRethrow(() -> {
             try (M first = supplier.get(); A resource = subSupplier.apply(first)) {
@@ -108,11 +88,8 @@ public final class Catcher {
     }
 
     public static <T, A extends AutoCloseable, R extends Throwable> T tryCatchResources(
-            ErrorSupplier<A> supplier,
-            ErrorFunction<A, T> function,
-            Class<? extends Throwable> catchClass,
-            Class<R> rethrowClass,
-            Function<Throwable, String> errorMessage
+            ErrorSupplier<A> supplier, ErrorFunction<A, T> function, Class<? extends Throwable> catchClass,
+            Class<R> rethrowClass, Function<Throwable, String> errorMessage
     ) throws R {
         return tryCatchResources(supplier, r -> r, function, catchClass, rethrowClass, errorMessage);
     }
@@ -122,10 +99,8 @@ public final class Catcher {
     }
 
     private static <T, R extends Throwable> T tryCatchInner(
-            ErrorSupplier<T> supplier,
-            Class<? extends Throwable> catchClass,
-            Class<R> rethrowClass,
-            ErrorConsumer<R> onCatch
+            ErrorSupplier<T> supplier, Class<? extends Throwable> catchClass,
+            Class<R> rethrowClass, ErrorConsumer<R> onCatch
     ) throws R {
         try {
             return supplier.get();

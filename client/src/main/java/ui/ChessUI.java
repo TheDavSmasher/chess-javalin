@@ -75,17 +75,11 @@ public final class ChessUI {
     }
 
     private void drawChessSquare(ChessPiece piece, Boolean moveSpot, boolean isWhite) {
-        boolean isMove = moveSpot != null;
-
-        if (isMove) {
-            out.print(moveSpot ? SET_BG_COLOR_YELLOW : isWhite ? SET_BG_COLOR_GREEN : SET_BG_COLOR_DARK_GREEN);
-            out.print(SET_TEXT_COLOR_BLACK);
-        } else {
-            out.print(isWhite ? SET_BG_COLOR_WHITE : SET_BG_COLOR_BLACK);
-            if (piece != null) {
-                out.print(piece.color() == ChessGame.TeamColor.WHITE ? SET_TEXT_COLOR_RED : SET_TEXT_COLOR_BLUE);
-            }
-        }
+        out.print(moveSpot != null ?
+                moveSpot ? SET_BG_COLOR_YELLOW : isWhite ? SET_BG_COLOR_GREEN : SET_BG_COLOR_DARK_GREEN :
+                isWhite ? SET_BG_COLOR_WHITE : SET_BG_COLOR_BLACK);
+        out.print(moveSpot != null ? SET_TEXT_COLOR_BLACK : piece == null ? "" :
+                piece.color() == ChessGame.TeamColor.WHITE ? SET_TEXT_COLOR_RED : SET_TEXT_COLOR_BLUE);
         printSquare(piece);
     }
 

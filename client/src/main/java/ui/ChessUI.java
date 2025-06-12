@@ -51,7 +51,8 @@ public final class ChessUI {
         int boardRow = invertIf(!whiteBottom, col);
         printRow(boardRow + 1, i -> {
             int boardCol = invertIf(whiteBottom, i);
-            drawChessSquare(board.getPiece(boardRow, boardCol), moves[boardRow][boardCol], (i % 2 == 0) == firstIsWhite);
+            drawChessSquare(board.getPiece(new ChessPosition(boardRow, boardCol)),
+                    moves[boardRow][boardCol], (i % 2 == 0) == firstIsWhite);
         });
     }
 

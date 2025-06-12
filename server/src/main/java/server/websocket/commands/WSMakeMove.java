@@ -32,7 +32,7 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
 
         GameService.updateGameState(command, game);
 
-        connectionManager.loadNewGame(gameData, command.getGameID());
+        connectionManager.loadNewGame(gameData);
 
         notifyGame(command.getGameID(), command.getAuthToken(), username + " has moved piece at " +
                 move.getStartPosition() + " to " + move.getEndPosition() + ".");

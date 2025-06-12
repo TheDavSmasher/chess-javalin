@@ -43,9 +43,9 @@ public class ConnectionManager {
         return userConnections.get(authToken) instanceof Connection conn ? conn.username : null;
     }
 
-    public void loadNewGame(GameData gameData, int gameID) {
+    public void loadNewGame(GameData gameData) {
         LoadGameMessage message = getLoadGame(gameData);
-        for (Connection current : connectionsToGames.get(gameID)) {
+        for (Connection current : connectionsToGames.get(gameData.gameID())) {
             current.context.send(message);
         }
     }

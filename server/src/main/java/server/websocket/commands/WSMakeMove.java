@@ -10,6 +10,7 @@ import io.javalin.websocket.WsContext;
 import service.GameService;
 import websocket.commands.MakeMoveCommand;
 
+import static server.websocket.ConnectionManager.getLoadGame;
 import static utils.Catcher.*;
 
 public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
@@ -32,7 +33,7 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
 
         GameService.updateGameState(command, game);
 
-        connectionManager.loadNewGame(gameData);
+        notifyGame(gameData.gameID(), null, getLoadGame(gameData));
 
         notifyGame(command.getGameID(), command.getAuthToken(), username + " has moved piece at " +
                 move.getStartPosition() + " to " + move.getEndPosition() + ".");

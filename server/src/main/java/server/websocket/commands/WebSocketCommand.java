@@ -8,6 +8,7 @@ import server.websocket.ConnectionManager;
 import service.ServiceException;
 import websocket.commands.UserGameCommand;
 import websocket.messages.Notification;
+import websocket.messages.ServerMessage;
 
 public abstract class WebSocketCommand<T extends UserGameCommand> implements WsMessageHandler {
     protected static final ConnectionManager connectionManager = new ConnectionManager();
@@ -26,6 +27,10 @@ public abstract class WebSocketCommand<T extends UserGameCommand> implements WsM
     }
 
     protected void notifyGame(int gameID, String authToken, String message) {
-        connectionManager.notifyGame(gameID, new Notification(message), authToken);
+        notifyGame(gameID, authToken, new Notification(message));
+    }
+
+    protected void notifyGame(int gameID, String authToken, ServerMessage serverMessage) {
+        connectionManager.notifyGame(gameID, serverMessage, authToken);
     }
 }

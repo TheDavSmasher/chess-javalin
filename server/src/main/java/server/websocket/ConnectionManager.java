@@ -43,11 +43,7 @@ public class ConnectionManager {
         return userConnections.get(authToken) instanceof Connection conn ? conn.username : null;
     }
 
-    public void loadNewGame(GameData gameData) {
-        notifyGame(gameData.gameID(), getLoadGame(gameData), null);
-    }
-
-    private LoadGameMessage getLoadGame(GameData gameData) {
+    public static LoadGameMessage getLoadGame(GameData gameData) {
         return new LoadGameMessage(serialize(gameData.game()));
     }
 

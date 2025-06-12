@@ -4,7 +4,6 @@ import chess.ChessGame;
 import model.dataaccess.GameData;
 import server.websocket.WebsocketException;
 import service.ServiceException;
-import server.websocket.Connection;
 import service.GameService;
 import websocket.commands.UserGameCommand;
 
@@ -18,8 +17,8 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
     }
 
     protected String checkConnection(String authToken) throws ServiceException {
-        return connectionManager.getFromUsers(authToken) instanceof Connection connection ?
-                connection.username() : throwNew(WebsocketException.class, "You are unauthorized.");
+        return connectionManager.getFromUsers(authToken) instanceof String username ?
+                username : throwNew(WebsocketException.class, "You are unauthorized.");
     }
 
     protected GameData checkPlayerGameState(UserGameCommand command, String username, boolean isMakeMove) throws ServiceException {

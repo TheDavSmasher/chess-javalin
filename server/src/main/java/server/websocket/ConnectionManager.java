@@ -5,12 +5,20 @@ import org.eclipse.jetty.websocket.api.Session;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.Notification;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static utils.Catcher.tryCatchDo;
 import static utils.Serializer.serialize;
 
 public class ConnectionManager {
+    public record Connection(String username, Session session) {
+        public void send(Object message) {
+            tryCatchDo(() -> session.getRemote().sendString(serialize(message)), IOException.class, e -> {});
+        }
+    }
+
     private final ConcurrentHashMap<String, Connection> userConnections = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, ArrayList<Connection>> connectionsToGames = new ConcurrentHashMap<>();
 
@@ -28,7 +36,7 @@ public class ConnectionManager {
 
     public void removeFromGame(int gameID, String authToken) {
         ArrayList<Connection> gameConnections = connectionsToGames.get(gameID);
-        gameConnections.remove(getFromUsers(authToken));
+        gameConnections.remove(userConnections.get(authToken));
         if (gameConnections.isEmpty()) {
             connectionsToGames.remove(gameID);
         } else {
@@ -37,8 +45,8 @@ public class ConnectionManager {
         userConnections.remove(authToken);
     }
 
-    public Connection getFromUsers(String authToken) {
-        return userConnections.get(authToken);
+    public String getFromUsers(String authToken) {
+        return userConnections.get(authToken) instanceof Connection conn ? conn.username : null;
     }
 
     public void loadNewGame(GameData gameData, int gameID) {
@@ -57,7 +65,7 @@ public class ConnectionManager {
         if (gameConnections == null) return;
         if (authToken == null) authToken = "";
 
-        gameConnections.removeIf(c -> !c.session().isOpen());
+        gameConnections.removeIf(c -> !c.session.isOpen());
 
         for (Connection current : gameConnections) {
             if (current == userConnections.get(authToken)) continue;

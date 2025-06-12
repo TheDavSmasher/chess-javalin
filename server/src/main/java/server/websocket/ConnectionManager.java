@@ -57,7 +57,7 @@ public class ConnectionManager {
         if (gameConnections == null) return;
         if (authToken == null) authToken = "";
 
-        gameConnections.removeIf(c -> !c.isOpen());
+        gameConnections.removeIf(c -> !c.session().isOpen());
 
         for (Connection current : gameConnections) {
             if (current == userConnections.get(authToken)) continue;

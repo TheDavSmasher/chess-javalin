@@ -12,8 +12,4 @@ public record Connection(String username, Session session) {
         tryCatchDo(() -> session.getRemote().sendString(serialize(message)),
                 IOException.class, e -> {});
     }
-
-    public boolean isOpen() {
-        return session.isOpen();
-    }
 }

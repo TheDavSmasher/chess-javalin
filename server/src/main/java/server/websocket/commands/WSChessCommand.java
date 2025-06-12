@@ -9,6 +9,8 @@ import service.GameService;
 import service.UserService;
 import websocket.commands.UserGameCommand;
 
+import static utils.Catcher.*;
+
 public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocketCommand<T> {
     protected String endGame(UserGameCommand command, ChessGame game) throws ServiceException {
         game.endGame();
@@ -17,10 +19,8 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
     }
 
     protected String checkConnection(String authToken) throws ServiceException {
-        if (!(connectionManager.getFromUsers(authToken) instanceof Connection connection)) {
-            throw new WebsocketException("You are unauthorized.");
-        }
-        return connection.username();
+        return connectionManager.getFromUsers(authToken) instanceof Connection connection ?
+                connection.username() : throwNew(WebsocketException.class, "You are unauthorized.");
     }
 
     protected GameData checkPlayerGameState(UserGameCommand command, String username, boolean isMakeMove) throws ServiceException {
@@ -28,17 +28,14 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
 
         UserService.validateAuth(command.getAuthToken());
         GameData gameData = GameService.getGame(command.getGameID());
-        if (gameData.game().isGameOver()) {
-            throw new WebsocketException("Game is already finished. You cannot " + description + " anymore.");
-        }
-        ChessGame.TeamColor color = switch (username) {
-            case String w when w.equals(gameData.whiteUsername()) -> ChessGame.TeamColor.WHITE;
-            case String b when b.equals(gameData.blackUsername()) -> ChessGame.TeamColor.BLACK;
-            default -> throw new WebsocketException("You need to be a player to " + description + ".");
-        };
-        if (isMakeMove && color != gameData.game().getTeamTurn()) {
-            throw new WebsocketException("It is not your turn to make a move.");
-        }
-        return gameData;
+
+        return gameData.game().isGameOver() ?
+                throwNew(WebsocketException.class, "Game is already finished. You cannot " + description + " anymore.") :
+                (switch (username) {
+                    case String w when w.equals(gameData.whiteUsername()) -> ChessGame.TeamColor.WHITE;
+                    case String b when b.equals(gameData.blackUsername()) -> ChessGame.TeamColor.BLACK;
+                    default -> throwNew(WebsocketException.class,"You need to be a player to " + description + ".");
+                }) != gameData.game().getTeamTurn() && isMakeMove ?
+                throwNew(WebsocketException.class, "It is not your turn to make a move.") : gameData;
     }
 }

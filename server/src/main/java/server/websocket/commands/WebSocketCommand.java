@@ -4,14 +4,10 @@ import io.javalin.websocket.WsMessageContext;
 import io.javalin.websocket.WsMessageHandler;
 import org.jetbrains.annotations.NotNull;
 import server.websocket.ConnectionManager;
-import server.websocket.Connection;
 import service.ServiceException;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.commands.UserGameCommand;
-import websocket.messages.ErrorMessage;
 import websocket.messages.Notification;
-
-import static utils.Catcher.*;
 
 public abstract class WebSocketCommand<T extends UserGameCommand> implements WsMessageHandler {
     protected static final ConnectionManager connectionManager = new ConnectionManager();
@@ -21,9 +17,8 @@ public abstract class WebSocketCommand<T extends UserGameCommand> implements WsM
     protected abstract void execute(T command, Session session) throws ServiceException;
 
     @Override
-    public void handleMessage(@NotNull WsMessageContext context) {
-        tryCatchDo(() -> execute(context.messageAsClass(getCommandClass()), context.session),
-                ServiceException.class, e -> Connection.send(context.session, new ErrorMessage(e.getMessage())));
+    public void handleMessage(@NotNull WsMessageContext context) throws ServiceException {
+        execute(context.messageAsClass(getCommandClass()), context.session);
     }
 
     protected void notifyGame(int gameID, String message) {

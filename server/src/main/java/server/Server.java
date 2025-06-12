@@ -5,6 +5,7 @@ import io.javalin.json.JavalinGson;
 import io.javalin.websocket.WsContext;
 import server.handler.*;
 import server.websocket.WSServer;
+import server.websocket.WsExceptionHandler;
 import service.ServiceException;
 
 public class Server {
@@ -29,7 +30,7 @@ public class Server {
                 .ws("/ws", ws -> {
                     ws.onConnect(WsContext::enableAutomaticPings);
                     ws.onMessage(new WSServer());
-                });
+                }).wsException(ServiceException.class, new WsExceptionHandler());
     }
 
     public int run(int desiredPort) {

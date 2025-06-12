@@ -3,7 +3,7 @@ package server.websocket;
 import model.dataaccess.GameData;
 import io.javalin.websocket.WsContext;
 import websocket.messages.LoadGameMessage;
-import websocket.messages.Notification;
+import websocket.messages.ServerMessage;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,17 +44,14 @@ public class ConnectionManager {
     }
 
     public void loadNewGame(GameData gameData) {
-        LoadGameMessage message = getLoadGame(gameData);
-        for (Connection current : connectionsToGames.get(gameData.gameID())) {
-            current.context.send(message);
-        }
+        notifyGame(gameData.gameID(), getLoadGame(gameData), null);
     }
 
     private LoadGameMessage getLoadGame(GameData gameData) {
         return new LoadGameMessage(serialize(gameData.game()));
     }
 
-    public void notifyGame(int gameID, Notification notification, String authToken) {
+    public void notifyGame(int gameID, ServerMessage serverMessage, String authToken) {
         if (!(connectionsToGames.get(gameID) instanceof ArrayList<Connection> gameConnections)) return;
 
         gameConnections.removeIf(c -> !c.context.session.isOpen());
@@ -62,7 +59,7 @@ public class ConnectionManager {
         Connection user = userConnections.get(authToken == null ? "" : authToken);
         for (Connection current : gameConnections) {
             if (current == user) continue;
-            current.context.send(notification);
+            current.context.send(serverMessage);
         }
     }
 }

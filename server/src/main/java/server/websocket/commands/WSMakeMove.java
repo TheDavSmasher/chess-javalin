@@ -45,8 +45,7 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
         String opponent = (currentTurn == ChessGame.TeamColor.WHITE) ? gameData.whiteUsername() : gameData.blackUsername();
         String message = opponent + " is now in " + state.name().toLowerCase() + ".";
         if (state != ChessGame.CheckState.CHECK) {
-            message = endGame(command, game) + message + "\n";
-            message += state == ChessGame.CheckState.STALEMATE ? "The game is tied." : username + " has won.";
+            message += endGame(command, game, (state == ChessGame.CheckState.STALEMATE ? "The game is tied." : username + " has won."));
         }
         notifyGame(command.getGameID(), message);
     }

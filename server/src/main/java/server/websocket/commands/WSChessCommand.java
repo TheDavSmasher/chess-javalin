@@ -6,7 +6,6 @@ import server.websocket.WebsocketException;
 import service.ServiceException;
 import server.websocket.Connection;
 import service.GameService;
-import service.UserService;
 import websocket.commands.UserGameCommand;
 
 import static utils.Catcher.*;
@@ -26,7 +25,6 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
     protected GameData checkPlayerGameState(UserGameCommand command, String username, boolean isMakeMove) throws ServiceException {
         String description = isMakeMove ? "make a move" : "resign";
 
-        UserService.validateAuth(command.getAuthToken());
         GameData gameData = GameService.getGame(command.getGameID());
 
         return gameData.game().isGameOver() ?

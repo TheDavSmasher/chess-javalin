@@ -55,8 +55,7 @@ public class ConnectionManager {
     }
 
     public void notifyGame(int gameID, Notification notification, String authToken) {
-        ArrayList<Connection> gameConnections = connectionsToGames.get(gameID);
-        if (gameConnections == null) return;
+        if (!(connectionsToGames.get(gameID) instanceof ArrayList<Connection> gameConnections)) return;
 
         gameConnections.removeIf(c -> !c.context.session.isOpen());
 

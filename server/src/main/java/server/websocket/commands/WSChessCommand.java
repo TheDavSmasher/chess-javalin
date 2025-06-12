@@ -11,10 +11,10 @@ import websocket.commands.UserGameCommand;
 import static utils.Catcher.*;
 
 public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocketCommand<T> {
-    protected String endGame(UserGameCommand command, ChessGame game, String extendMessage) throws ServiceException {
+    protected void endGame(UserGameCommand command, ChessGame game, String extendMessage) throws ServiceException {
         game.endGame();
         GameService.updateGameState(command, game);
-        return extendMessage + "\nThe game has ended.";
+        notifyGame(command.getGameID(), extendMessage + "\nThe game has ended.");
     }
 
     protected String checkConnection(String authToken) throws ServiceException {

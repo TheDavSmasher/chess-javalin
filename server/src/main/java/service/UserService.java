@@ -5,11 +5,13 @@ import model.dataaccess.AuthData;
 import model.request.UserEnterRequest;
 import model.response.UserEnterResponse;
 
+import static utils.Catcher.*;
+
 public class UserService extends Service {
     public static UserEnterResponse register(UserEnterRequest request) throws ServiceException {
         return enterUser(request, true, () -> {
             if (userDAO().getUser(request.username()) != null) {
-                throwPreexisting();
+                throwNew(PreexistingException.class);
             }
             userDAO().createUser(request.username(), request.password(), request.email());
         });
@@ -18,7 +20,7 @@ public class UserService extends Service {
     public static UserEnterResponse login(UserEnterRequest request) throws ServiceException {
         return enterUser(request, false, () -> {
             if (userDAO().getUser(request.username(), request.password()) == null) {
-                throwUnauthorized();
+                throwNew(UnauthorizedException.class);
             }
         });
     }
@@ -29,7 +31,7 @@ public class UserService extends Service {
 
     public static String validateAuth(String authToken) throws ServiceException {
         return tryCatch(() -> authDAO().getAuth(authToken) instanceof AuthData auth
-                ? auth.username() : throwUnauthorized());
+                ? auth.username() : throwNew(UnauthorizedException.class));
     }
 
     private interface EndpointRunnable {

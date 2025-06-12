@@ -62,18 +62,6 @@ public abstract class Service {
     //endregion
 
     protected static String getValidParameters(String... params) throws BadRequestException {
-        return Arrays.stream(params).anyMatch(StringUtil::isBlank) ? throwBadRequest() : params[0];
-    }
-
-    protected static <T> T throwUnauthorized() throws UnauthorizedException {
-        throw new UnauthorizedException();
-    }
-
-    protected static <T> T throwPreexisting() throws PreexistingException {
-        throw new PreexistingException();
-    }
-
-    protected static <T> T throwBadRequest() throws BadRequestException {
-        throw new BadRequestException();
+        return Arrays.stream(params).anyMatch(StringUtil::isBlank) ? throwNew(BadRequestException.class) : params[0];
     }
 }

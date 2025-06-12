@@ -9,6 +9,7 @@ import model.response.ListGamesResponse;
 import websocket.commands.LeaveCommand;
 import websocket.commands.UserGameCommand;
 
+import static utils.Catcher.*;
 import static utils.Serializer.serialize;
 
 public class GameService extends Service {
@@ -22,7 +23,7 @@ public class GameService extends Service {
     }
 
     public static GameData getGame(int gameID) throws ServiceException {
-        return tryCatch(() -> gameDAO().getGame(gameID) instanceof GameData data ? data : throwBadRequest());
+        return tryCatch(() -> gameDAO().getGame(gameID) instanceof GameData data ? data : throwNew(BadRequestException.class));
     }
 
     public static Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
@@ -30,8 +31,9 @@ public class GameService extends Service {
                 (switch (getValidParameters(request.playerColor()).toUpperCase()) {
                     case "WHITE" -> oldGame.whiteUsername();
                     case "BLACK" -> oldGame.blackUsername();
-                    default -> throwBadRequest();
-                }) instanceof String gameUser && !username.equals(gameUser) ? throwPreexisting() : request.playerColor()
+                    default -> throwNew(BadRequestException.class);
+                }) instanceof String gameUser && !username.equals(gameUser)
+                        ? throwNew(PreexistingException.class) : request.playerColor()
         );
     }
 

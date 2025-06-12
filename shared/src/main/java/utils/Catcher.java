@@ -4,10 +4,17 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public final class Catcher {
+    //region Throwing
+    public static <T, E extends Exception> T throwNew(Class<E> exceptionClass, String message) throws E {
+        ignoreReflection(() -> exceptionClass.getConstructor(String.class).newInstance(message));
+        return null;
+    }
+
     public static <T, E extends Exception> T throwNew(Class<E> exceptionClass) throws E {
         ignoreReflection(() -> exceptionClass.getConstructor().newInstance());
         return null;
     }
+    //endregion
 
     //region Interfaces
     public interface ErrorSupplier<T> {

@@ -11,11 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static utils.Serializer.serialize;
 
 public class ConnectionManager {
-    public record Connection(String username, WsContext context) {
-        public void send(Object message) {
-            context.send(message);
-        }
-    }
+    public record Connection(String username, WsContext context) {}
 
     private final ConcurrentHashMap<String, Connection> userConnections = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, ArrayList<Connection>> connectionsToGames = new ConcurrentHashMap<>();
@@ -50,7 +46,7 @@ public class ConnectionManager {
     public void loadNewGame(GameData gameData, int gameID) {
         LoadGameMessage message = getLoadGame(gameData);
         for (Connection current : connectionsToGames.get(gameID)) {
-            current.send(message);
+            current.context.send(message);
         }
     }
 
@@ -67,7 +63,7 @@ public class ConnectionManager {
 
         for (Connection current : gameConnections) {
             if (current == userConnections.get(authToken)) continue;
-            current.send(notification);
+            current.context.send(notification);
         }
     }
 }

@@ -84,15 +84,13 @@ public class ChessGame {
     }
 
     private Collection<ChessMove> removeInvalidMoves(Collection<ChessMove> moves) {
-        moves.removeIf(this::moveLeavesInCheck);
+        moves.removeIf(move -> {
+            ChessBoard testBoard = gameBoard.clone();
+            TeamColor colorToCheck = gameBoard.getPiece(move.getStartPosition()).getTeamColor();
+            makeMoveInGame(move, testBoard);
+            return isInCheckTest(colorToCheck, testBoard);
+        });
         return moves;
-    }
-
-    private boolean moveLeavesInCheck(ChessMove move) {
-        ChessBoard testBoard = gameBoard.clone();
-        TeamColor colorToCheck = gameBoard.getPiece(move.getStartPosition()).getTeamColor();
-        makeMoveInGame(move, testBoard);
-        return isInCheckTest(colorToCheck, testBoard);
     }
 
     /**

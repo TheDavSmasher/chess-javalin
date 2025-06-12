@@ -1,12 +1,13 @@
 package server.handler;
 
 import io.javalin.http.Context;
+import io.javalin.http.ExceptionHandler;
 import io.javalin.http.HttpStatus;
 import model.response.ErrorResponse;
 import service.*;
 import org.jetbrains.annotations.NotNull;
 
-public class ExceptionHandler implements io.javalin.http.ExceptionHandler<ServiceException> {
+public class ServerExceptionHandler implements ExceptionHandler<ServiceException> {
     @Override
     public void handle(@NotNull ServiceException e, @NotNull Context context) {
         context.status(switch (e) {

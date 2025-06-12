@@ -19,7 +19,7 @@ public class WSServer implements WsMessageHandler {
             case MAKE_MOVE -> new WSMakeMove();
             case LEAVE -> new WSLeave();
             case RESIGN -> new WSResign();
-        }).handle(context);
+        }).handleMessage(context);
     }
 
     public static void send(Session session, Object message) {

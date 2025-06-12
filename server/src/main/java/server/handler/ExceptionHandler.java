@@ -3,10 +3,7 @@ package server.handler;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import model.response.ErrorResponse;
-import service.BadRequestException;
-import service.PreexistingException;
-import service.ServiceException;
-import service.UnauthorizedException;
+import service.*;
 import org.jetbrains.annotations.NotNull;
 
 public class ExceptionHandler implements io.javalin.http.ExceptionHandler<ServiceException> {

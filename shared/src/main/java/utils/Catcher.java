@@ -4,6 +4,11 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public final class Catcher {
+    public static <T, E extends Exception> T throwNew(Class<E> exceptionClass) throws E {
+        ignoreReflection(() -> exceptionClass.getConstructor().newInstance());
+        return null;
+    }
+
     //region Interfaces
     public interface ErrorSupplier<T> {
         T get() throws Throwable;
@@ -19,6 +24,10 @@ public final class Catcher {
 
     private interface ErrorConsumer<E extends Throwable> {
         void accept(Throwable t) throws E;
+    }
+
+    private interface ErrorSupplier0<T, E extends Throwable> {
+        T get() throws E;
     }
     //endregion
 
@@ -81,13 +90,15 @@ public final class Catcher {
             Class<? extends R> throwAsClass, Function<Throwable, String> errorMessage
     ) throws R {
         return tryCatchInner(supplier, catchClass, rethrowClass, e -> {
-            try {
-                throw throwAsClass.getConstructor(String.class, Throwable.class).newInstance(errorMessage.apply(e), e);
-            } catch (ReflectiveOperationException ignored) {}
-            try {
-                throw throwAsClass.getConstructor(String.class).newInstance(errorMessage.apply(e));
-            } catch (ReflectiveOperationException ignored) {}
+            ignoreReflection(() -> throwAsClass.getConstructor(String.class, Throwable.class).newInstance(errorMessage.apply(e), e));
+            ignoreReflection(() -> throwAsClass.getConstructor(String.class).newInstance(errorMessage.apply(e)));
         });
+    }
+
+    private static <E extends Throwable> void ignoreReflection(ErrorSupplier0<E, ReflectiveOperationException> supplier0) throws E {
+        try {
+            throw supplier0.get();
+        } catch (ReflectiveOperationException ignored) {}
     }
 
     private static <R extends Throwable> void tryCatchDoInner(

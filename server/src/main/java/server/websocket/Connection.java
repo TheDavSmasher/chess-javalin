@@ -9,15 +9,11 @@ import static utils.Serializer.serialize;
 
 public record Connection(String username, Session session) {
     public void send(Object message) {
-        send(session, message);
+        tryCatchDo(() -> session.getRemote().sendString(serialize(message)),
+                IOException.class, e -> {});
     }
 
     public boolean isOpen() {
         return session.isOpen();
-    }
-
-    public static void send(Session session, Object message) {
-        tryCatchDo(() -> session.getRemote().sendString(serialize(message)),
-                IOException.class, e -> {});
     }
 }

@@ -2,7 +2,7 @@ package server.websocket.commands;
 
 import model.dataaccess.GameData;
 import service.ServiceException;
-import org.eclipse.jetty.websocket.api.Session;
+import io.javalin.websocket.WsContext;
 import service.GameService;
 import service.UserService;
 import websocket.commands.ConnectCommand;
@@ -14,11 +14,11 @@ public class WSConnect extends WebSocketCommand<ConnectCommand> {
     }
 
     @Override
-    protected void execute(ConnectCommand command, Session session) throws ServiceException {
+    protected void execute(ConnectCommand command, WsContext context) throws ServiceException {
         String username = UserService.validateAuth(command.getAuthToken());
         GameData data = GameService.getGame(command.getGameID());
 
         notifyGame(command.getGameID(), username + " is now observing the game.");
-        connectionManager.addToGame(data, command.getAuthToken(), username, session);
+        connectionManager.addToGame(data, command.getAuthToken(), username, context);
     }
 }

@@ -1,29 +1,27 @@
 package server.websocket;
 
 import model.dataaccess.GameData;
-import org.eclipse.jetty.websocket.api.Session;
+import io.javalin.websocket.WsContext;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.Notification;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static utils.Catcher.tryCatchDo;
 import static utils.Serializer.serialize;
 
 public class ConnectionManager {
-    public record Connection(String username, Session session) {
+    public record Connection(String username, WsContext context) {
         public void send(Object message) {
-            tryCatchDo(() -> session.getRemote().sendString(serialize(message)), IOException.class, e -> {});
+            context.send(message);
         }
     }
 
     private final ConcurrentHashMap<String, Connection> userConnections = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, ArrayList<Connection>> connectionsToGames = new ConcurrentHashMap<>();
 
-    public void addToGame(GameData gameData, String authToken, String username, Session session) {
-        Connection newConnection = new Connection(username, session);
+    public void addToGame(GameData gameData, String authToken, String username, WsContext context) {
+        Connection newConnection = new Connection(username, context);
         int gameID = gameData.gameID();
         if (!connectionsToGames.containsKey(gameID)) {
             connectionsToGames.put(gameID, new ArrayList<>());
@@ -31,7 +29,7 @@ public class ConnectionManager {
         connectionsToGames.get(gameID).add(newConnection);
         userConnections.put(authToken, newConnection);
 
-        newConnection.send(getLoadGame(gameData));
+        context.send(getLoadGame(gameData));
     }
 
     public void removeFromGame(int gameID, String authToken) {
@@ -65,7 +63,7 @@ public class ConnectionManager {
         if (gameConnections == null) return;
         if (authToken == null) authToken = "";
 
-        gameConnections.removeIf(c -> !c.session.isOpen());
+        gameConnections.removeIf(c -> !c.context.session.isOpen());
 
         for (Connection current : gameConnections) {
             if (current == userConnections.get(authToken)) continue;

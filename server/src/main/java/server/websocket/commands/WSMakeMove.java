@@ -6,7 +6,7 @@ import chess.InvalidMoveException;
 import model.dataaccess.GameData;
 import server.websocket.WebsocketException;
 import service.ServiceException;
-import org.eclipse.jetty.websocket.api.Session;
+import io.javalin.websocket.WsContext;
 import service.GameService;
 import websocket.commands.MakeMoveCommand;
 
@@ -19,7 +19,7 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
     }
 
     @Override
-    protected void execute(MakeMoveCommand command, Session session) throws ServiceException {
+    protected void execute(MakeMoveCommand command, WsContext context) throws ServiceException {
         String username = checkConnection(command.getAuthToken());
         GameData gameData = checkPlayerGameState(command, username, true);
 

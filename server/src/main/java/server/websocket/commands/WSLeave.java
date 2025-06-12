@@ -1,7 +1,7 @@
 package server.websocket.commands;
 
 import service.ServiceException;
-import org.eclipse.jetty.websocket.api.Session;
+import io.javalin.websocket.WsContext;
 import service.GameService;
 import websocket.commands.LeaveCommand;
 
@@ -12,7 +12,7 @@ public class WSLeave extends WSChessCommand<LeaveCommand> {
     }
 
     @Override
-    protected void execute(LeaveCommand command, Session session) throws ServiceException {
+    protected void execute(LeaveCommand command, WsContext context) throws ServiceException {
         String username = checkConnection(command.getAuthToken());
         GameService.leaveGame(command);
         connectionManager.removeFromGame(command.getGameID(), command.getAuthToken());

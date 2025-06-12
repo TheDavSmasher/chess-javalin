@@ -57,12 +57,12 @@ public class ConnectionManager {
     public void notifyGame(int gameID, Notification notification, String authToken) {
         ArrayList<Connection> gameConnections = connectionsToGames.get(gameID);
         if (gameConnections == null) return;
-        if (authToken == null) authToken = "";
 
         gameConnections.removeIf(c -> !c.context.session.isOpen());
 
+        Connection user = userConnections.get(authToken == null ? "" : authToken);
         for (Connection current : gameConnections) {
-            if (current == userConnections.get(authToken)) continue;
+            if (current == user) continue;
             current.context.send(notification);
         }
     }

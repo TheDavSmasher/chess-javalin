@@ -75,13 +75,8 @@ public class ChessBoard implements Cloneable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ChessBoard that)) {
-            return false;
-        }
-        return Objects.deepEquals(board, that.board);
+        return this == o || o instanceof ChessBoard that &&
+                Objects.deepEquals(board, that.board);
     }
 
     @Override

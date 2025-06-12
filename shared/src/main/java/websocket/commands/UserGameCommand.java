@@ -43,13 +43,8 @@ public class UserGameCommand {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof UserGameCommand that)) {
-            return false;
-        }
-        return commandType == that.commandType &&
+        return this == o || o instanceof UserGameCommand that &&
+                commandType == that.commandType &&
                 Objects.equals(authToken, that.authToken) &&
                 Objects.equals(gameID, that.gameID);
     }

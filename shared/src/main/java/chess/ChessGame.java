@@ -211,13 +211,9 @@ public class ChessGame {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ChessGame chessGame)) {
-            return false;
-        }
-        return Objects.equals(gameBoard, chessGame.gameBoard) && currentTurn == chessGame.currentTurn;
+        return this == o || o instanceof ChessGame chessGame &&
+                Objects.equals(gameBoard, chessGame.gameBoard) &&
+                currentTurn == chessGame.currentTurn;
     }
 
     @Override

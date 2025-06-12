@@ -23,8 +23,9 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
         return connection.username();
     }
 
-    protected GameData checkPlayerGameState(UserGameCommand command, String username, String description) throws ServiceException {
-        boolean checkColor = !description.equals("resign");
+    protected GameData checkPlayerGameState(UserGameCommand command, String username, boolean isMakeMove) throws ServiceException {
+        String description = isMakeMove ? "make a move" : "resign";
+
         UserService.validateAuth(command.getAuthToken());
         GameData gameData = GameService.getGame(command.getGameID());
         if (gameData.game().isGameOver()) {
@@ -35,7 +36,7 @@ public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocke
             case String b when b.equals(gameData.blackUsername()) -> ChessGame.TeamColor.BLACK;
             default -> throw new WebsocketException("You need to be a player to " + description + ".");
         };
-        if (checkColor && color != gameData.game().getTeamTurn()) {
+        if (isMakeMove && color != gameData.game().getTeamTurn()) {
             throw new WebsocketException("It is not your turn to make a move.");
         }
         return gameData;

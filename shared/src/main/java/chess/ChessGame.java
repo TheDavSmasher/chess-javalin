@@ -213,9 +213,12 @@ public class ChessGame {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ChessGame chessGame = (ChessGame) o;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ChessGame chessGame)) {
+            return false;
+        }
         return Objects.equals(gameBoard, chessGame.gameBoard) && currentTurn == chessGame.currentTurn;
     }
 

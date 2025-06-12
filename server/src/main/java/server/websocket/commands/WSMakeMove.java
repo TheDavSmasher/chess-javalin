@@ -2,7 +2,6 @@ package server.websocket.commands;
 
 import chess.ChessGame;
 import chess.ChessMove;
-import chess.ChessPosition;
 import chess.InvalidMoveException;
 import model.dataaccess.GameData;
 import server.websocket.WebsocketException;
@@ -36,7 +35,7 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
         connectionManager.loadNewGame(gameData, command.getGameID());
 
         notifyGame(command.getGameID(), command.getAuthToken(), username + " has moved piece at " +
-                positionAsString(move.getStartPosition()) + " to " + positionAsString(move.getEndPosition()) + ".");
+                move.getStartPosition() + " to " + move.getEndPosition() + ".");
 
         ChessGame.TeamColor currentTurn = game.getTeamTurn();
         ChessGame.CheckState state = game.getCheckState(currentTurn);
@@ -48,9 +47,5 @@ public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
             message += endGame(command, game, (state == ChessGame.CheckState.STALEMATE ? "The game is tied." : username + " has won."));
         }
         notifyGame(command.getGameID(), message);
-    }
-
-    private String positionAsString(ChessPosition position) {
-        return String.valueOf('A' + position.getColumn() - 1) + (position.getRow() - 1);
     }
 }

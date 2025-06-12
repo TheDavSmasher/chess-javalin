@@ -29,6 +29,6 @@ public record ChessPosition(int row, int col) {
 
     @Override
     public String toString() {
-        return row + "," + col;
+        return String.valueOf((char) ('A' + col - 1)) + row;
     }
 }

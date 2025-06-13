@@ -21,7 +21,7 @@ public class Repl {
 
             tryCatchDo(() -> tryCatchDo(
                     () -> client.evaluate(scanner.nextLine()),
-                    ExitException.class, ignore -> {
+                    ExitException.class, _ -> {
                         out.println();
                         System.exit(0);
                     }, Throwable.class), Throwable.class,

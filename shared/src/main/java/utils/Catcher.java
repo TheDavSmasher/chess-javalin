@@ -105,7 +105,7 @@ public final class Catcher {
     private static <E extends Throwable> void ignoreReflection(ErrorSupplier0<E, ReflectiveOperationException> supplier0) throws E {
         try {
             throw supplier0.get();
-        } catch (ReflectiveOperationException ignored) {}
+        } catch (ReflectiveOperationException _) {}
     }
 
     private static <R extends Throwable> void tryCatchDoInner(

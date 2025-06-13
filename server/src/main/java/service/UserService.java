@@ -26,7 +26,7 @@ public class UserService extends Service {
     }
 
     public static Void logout(String authToken) throws ServiceException {
-        return tryAuthorized(authToken, ignored -> authDAO().deleteAuth(authToken));
+        return tryAuthorized(authToken, _ -> authDAO().deleteAuth(authToken));
     }
 
     public static String validateAuth(String authToken) throws ServiceException {

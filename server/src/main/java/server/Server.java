@@ -52,9 +52,9 @@ public class Server {
 
     private void handleServerException(ServiceException e, Context context) {
         context.status(switch (e) {
-            case BadRequestException ignore -> HttpStatus.BAD_REQUEST;
-            case UnauthorizedException ignore -> HttpStatus.UNAUTHORIZED;
-            case PreexistingException ignore -> HttpStatus.FORBIDDEN;
+            case BadRequestException _ -> HttpStatus.BAD_REQUEST;
+            case UnauthorizedException _ -> HttpStatus.UNAUTHORIZED;
+            case PreexistingException _ -> HttpStatus.FORBIDDEN;
             default -> HttpStatus.INTERNAL_SERVER_ERROR;
         }).json(new ErrorResponse("Error: " + e.getMessage()));
     }

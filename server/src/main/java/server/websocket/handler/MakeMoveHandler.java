@@ -26,8 +26,7 @@ public class MakeMoveHandler extends ChessMessageHandler<MakeMoveCommand> {
         ChessGame game = gameData.game();
         ChessMove move = command.getMove();
         tryCatchRethrow(() -> {
-            game.makeMove(move);
-            return null;
+            game.makeMove(move); return null;
         }, InvalidMoveException.class, WebsocketException.class);
 
         GameService.updateGameState(command, game);

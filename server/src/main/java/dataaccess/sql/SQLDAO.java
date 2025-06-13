@@ -45,7 +45,7 @@ public abstract class SQLDAO implements ChessDAO {
     }
 
     protected interface SqlUpdate {
-        void execute(int updated) throws SQLException, DataAccessException;
+        void execute(int updated) throws DataAccessException;
     }
 
     protected static void tryUpdate(@Language("SQL") String sql, SqlUpdate update, Object... params) throws DataAccessException {

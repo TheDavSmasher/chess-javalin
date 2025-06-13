@@ -1,5 +1,7 @@
 package chess;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Represents moving a chess piece on a chessboard
  * <p>
@@ -35,6 +37,7 @@ public record ChessMove(ChessPosition startPosition, ChessPosition endPosition, 
         return promotionPiece;
     }
 
+    @NotNull
     @Override
     public String toString() {
         String promotion = promotionPiece != null ? "(%s)".formatted(promotionPiece) : "";

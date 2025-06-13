@@ -1,5 +1,7 @@
 package chess;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Represents a single square position on a chess board
  * <p>
@@ -27,6 +29,7 @@ public record ChessPosition(int row, int col) {
         return (row > 8 || row < 1) || (col > 8 || col < 1);
     }
 
+    @NotNull
     @Override
     public String toString() {
         return String.valueOf((char) ('A' + col - 1)) + row;

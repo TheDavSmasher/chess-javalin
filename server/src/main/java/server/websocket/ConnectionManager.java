@@ -1,6 +1,5 @@
 package server.websocket;
 
-import model.dataaccess.GameData;
 import io.javalin.websocket.WsContext;
 import websocket.messages.ServerMessage;
 
@@ -13,10 +12,10 @@ public class ConnectionManager {
     private final ConcurrentHashMap<String, Connection> userConnections = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, ArrayList<Connection>> connectionsToGames = new ConcurrentHashMap<>();
 
-    public void addToGame(GameData gameData, String authToken, String username, WsContext context) {
+    public void addToGame(int gameID, String authToken, String username, WsContext context) {
         Connection newConnection = new Connection(username, context);
-        connectionsToGames.putIfAbsent(gameData.gameID(), new ArrayList<>());
-        connectionsToGames.get(gameData.gameID()).add(newConnection);
+        connectionsToGames.putIfAbsent(gameID, new ArrayList<>());
+        connectionsToGames.get(gameID).add(newConnection);
         userConnections.put(authToken, newConnection);
     }
 

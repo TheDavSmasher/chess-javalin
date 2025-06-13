@@ -20,6 +20,6 @@ public class ConnectHandler extends MessageHandler<ConnectCommand> {
 
         notifyGame(command.getGameID(), username + " is now observing the game.");
         context.send(getLoadGame(data));
-        connectionManager.addToGame(data, command.getAuthToken(), username, context);
+        connectionManager.addToGame(data.gameID(), command.getAuthToken(), username, context);
     }
 }

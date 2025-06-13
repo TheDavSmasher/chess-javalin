@@ -14,7 +14,7 @@ import websocket.messages.ServerMessage;
 
 import static utils.Serializer.serialize;
 
-public abstract class WebSocketCommand<T extends UserGameCommand> implements WsMessageHandler {
+public abstract class WebsocketCommand<T extends UserGameCommand> implements WsMessageHandler {
     protected static final ConnectionManager connectionManager = new ConnectionManager();
 
     protected abstract Class<T> getCommandClass();

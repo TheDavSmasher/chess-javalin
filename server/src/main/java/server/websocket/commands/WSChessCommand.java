@@ -9,7 +9,7 @@ import websocket.commands.UserGameCommand;
 
 import static utils.Catcher.*;
 
-public abstract class WSChessCommand<T extends UserGameCommand> extends WebSocketCommand<T> {
+public abstract class WSChessCommand<T extends UserGameCommand> extends WebsocketCommand<T> {
     protected void endGame(UserGameCommand command, ChessGame game, String extendMessage) throws ServiceException {
         game.endGame();
         GameService.updateGameState(command, game);

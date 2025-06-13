@@ -7,7 +7,7 @@ import service.GameService;
 import service.UserService;
 import websocket.commands.ConnectCommand;
 
-public class WSConnect extends WebSocketCommand<ConnectCommand> {
+public class WSConnect extends WebsocketCommand<ConnectCommand> {
     @Override
     protected Class<ConnectCommand> getCommandClass() {
         return ConnectCommand.class;

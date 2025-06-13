@@ -24,8 +24,6 @@ public class ConnectionManager {
         }
         connectionsToGames.get(gameID).add(newConnection);
         userConnections.put(authToken, newConnection);
-
-        context.send(getLoadGame(gameData));
     }
 
     public void removeFromGame(int gameID, String authToken) {

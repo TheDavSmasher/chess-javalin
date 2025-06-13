@@ -7,6 +7,8 @@ import service.GameService;
 import service.UserService;
 import websocket.commands.ConnectCommand;
 
+import static server.websocket.ConnectionManager.getLoadGame;
+
 public class WSConnect extends WebSocketCommand<ConnectCommand> {
     @Override
     protected Class<ConnectCommand> getCommandClass() {
@@ -19,6 +21,7 @@ public class WSConnect extends WebSocketCommand<ConnectCommand> {
         GameData data = GameService.getGame(command.getGameID());
 
         notifyGame(command.getGameID(), username + " is now observing the game.");
+        context.send(getLoadGame(data));
         connectionManager.addToGame(data, command.getAuthToken(), username, context);
     }
 }

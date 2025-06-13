@@ -26,7 +26,7 @@ public abstract class WebsocketCommand<T extends UserGameCommand> implements WsM
         execute(context.messageAsClass(getCommandClass()), context);
     }
 
-    public static LoadGameMessage getLoadGame(GameData gameData) {
+    protected static LoadGameMessage getLoadGame(GameData gameData) {
         return new LoadGameMessage(serialize(gameData.game()));
     }
 

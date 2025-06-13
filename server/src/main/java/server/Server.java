@@ -1,12 +1,16 @@
 package server;
 
 import io.javalin.Javalin;
+import io.javalin.http.Context;
+import io.javalin.http.HttpStatus;
 import io.javalin.json.JavalinGson;
 import io.javalin.websocket.WsContext;
+import model.response.ErrorResponse;
 import server.handler.*;
-import server.websocket.handler.WsServerMessageHandler;
-import server.websocket.WsServerExceptionHandler;
-import service.ServiceException;
+import server.websocket.handler.*;
+import service.*;
+import websocket.commands.UserGameCommand;
+import websocket.messages.ErrorMessage;
 
 public class Server {
 
@@ -26,11 +30,16 @@ public class Server {
                 .get("/game", new ListGameHandler())
                 .post("/game", new CreateGameHandler())
                 .put("/game", new JoinGameHandler())
-                .exception(ServiceException.class, new ServerExceptionHandler())
+                .exception(ServiceException.class, this::handleServerException)
                 .ws("/ws", ws -> {
                     ws.onConnect(WsContext::enableAutomaticPings);
-                    ws.onMessage(new WsServerMessageHandler());
-                }).wsException(ServiceException.class, new WsServerExceptionHandler());
+                    ws.onMessage(context -> (switch (context.messageAsClass(UserGameCommand.class).getCommandType()) {
+                        case CONNECT -> new ConnectHandler();
+                        case MAKE_MOVE -> new MakeMoveHandler();
+                        case LEAVE -> new LeaveHandler();
+                        case RESIGN -> new ResignHandler();
+                    }).handleMessage(context));
+                }).wsException(ServiceException.class, this::handleWebsocketException);
     }
 
     public int run(int desiredPort) {
@@ -39,5 +48,18 @@ public class Server {
 
     public void stop() {
         javalin.stop();
+    }
+
+    private void handleServerException(ServiceException e, Context context) {
+        context.status(switch (e) {
+            case BadRequestException ignore -> HttpStatus.BAD_REQUEST;
+            case UnauthorizedException ignore -> HttpStatus.UNAUTHORIZED;
+            case PreexistingException ignore -> HttpStatus.FORBIDDEN;
+            default -> HttpStatus.INTERNAL_SERVER_ERROR;
+        }).json(new ErrorResponse("Error: " + e.getMessage()));
+    }
+
+    private void handleWebsocketException(ServiceException e, WsContext wsContext) {
+        wsContext.send(new ErrorMessage(e.getMessage()));
     }
 }

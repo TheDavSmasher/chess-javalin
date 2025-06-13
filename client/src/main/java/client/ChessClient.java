@@ -172,17 +172,13 @@ public class ChessClient implements ServerMessageObserver {
     }
 
     private void register(String[] params) throws ClientException, IOException {
-        if (params.length < 3) {
-            throw new FormatException("Please provide a username, password, and email.", "1 username password email");
-        }
+        checkParamLength(params, 3, "Please provide a username, password, and email.", "1 username password email");
         String username = params[0], password = params[1], email = params[2];
         changeState(serverFacade.register(username, password, email).authToken());
     }
 
     private void signIn(String[] params) throws ClientException, IOException {
-        if (params.length < 2) {
-            throw new FormatException("Please provide a username and password", "2 username password");
-        }
+        checkParamLength(params, 2, "Please provide a username and password", "2 username password");
         String username = params[0], password = params[1];
         changeState(serverFacade.login(username, password).authToken());
     }
@@ -201,9 +197,7 @@ public class ChessClient implements ServerMessageObserver {
     }
 
     private void createGame(String[] params) throws ClientException, IOException {
-        if (params.length < 1) {
-            throw new FormatException("Please provide a game ID", "2 gameName");
-        }
+        checkParamLength(params, 1, "Please provide a game ID", "2 gameName");
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < params.length; i++) {
             result.append(params[i]);
@@ -217,9 +211,7 @@ public class ChessClient implements ServerMessageObserver {
     }
 
     private void joinGame(String[] params) throws ClientException, IOException {
-        if (params.length < 2) {
-            throw new FormatException("Please provide a game ID and color", "3 WHITE/BLACK gameID");
-        }
+        checkParamLength(params, 2, "Please provide a game ID and color", "3 WHITE/BLACK gameID");
         if (existingGames == null) {
             throw new ClientException("Please list the games before you can join!");
         }
@@ -237,9 +229,7 @@ public class ChessClient implements ServerMessageObserver {
     }
 
     private void observeGame(String[] params) throws ClientException, IOException {
-        if (params.length < 1) {
-            throw new FormatException("Please provide a game ID","4 gameID");
-        }
+        checkParamLength(params, 1, "Please provide a game ID","4 gameID");
         if (existingGames == null) {
             throw new ClientException("Please list the games before you can join!");
         }
@@ -264,12 +254,10 @@ public class ChessClient implements ServerMessageObserver {
     }
 
     private void makeMove(String[] params) throws ClientException, IOException {
-        if (params.length < 2) {
-            throw new FormatException("""
+        checkParamLength(params, 2, """
                 Please provide a start and end position.
                 If a pawn is to be promoted, also provide what it should become.""",
                 "2 start end (pieceType)");
-        }
         String start = params[0], end = params[1];
         ChessPiece.PieceType type = params.length < 3 ? null : typeFromString(params[2]);
         ChessMove move = new ChessMove(positionFromString(start), positionFromString(end), type);
@@ -277,9 +265,7 @@ public class ChessClient implements ServerMessageObserver {
     }
 
     private void highlightMoves(String[] params) throws ClientException, IOException {
-        if (params.length < 1) {
-            throw new FormatException("Please provide a start position.", "3 start");
-        }
+        checkParamLength(params, 1, "Please provide a start position.", "3 start");
         String startPos = params[0];
         ChessPosition start = positionFromString(startPos);
         chessUI.printChessBoard(currentGame, start, whitePlayer);
@@ -293,6 +279,12 @@ public class ChessClient implements ServerMessageObserver {
     private void resignGame() throws IOException {
         serverFacade.resignGame(authToken, currentGameID);
         changeState(MenuState.POST_LOGIN);
+    }
+
+    private void checkParamLength(String[] params, int desiredLength, String request, String correct) throws FormatException {
+        if (params.length < desiredLength) {
+            throw new FormatException(request, correct);
+        }
     }
 
     private ChessPosition positionFromString(String moveString) throws IOException {

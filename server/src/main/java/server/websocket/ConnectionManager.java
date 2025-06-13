@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionManager {
-    public record Connection(String username, WsContext context) {}
+    private record Connection(String username, WsContext context) {}
 
     private final ConcurrentHashMap<String, Connection> userConnections = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, ArrayList<Connection>> connectionsToGames = new ConcurrentHashMap<>();

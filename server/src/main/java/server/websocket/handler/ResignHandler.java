@@ -1,11 +1,11 @@
-package server.websocket.commands;
+package server.websocket.handler;
 
 import chess.ChessGame;
 import service.ServiceException;
 import io.javalin.websocket.WsContext;
 import websocket.commands.ResignCommand;
 
-public class WSResign extends WSChessCommand<ResignCommand> {
+public class ResignHandler extends ChessMessageHandler<ResignCommand> {
     @Override
     protected Class<ResignCommand> getCommandClass() {
         return ResignCommand.class;

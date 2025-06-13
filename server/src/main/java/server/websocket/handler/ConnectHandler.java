@@ -1,4 +1,4 @@
-package server.websocket.commands;
+package server.websocket.handler;
 
 import model.dataaccess.GameData;
 import service.ServiceException;
@@ -7,7 +7,7 @@ import service.GameService;
 import service.UserService;
 import websocket.commands.ConnectCommand;
 
-public class WSConnect extends WebsocketCommand<ConnectCommand> {
+public class ConnectHandler extends MessageHandler<ConnectCommand> {
     @Override
     protected Class<ConnectCommand> getCommandClass() {
         return ConnectCommand.class;

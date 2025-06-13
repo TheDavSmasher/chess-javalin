@@ -1,4 +1,4 @@
-package server.websocket.commands;
+package server.websocket.handler;
 
 import io.javalin.websocket.WsContext;
 import io.javalin.websocket.WsMessageContext;
@@ -14,7 +14,7 @@ import websocket.messages.ServerMessage;
 
 import static utils.Serializer.serialize;
 
-public abstract class WebsocketCommand<T extends UserGameCommand> implements WsMessageHandler {
+public abstract class MessageHandler<T extends UserGameCommand> implements WsMessageHandler {
     protected static final ConnectionManager connectionManager = new ConnectionManager();
 
     protected abstract Class<T> getCommandClass();

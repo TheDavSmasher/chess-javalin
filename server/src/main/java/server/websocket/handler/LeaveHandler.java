@@ -1,11 +1,11 @@
-package server.websocket.commands;
+package server.websocket.handler;
 
 import service.ServiceException;
 import io.javalin.websocket.WsContext;
 import service.GameService;
 import websocket.commands.LeaveCommand;
 
-public class WSLeave extends WSChessCommand<LeaveCommand> {
+public class LeaveHandler extends ChessMessageHandler<LeaveCommand> {
     @Override
     protected Class<LeaveCommand> getCommandClass() {
         return LeaveCommand.class;

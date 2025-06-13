@@ -1,4 +1,4 @@
-package server.websocket.commands;
+package server.websocket.handler;
 
 import chess.ChessGame;
 import chess.ChessMove;
@@ -12,7 +12,7 @@ import websocket.commands.MakeMoveCommand;
 
 import static utils.Catcher.*;
 
-public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {
+public class MakeMoveHandler extends ChessMessageHandler<MakeMoveCommand> {
     @Override
     protected Class<MakeMoveCommand> getCommandClass() {
         return MakeMoveCommand.class;

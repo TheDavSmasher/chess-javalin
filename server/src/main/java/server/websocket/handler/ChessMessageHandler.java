@@ -1,4 +1,4 @@
-package server.websocket.commands;
+package server.websocket.handler;
 
 import chess.ChessGame;
 import model.dataaccess.GameData;
@@ -9,7 +9,7 @@ import websocket.commands.UserGameCommand;
 
 import static utils.Catcher.*;
 
-public abstract class WSChessCommand<T extends UserGameCommand> extends WebsocketCommand<T> {
+public abstract class ChessMessageHandler<T extends UserGameCommand> extends MessageHandler<T> {
     protected void endGame(UserGameCommand command, ChessGame game, String extendMessage) throws ServiceException {
         game.endGame();
         GameService.updateGameState(command, game);

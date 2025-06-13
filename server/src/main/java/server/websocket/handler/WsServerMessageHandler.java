@@ -1,19 +1,18 @@
-package server.websocket;
+package server.websocket.handler;
 
 import io.javalin.websocket.WsMessageContext;
 import io.javalin.websocket.WsMessageHandler;
-import server.websocket.commands.*;
 import service.ServiceException;
 import websocket.commands.UserGameCommand;
 
-public class WSServer implements WsMessageHandler {
+public class WsServerMessageHandler implements WsMessageHandler {
     @Override
     public void handleMessage(WsMessageContext context) throws ServiceException {
         (switch (context.messageAsClass(UserGameCommand.class).getCommandType()) {
-            case CONNECT -> new WSConnect();
-            case MAKE_MOVE -> new WSMakeMove();
-            case LEAVE -> new WSLeave();
-            case RESIGN -> new WSResign();
+            case CONNECT -> new ConnectHandler();
+            case MAKE_MOVE -> new MakeMoveHandler();
+            case LEAVE -> new LeaveHandler();
+            case RESIGN -> new ResignHandler();
         }).handleMessage(context);
     }
 }

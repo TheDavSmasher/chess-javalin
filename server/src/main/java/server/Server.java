@@ -4,7 +4,7 @@ import io.javalin.Javalin;
 import io.javalin.json.JavalinGson;
 import io.javalin.websocket.WsContext;
 import server.handler.*;
-import server.websocket.WSServer;
+import server.websocket.handler.WsServerMessageHandler;
 import server.websocket.WsServerExceptionHandler;
 import service.ServiceException;
 
@@ -29,7 +29,7 @@ public class Server {
                 .exception(ServiceException.class, new ServerExceptionHandler())
                 .ws("/ws", ws -> {
                     ws.onConnect(WsContext::enableAutomaticPings);
-                    ws.onMessage(new WSServer());
+                    ws.onMessage(new WsServerMessageHandler());
                 }).wsException(ServiceException.class, new WsServerExceptionHandler());
     }
 

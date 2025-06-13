@@ -1,5 +1,6 @@
 package server.websocket.handler;
 
+import chess.ChessGame;
 import model.dataaccess.GameData;
 import service.ServiceException;
 import io.javalin.websocket.WsContext;
@@ -18,7 +19,9 @@ public class ConnectHandler extends MessageHandler<ConnectCommand> {
         String username = UserService.validateAuth(command.getAuthToken());
         GameData data = GameService.getGame(command.getGameID());
 
-        notifyGame(command.getGameID(), username + " is now observing the game.");
+        String watchingAs = getPlayerColor(username, data) instanceof ChessGame.TeamColor color
+                ? "playing as " + color.toString().toLowerCase() : "observing the game";
+        notifyGame(command.getGameID(), username + " is now " + watchingAs);
         context.send(getLoadGame(data));
         connectionManager.addToGame(data.gameID(), command.getAuthToken(), username, context);
     }

@@ -10,7 +10,6 @@ import io.javalin.websocket.WsContext;
 import service.GameService;
 import websocket.commands.MakeMoveCommand;
 
-import static server.websocket.ConnectionManager.getLoadGame;
 import static utils.Catcher.*;
 
 public class WSMakeMove extends WSChessCommand<MakeMoveCommand> {

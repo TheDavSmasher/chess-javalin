@@ -2,13 +2,10 @@ package server.websocket;
 
 import model.dataaccess.GameData;
 import io.javalin.websocket.WsContext;
-import websocket.messages.LoadGameMessage;
 import websocket.messages.ServerMessage;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static utils.Serializer.serialize;
 
 public class ConnectionManager {
     public record Connection(String username, WsContext context) {}
@@ -39,10 +36,6 @@ public class ConnectionManager {
 
     public String getFromUsers(String authToken) {
         return userConnections.get(authToken) instanceof Connection conn ? conn.username : null;
-    }
-
-    public static LoadGameMessage getLoadGame(GameData gameData) {
-        return new LoadGameMessage(serialize(gameData.game()));
     }
 
     public void notifyGame(int gameID, ServerMessage serverMessage, String authToken) {

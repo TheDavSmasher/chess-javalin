@@ -7,8 +7,6 @@ import service.GameService;
 import service.UserService;
 import websocket.commands.ConnectCommand;
 
-import static server.websocket.ConnectionManager.getLoadGame;
-
 public class WSConnect extends WebSocketCommand<ConnectCommand> {
     @Override
     protected Class<ConnectCommand> getCommandClass() {

@@ -28,11 +28,9 @@ public abstract class ChessMessageHandler<T extends UserGameCommand> extends Mes
 
         return gameData.game().isGameOver() ?
                 throwNew(WebsocketException.class, "Game is already finished. You cannot " + description + " anymore.") :
-                (switch (username) {
-                    case String w when w.equals(gameData.whiteUsername()) -> ChessGame.TeamColor.WHITE;
-                    case String b when b.equals(gameData.blackUsername()) -> ChessGame.TeamColor.BLACK;
-                    default -> throwNew(WebsocketException.class,"You need to be a player to " + description + ".");
-                }) != gameData.game().getTeamTurn() && isMakeMove ?
-                throwNew(WebsocketException.class, "It is not your turn to make a move.") : gameData;
+                getPlayerColor(username, gameData) instanceof ChessGame.TeamColor color ?
+                    color != gameData.game().getTeamTurn() && isMakeMove ?
+                    throwNew(WebsocketException.class, "It is not your turn to make a move.") : gameData :
+                throwNew(WebsocketException.class,"You need to be a player to " + description + ".");
     }
 }

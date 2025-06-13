@@ -1,5 +1,6 @@
 package server.websocket.handler;
 
+import chess.ChessGame;
 import io.javalin.websocket.WsContext;
 import io.javalin.websocket.WsMessageContext;
 import io.javalin.websocket.WsMessageHandler;
@@ -28,6 +29,14 @@ public abstract class MessageHandler<T extends UserGameCommand> implements WsMes
 
     protected static LoadGameMessage getLoadGame(GameData gameData) {
         return new LoadGameMessage(serialize(gameData.game()));
+    }
+
+    protected ChessGame.TeamColor getPlayerColor(String user, GameData gameData) {
+        return switch (user) {
+            case String w when w.equals(gameData.whiteUsername()) -> ChessGame.TeamColor.WHITE;
+            case String b when b.equals(gameData.blackUsername()) -> ChessGame.TeamColor.BLACK;
+            default -> null;
+        };
     }
 
     protected void notifyGame(int gameID, String message) {

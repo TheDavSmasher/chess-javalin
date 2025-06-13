@@ -16,9 +16,7 @@ public class ConnectionManager {
     public void addToGame(GameData gameData, String authToken, String username, WsContext context) {
         Connection newConnection = new Connection(username, context);
         int gameID = gameData.gameID();
-        if (!connectionsToGames.containsKey(gameID)) {
-            connectionsToGames.put(gameID, new ArrayList<>());
-        }
+        connectionsToGames.putIfAbsent(gameID, new ArrayList<>());
         connectionsToGames.get(gameID).add(newConnection);
         userConnections.put(authToken, newConnection);
     }

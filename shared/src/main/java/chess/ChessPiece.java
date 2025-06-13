@@ -1,6 +1,7 @@
 package chess;
 
 import chess.calculator.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
@@ -55,6 +56,7 @@ public record ChessPiece(ChessGame.TeamColor color, PieceType type) {
         }).calculateMoves(board, myPosition);
     }
 
+    @NotNull
     @Override
     public String toString() {
         String s = switch (type) {

@@ -48,7 +48,7 @@ public abstract class ProgrammaticMoveCalculator implements PieceMoveCalculator 
     protected abstract int getDirMod(boolean isRow, boolean flipA, boolean flipB, boolean flipC);
     protected abstract boolean ignoreThird();
 
-    protected static boolean[] options = { false, true };
+    protected static final boolean[] options = { false, true };
 
     protected static int getOffset(boolean a) {
         return a ? 2 : 1;

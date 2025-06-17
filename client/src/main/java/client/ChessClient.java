@@ -239,7 +239,7 @@ public class ChessClient implements ServerMessageObserver {
             throw new ClientException("That game does not exist!");
         }
         int newGameID = existingGames[index];
-        serverFacade.connectToGame(authToken, currentGameID);
+        serverFacade.connectToGame(authToken, newGameID);
         currentGameID = newGameID;
         changeState(MenuState.OBSERVING);
     }

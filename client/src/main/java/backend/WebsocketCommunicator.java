@@ -42,7 +42,12 @@ public class WebsocketCommunicator extends Endpoint implements MessageHandler.Wh
     }
 
     private void connectToServer() throws IOException {
-        if (connected) return;
+        if (connected && session != null) {
+            if (session.isOpen()) {
+                return;
+            }
+            observer.notify(new Notification("Reconnecting to server..."));
+        }
         session = tryCatchRethrow(
                 () -> ContainerProvider.getWebSocketContainer().connectToServer(this, URI.create(socketUrl + "ws")),
                 DeploymentException.class, IOException.class);

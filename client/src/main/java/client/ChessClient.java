@@ -220,33 +220,28 @@ public class ChessClient implements ServerMessageObserver {
 
     private void joinGame(String[] params) throws ClientException, IOException {
         checkParamLength(params, 2, "Please provide a game ID and color", "3 gameID WHITE/BLACK");
-        if (existingGames == null) {
-            throw new ClientException("Please list the games before you can join!");
-        }
-        String gameIndex = params[0], color = params[1];
-        int index = Integer.parseInt(gameIndex) - 1;
-        if (index >= existingGames.length) {
-            throw new ClientException("That game does not exist!");
-        }
-        int newGameID = existingGames[index];
-        serverFacade.joinGame(authToken, color, newGameID);
-        serverFacade.connectToGame(authToken, newGameID);
-        changeState(newGameID, color);
+        enterGame(params[0], params[1]);
     }
 
     private void observeGame(String[] params) throws ClientException, IOException {
         checkParamLength(params, 1, "Please provide a game ID","4 gameID");
+        enterGame(params[0], null);
+    }
+
+    private void enterGame(String gameIndex, String color) throws ClientException, IOException {
         if (existingGames == null) {
             throw new ClientException("Please list the games before you can join!");
         }
-        String gameIndex = params[0];
         int index = Integer.parseInt(gameIndex) - 1;
         if (index >= existingGames.length) {
             throw new ClientException("That game does not exist!");
         }
         int newGameID = existingGames[index];
+        if (color != null) {
+            serverFacade.joinGame(authToken, color, newGameID);
+        }
         serverFacade.connectToGame(authToken, newGameID);
-        changeState(newGameID, null);
+        changeState(newGameID, color);
     }
 
     private void logout() throws IOException {

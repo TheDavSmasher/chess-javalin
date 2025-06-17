@@ -6,7 +6,6 @@ import model.dataaccess.GameData;
 import ui.ChessUI;
 import websocket.messages.*;
 
-import java.io.IOError;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -77,7 +76,7 @@ public class ChessClient implements ServerMessageObserver {
                 }
             }
             return null;
-        }, IOError.class, ClientException.class),
+        }, IOException.class, ClientException.class),
                 NumberFormatException.class, _ -> help(true), ClientException.class);
     }
 

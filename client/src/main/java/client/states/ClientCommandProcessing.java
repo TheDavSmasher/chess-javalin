@@ -28,10 +28,11 @@ public final class ClientCommandProcessing {
             this(_ -> command.process(), option, 0, "This command takes no arguments", null, description);
         }
 
-        public void checkParamLength(String[] params, int index) throws FormatException {
+        public void process(String[] params, int index) throws ClientException, IOException {
             if (params.length < paramMin || params.length > paramMax) {
                 throw new FormatException(onWrong, index + " " + format);
             }
+            command.process(params);
         }
     }
 }

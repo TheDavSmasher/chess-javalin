@@ -46,14 +46,7 @@ public record ChessPiece(ChessGame.TeamColor color, PieceType type) {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return (switch (type) {
-            case BISHOP -> new DiagonalMoveCalculator();
-            case ROOK -> new CrossMoveCalculator();
-            case QUEEN -> new QueenMoveCalculator();
-            case KING -> new KingMoveCalculator();
-            case KNIGHT -> new KnightMoveCalculator();
-            case PAWN -> new PawnMoveCalculator();
-        }).calculateMoves(board, myPosition);
+        return PieceMoveCalculatorFactory.getPieceMoveCalculator(type).calculateMoves(board, myPosition);
     }
 
     @NotNull

@@ -22,6 +22,8 @@ public class Server {
             config.jsonMapper(new JavalinGson());
         });
 
+        WebsocketMessageHandlerFactory websocketMessageHandlers = new WebsocketMessageHandlerFactory();
+
         // Register your endpoints and exception handlers here.
         javalin.delete("/db", new ClearHandler())
                 .post("/user", new RegisterHandler())
@@ -33,12 +35,10 @@ public class Server {
                 .exception(ServiceException.class, this::handleServerException)
                 .ws("/ws", ws -> {
                     ws.onConnect(WsContext::enableAutomaticPings);
-                    ws.onMessage(context -> (switch (context.messageAsClass(UserGameCommand.class).getCommandType()) {
-                        case CONNECT -> new ConnectHandler();
-                        case MAKE_MOVE -> new MakeMoveHandler();
-                        case LEAVE -> new LeaveHandler();
-                        case RESIGN -> new ResignHandler();
-                    }).handleMessage(context));
+                    ws.onMessage(context ->
+                            websocketMessageHandlers.get(
+                                            context.messageAsClass(UserGameCommand.class).getCommandType()
+                                    ).handleMessage(context));
                 }).wsException(ServiceException.class, this::handleWebsocketException);
     }
 

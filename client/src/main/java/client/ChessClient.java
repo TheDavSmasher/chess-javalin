@@ -98,10 +98,10 @@ public class ChessClient implements ServerMessageObserver {
         help(true);
     }
 
-    private void changeState(int gameID, Boolean playerState) {
+    private void changeState(int gameID, String playerState) {
         currentGameID = gameID;
         if (playerState != null) {
-            whitePlayer = playerState;
+            whitePlayer = playerState.equalsIgnoreCase("white");
             changeState(MenuState.MID_GAME);
         }
         changeState(MenuState.OBSERVING);
@@ -219,11 +219,11 @@ public class ChessClient implements ServerMessageObserver {
     }
 
     private void joinGame(String[] params) throws ClientException, IOException {
-        checkParamLength(params, 2, "Please provide a game ID and color", "3 WHITE/BLACK gameID");
+        checkParamLength(params, 2, "Please provide a game ID and color", "3 gameID WHITE/BLACK");
         if (existingGames == null) {
             throw new ClientException("Please list the games before you can join!");
         }
-        String color = params[0], gameIndex = params[1];
+        String gameIndex = params[0], color = params[1];
         int index = Integer.parseInt(gameIndex) - 1;
         if (index >= existingGames.length) {
             throw new ClientException("That game does not exist!");
@@ -231,7 +231,7 @@ public class ChessClient implements ServerMessageObserver {
         int newGameID = existingGames[index];
         serverFacade.joinGame(authToken, color, newGameID);
         serverFacade.connectToGame(authToken, newGameID);
-        changeState(newGameID, color.equalsIgnoreCase("white"));
+        changeState(newGameID, color);
     }
 
     private void observeGame(String[] params) throws ClientException, IOException {

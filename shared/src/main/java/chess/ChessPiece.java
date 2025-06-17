@@ -49,7 +49,7 @@ public record ChessPiece(ChessGame.TeamColor color, PieceType type) {
         return pieceMoveCalculators.get(type).calculateMoves(board, myPosition);
     }
 
-    private static final PieceMoveCalculatorFactory pieceMoveCalculators = new PieceMoveCalculatorFactory();
+    public static final PieceMoveCalculatorFactory pieceMoveCalculators = new PieceMoveCalculatorFactory();
 
     @NotNull
     @Override

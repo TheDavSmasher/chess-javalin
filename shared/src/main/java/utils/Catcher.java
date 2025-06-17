@@ -17,22 +17,27 @@ public final class Catcher {
     //endregion
 
     //region Interfaces
+    @FunctionalInterface
     public interface ErrorSupplier<T> {
         T get() throws Throwable;
     }
 
+    @FunctionalInterface
     public interface ErrorRunnable {
         void run() throws Throwable;
     }
 
+    @FunctionalInterface
     public interface ErrorFunction<T, V> {
         V apply(T t) throws Throwable;
     }
 
+    @FunctionalInterface
     private interface ErrorConsumer<E extends Throwable> {
         void accept(Throwable t) throws E;
     }
 
+    @FunctionalInterface
     private interface ErrorSupplier0<T, E extends Throwable> {
         T get() throws E;
     }

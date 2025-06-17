@@ -34,6 +34,7 @@ public class UserService extends Service {
                 ? auth.username() : throwNew(UnauthorizedException.class));
     }
 
+    @FunctionalInterface
     private interface EndpointRunnable {
         void method() throws ServiceException, DataAccessException;
     }

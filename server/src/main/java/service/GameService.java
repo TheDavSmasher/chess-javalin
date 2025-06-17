@@ -52,6 +52,7 @@ public class GameService extends Service {
     }
     //endregion
 
+    @FunctionalInterface
     private interface GameJoinUpdate {
         String update(GameData oldGame, String username) throws ServiceException;
     }

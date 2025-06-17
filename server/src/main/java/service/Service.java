@@ -28,14 +28,17 @@ public abstract class Service {
     //endregion
 
     //region Interfaces
+    @FunctionalInterface
     protected interface EndpointSupplier<T> {
         T method() throws ServiceException, DataAccessException;
     }
 
+    @FunctionalInterface
     public interface AuthorizedSupplier<T> {
         T call() throws ServiceException, DataAccessException;
     }
 
+    @FunctionalInterface
     public interface AuthorizedConsumer {
         void call(String username) throws ServiceException, DataAccessException;
     }

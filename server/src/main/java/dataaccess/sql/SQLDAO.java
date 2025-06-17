@@ -30,6 +30,7 @@ public abstract class SQLDAO implements ChessDAO {
         tryUpdate("TRUNCATE " + getTableName(), _ -> {});
     }
 
+    @FunctionalInterface
     protected interface SqlQuery<T> {
         T execute(ResultSet resultSet) throws SQLException, DataAccessException;
     }
@@ -44,6 +45,7 @@ public abstract class SQLDAO implements ChessDAO {
         return tryQuery(" WHERE " + whereCol + "=?", rs -> rs.next() ? query.execute(rs) : null, whereVal);
     }
 
+    @FunctionalInterface
     protected interface SqlUpdate {
         void execute(int updated) throws DataAccessException;
     }

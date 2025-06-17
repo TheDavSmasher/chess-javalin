@@ -1,6 +1,7 @@
 package client.states;
 
 import client.ClientException;
+import client.FormatException;
 
 import java.io.IOException;
 
@@ -25,6 +26,12 @@ public final class ClientCommandProcessing {
 
         public ClientCommand(CommandRunnable command, String option, String... description) {
             this(_ -> command.process(), option, 0, "This command takes no arguments", null, description);
+        }
+
+        public void checkParamLength(String[] params, int index) throws FormatException {
+            if (params.length < paramMin || params.length > paramMax) {
+                throw new FormatException(onWrong, index + " " + format);
+            }
         }
     }
 }

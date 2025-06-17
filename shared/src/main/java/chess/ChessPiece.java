@@ -46,7 +46,7 @@ public record ChessPiece(ChessGame.TeamColor color, PieceType type) {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return PieceMoveCalculatorFactory.INSTANCE.get(type).calculateMoves(board, myPosition);
+        return PieceMoveCalculatorFactory.getFrom(type).calculateMoves(board, myPosition);
     }
 
     @NotNull

@@ -23,5 +23,9 @@ public final class PieceMoveCalculatorFactory extends EnumObjectFactory<PieceTyp
         };
     }
 
-    public static final PieceMoveCalculatorFactory INSTANCE = new PieceMoveCalculatorFactory();
+    public static PieceMoveCalculator getFrom(PieceType type) {
+        return INSTANCE.get(type);
+    }
+
+    private static final PieceMoveCalculatorFactory INSTANCE = new PieceMoveCalculatorFactory();
 }

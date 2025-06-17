@@ -46,8 +46,10 @@ public record ChessPiece(ChessGame.TeamColor color, PieceType type) {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return PieceMoveCalculatorFactory.getPieceMoveCalculator(type).calculateMoves(board, myPosition);
+        return pieceMoveCalculatorFactory.get(type).calculateMoves(board, myPosition);
     }
+
+    private static final PieceMoveCalculatorFactory pieceMoveCalculatorFactory = new PieceMoveCalculatorFactory();
 
     @NotNull
     @Override
@@ -58,7 +60,7 @@ public record ChessPiece(ChessGame.TeamColor color, PieceType type) {
             case ROOK -> "r";
             case KING -> "k";
             case PAWN -> "p";
-            case QUEEN ->"q";
+            case QUEEN -> "q";
         };
         return color == ChessGame.TeamColor.WHITE ? s.toUpperCase() : s;
     }

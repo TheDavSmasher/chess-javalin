@@ -1,11 +1,19 @@
 package chess.calculator;
 
-import chess.ChessPiece;
 import chess.PieceMoveCalculator;
+import utils.EnumObjectFactory;
 
-public final class PieceMoveCalculatorFactory {
-    public static PieceMoveCalculator getPieceMoveCalculator(ChessPiece.PieceType type) {
-        return switch (type) {
+import static chess.ChessPiece.PieceType;
+
+public final class PieceMoveCalculatorFactory extends EnumObjectFactory<PieceType, PieceMoveCalculator> {
+    @Override
+    protected Class<PieceType> getKeyClass() {
+        return PieceType.class;
+    }
+
+    @Override
+    protected PieceMoveCalculator preGenerateValue(PieceType key) {
+        return switch (key) {
             case BISHOP -> new DiagonalMoveCalculator();
             case ROOK -> new CrossMoveCalculator();
             case QUEEN -> new QueenMoveCalculator();

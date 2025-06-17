@@ -98,6 +98,15 @@ public class ChessClient implements ServerMessageObserver {
         help(true);
     }
 
+    private void changeState(int gameID, Boolean playerState) {
+        currentGameID = gameID;
+        if (playerState != null) {
+            whitePlayer = playerState;
+            changeState(MenuState.MID_GAME);
+        }
+        changeState(MenuState.OBSERVING);
+    }
+
     private void changeState(String token) {
         authToken = token;
         changeState(MenuState.POST_LOGIN);
@@ -222,9 +231,7 @@ public class ChessClient implements ServerMessageObserver {
         int newGameID = existingGames[index];
         serverFacade.joinGame(authToken, color, newGameID);
         serverFacade.connectToGame(authToken, newGameID);
-        currentGameID = newGameID;
-        whitePlayer = color.equalsIgnoreCase("white");
-        changeState(MenuState.MID_GAME);
+        changeState(newGameID, color.equalsIgnoreCase("white"));
     }
 
     private void observeGame(String[] params) throws ClientException, IOException {
@@ -239,8 +246,7 @@ public class ChessClient implements ServerMessageObserver {
         }
         int newGameID = existingGames[index];
         serverFacade.connectToGame(authToken, newGameID);
-        currentGameID = newGameID;
-        changeState(MenuState.OBSERVING);
+        changeState(newGameID, null);
     }
 
     private void logout() throws IOException {

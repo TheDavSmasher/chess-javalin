@@ -22,4 +22,6 @@ public final class PieceMoveCalculatorFactory extends EnumObjectFactory<PieceTyp
             case PAWN -> new PawnMoveCalculator();
         };
     }
+
+    public static final PieceMoveCalculatorFactory INSTANCE = new PieceMoveCalculatorFactory();
 }

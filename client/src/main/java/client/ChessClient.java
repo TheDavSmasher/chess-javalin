@@ -33,9 +33,9 @@ public class ChessClient {
     public void evaluate(String input) throws ClientException {
         String[] tokens = input.toLowerCase().split(" ");
         tryCatchDo(() -> tryCatchRethrow(() -> {
-            int command = (tokens.length > 0) ? Integer.parseInt(tokens[0]) : 0;
-            String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
-            clientStates.get(currentState).evaluate(command - 1, params);
+            clientStates.get(currentState).evaluate(
+                    (tokens.length > 0 ? Integer.parseInt(tokens[0]) : 0) - 1,
+                    Arrays.copyOfRange(tokens, 1, tokens.length));
             return null;
         }, IOException.class, ClientException.class),
                 NumberFormatException.class, _ -> help(true), ClientException.class);

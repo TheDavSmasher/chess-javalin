@@ -30,7 +30,7 @@ public final class ClientCommandProcessing {
 
         public void process(String[] params, int index) throws ClientException, IOException {
             if (params.length < paramMin || params.length > paramMax) {
-                throw new FormatException(onWrong, format(index));
+                throw new FormatException(onWrong + (format(index) instanceof String indexFormat ? "\n " + indexFormat: ""));
             }
             command.process(params);
         }
@@ -42,15 +42,15 @@ public final class ClientCommandProcessing {
                 for (int i = 1; i < description.length; i++) {
                     help.append("\n   ").append(description[i]);
                 }
-                if (format != null) {
-                    help.append("\n   ").append(format(index));
+                if (format(index) instanceof String indexFormat) {
+                    help.append("\n   ").append(indexFormat);
                 }
             }
             return help.append("\n");
         }
 
         private String format(int index) {
-            return format != null ? "Format: " + index + " " + format : "";
+            return format != null ? "Format: " + index + " " + format : null;
         }
     }
 }

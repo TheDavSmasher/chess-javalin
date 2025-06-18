@@ -30,7 +30,7 @@ public final class ClientCommandProcessing {
 
         public void process(String[] params, int index) throws ClientException, IOException {
             if (params.length < paramMin || params.length > paramMax) {
-                throw new FormatException(onWrong, format != null ?  index + " " + format : null);
+                throw new FormatException(onWrong, format(index));
             }
             command.process(params);
         }

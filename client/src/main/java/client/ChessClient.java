@@ -35,7 +35,7 @@ public class ChessClient {
         tryCatchDo(() -> tryCatchRethrow(() -> {
             int command = (tokens.length > 0) ? Integer.parseInt(tokens[0]) : 0;
             String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
-            clientStates.get(currentState).evaluate(command, params);
+            clientStates.get(currentState).evaluate(command - 1, params);
             return null;
         }, IOException.class, ClientException.class),
                 NumberFormatException.class, _ -> help(true), ClientException.class);

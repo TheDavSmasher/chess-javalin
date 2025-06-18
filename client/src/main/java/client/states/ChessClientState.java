@@ -13,11 +13,11 @@ public abstract class ChessClientState {
     }
 
     public void evaluate(int command, String[] params) throws ClientException, IOException {
-        if (command < 1 || command > getStateCommands().length) {
+        if (command < 0 || command >= getStateCommands().length) {
             help(false);
             return;
         }
-        getStateCommands()[command - 1].process(params, command - 1);
+        getStateCommands()[command].process(params, command);
     }
 
     public void help(boolean simple) {

@@ -2,8 +2,6 @@ package client.states;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Optional;
-import java.util.function.Supplier;
 
 import backend.ServerFacade;
 import backend.ServerMessageObserver;
@@ -11,7 +9,6 @@ import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
-import client.ChessClient;
 import client.states.ClientCommandProcessing.*;
 import ui.ChessUI;
 import websocket.messages.ErrorMessage;
@@ -23,7 +20,7 @@ import static ui.EscapeSequences.SET_TEXT_COLOR_RED;
 import static utils.Catcher.tryCatchRethrow;
 import static utils.Serializer.deserialize;
 
-public class InGameClientState extends AuthorizedClientState implements ServerMessageObserver {
+public class InGameClientState extends ChessClientState implements ServerMessageObserver {
     private static final String moveFormat = "        Format positions column then row, such as G6.";
 
     private final ClientCommand[] observerCommands = {
@@ -53,53 +50,47 @@ public class InGameClientState extends AuthorizedClientState implements ServerMe
                     "This action cannot be undone after you confirm.")
     };
 
-    protected final Supplier<Integer> currentGameID;
-    protected final Supplier<Optional<Boolean>> whitePlayer;
-
     private ChessGame currentGame = null;
     private final ChessUI chessUI;
 
     public InGameClientState(
-            ServerFacade serverFacade, PrintStream out, ClientChanger client,
-            Supplier<String> authToken, Supplier<Integer> currentGameID, Supplier<Optional<Boolean>> whitePlayer) {
-        super(serverFacade, out, client, authToken);
-        this.currentGameID = currentGameID;
-        this.whitePlayer = whitePlayer;
+            ServerFacade serverFacade, PrintStream out, ClientStateManager client) {
+        super(serverFacade, out, client);
         this.chessUI = new ChessUI(this.out);
         this.serverFacade.registerObserver(this);
     }
 
     @Override
     protected ClientCommand[] getStateCommands() {
-        return whitePlayer.get().isEmpty() ? observerCommands : playerCommands;
+        return client.getIsPlayerAndWhite().isEmpty() ? observerCommands : playerCommands;
     }
 
     private void redrawBoard() {
-        chessUI.printChessBoard(currentGame, null, whitePlayer.get().orElse(true));
+        chessUI.printChessBoard(currentGame, null, client.getIsPlayerAndWhite().orElse(true));
     }
 
     private void makeMove(String[] params) throws IOException {
         String start = params[0], end = params[1];
         ChessPiece.PieceType type = params.length < 3 ? null : typeFromString(params[2]);
         ChessMove move = new ChessMove(positionFromString(start), positionFromString(end), type);
-        serverFacade.makeMove(authToken.get(), currentGameID.get(), move);
+        serverFacade.makeMove(client.getAuthToken(), client.getCurrentGameID(), move);
     }
 
     private void highlightMoves(String[] params) throws IOException {
         String startPos = params[0];
         ChessPosition start = positionFromString(startPos);
-        chessUI.printChessBoard(currentGame, start, whitePlayer.get().orElse(true));
+        chessUI.printChessBoard(currentGame, start, client.getIsPlayerAndWhite().orElse(true));
     }
 
     private void leaveGame() throws IOException {
-        serverFacade.leaveGame(authToken.get(), currentGameID.get());
+        serverFacade.leaveGame(client.getAuthToken(), client.getCurrentGameID());
         currentGame = null;
-        client.changeTo(ChessClient.MenuState.POST_LOGIN);
+        client.returnFromGame();
     }
 
     private void resignGame() throws IOException {
         //Add prompt
-        serverFacade.resignGame(authToken.get(), currentGameID.get());
+        serverFacade.resignGame(client.getAuthToken(), client.getCurrentGameID());
     }
 
     private ChessPiece.PieceType typeFromString(String type) throws IOException {

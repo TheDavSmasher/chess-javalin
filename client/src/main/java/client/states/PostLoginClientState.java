@@ -5,14 +5,12 @@ import backend.ServerFacade;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.function.Supplier;
 
-import client.ChessClient;
 import client.ClientException;
 import client.states.ClientCommandProcessing.*;
 import model.dataaccess.GameData;
 
-public class PostLoginClientState extends AuthorizedClientState {
+public class PostLoginClientState extends ChessClientState {
     private final ClientCommand[] stateCommands = {
             new ClientCommand(this::listGames, "List Games",
                     "show all games that are currently being hosted in the server."),
@@ -31,8 +29,8 @@ public class PostLoginClientState extends AuthorizedClientState {
 
     private int[] existingGames = null;
 
-    public PostLoginClientState(ServerFacade serverFacade, PrintStream out, ClientChanger client, Supplier<String> auth) {
-        super(serverFacade, out, client, auth);
+    public PostLoginClientState(ServerFacade serverFacade, PrintStream out, ClientStateManager client) {
+        super(serverFacade, out, client);
     }
 
 
@@ -42,7 +40,7 @@ public class PostLoginClientState extends AuthorizedClientState {
     }
 
     private void listGames() throws IOException {
-        ArrayList<GameData> allGames = serverFacade.listGames(authToken.get());
+        ArrayList<GameData> allGames = serverFacade.listGames(client.getAuthToken());
         existingGames = new int[allGames.size()];
         out.print("Games:");
         int i = 0;
@@ -63,7 +61,7 @@ public class PostLoginClientState extends AuthorizedClientState {
             }
         }
         String fullName = result.toString();
-        serverFacade.createGame(authToken.get(), fullName);
+        serverFacade.createGame(client.getAuthToken(), fullName);
         out.print("Game created! List all games to see it and be able to join or observe it.");
     }
 
@@ -85,14 +83,14 @@ public class PostLoginClientState extends AuthorizedClientState {
         }
         int newGameID = existingGames[index];
         if (color != null) {
-            serverFacade.joinGame(authToken.get(), color, newGameID);
+            serverFacade.joinGame(client.getAuthToken(), color, newGameID);
         }
-        serverFacade.connectToGame(authToken.get(), newGameID);
-        client.changeTo(ChessClient.MenuState.MID_GAME, newGameID, color);
+        serverFacade.connectToGame(client.getAuthToken(), newGameID);
+        client.enterGame(newGameID, color);
     }
 
     private void logout() throws IOException {
-        serverFacade.logout(authToken.get());
-        client.changeTo(ChessClient.MenuState.PRE_LOGIN);
+        serverFacade.logout(client.getAuthToken());
+        client.logout();
     }
 }

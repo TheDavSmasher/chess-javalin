@@ -9,26 +9,21 @@ import java.util.Arrays;
 import java.util.EnumMap;
 
 import static utils.Catcher.*;
-import static java.util.Optional.ofNullable;
 
 public class ChessClient {
     private final EnumMap<MenuState, ChessClientState> stateManager = new EnumMap<>(MenuState.class);
 
     private MenuState currentState = MenuState.PRE_LOGIN;
 
-    private String authToken = null;
-    private int currentGameID = 0;
-    private Boolean whitePlayer = null;
-
     public ChessClient(PrintStream out) {
         ServerFacade serverFacade = new ServerFacade();
+        ClientStateManager clientStateManager = new ClientStateManager(this);
         stateManager.put(MenuState.PRE_LOGIN,
-                new PreLoginClientState(serverFacade, out, this::changeClientState));
+                new PreLoginClientState(serverFacade, out, clientStateManager));
         stateManager.put(MenuState.POST_LOGIN,
-                new PostLoginClientState(serverFacade, out, this::changeClientState, () -> authToken));
+                new PostLoginClientState(serverFacade, out, clientStateManager));
         stateManager.put(MenuState.MID_GAME,
-                new InGameClientState(serverFacade, out, this::changeClientState,
-                        () -> authToken, () -> currentGameID, () -> ofNullable(whitePlayer)));
+                new InGameClientState(serverFacade, out, clientStateManager));
     }
 
     public void evaluate(String input) throws ClientException {
@@ -42,18 +37,9 @@ public class ChessClient {
                 NumberFormatException.class, _ -> help(true), ClientException.class);
     }
 
-    private void changeClientState(MenuState state, Object... args) {
+    public void changeState(MenuState state) {
         currentState = state;
-        if (state == MenuState.POST_LOGIN) {
-            currentGameID = 0;
-            authToken = args[0] instanceof String newAuth ? newAuth : authToken;
-        } else if (state == MenuState.PRE_LOGIN) {
-            authToken = null;
-        } else {
-            currentGameID = (int) args[0];
-            whitePlayer = args[1] instanceof String color ? color.equalsIgnoreCase("white") : null;
-        }
-        help(true);
+        help(false);
     }
 
     public enum MenuState {

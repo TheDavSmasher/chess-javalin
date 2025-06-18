@@ -1,7 +1,6 @@
 package client.states;
 
 import backend.ServerFacade;
-import client.ChessClient;
 import client.ClientException;
 import client.states.ClientCommandProcessing.*;
 
@@ -9,16 +8,11 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 public abstract class ChessClientState {
-    @FunctionalInterface
-    public interface ClientChanger {
-        void changeTo(ChessClient.MenuState target, Object... args);
-    }
-
     protected final ServerFacade serverFacade;
     protected final PrintStream out;
-    protected final ClientChanger client;
+    protected final ClientStateManager client;
 
-    protected ChessClientState(ServerFacade serverFacade, PrintStream out, ClientChanger client) {
+    protected ChessClientState(ServerFacade serverFacade, PrintStream out, ClientStateManager client) {
         this.serverFacade = serverFacade;
         this.out = out;
         this.client = client;

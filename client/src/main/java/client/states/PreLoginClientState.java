@@ -1,7 +1,6 @@
 package client.states;
 
 import backend.ServerFacade;
-import client.ChessClient;
 import client.ExitException;
 
 import java.io.IOException;
@@ -21,7 +20,7 @@ public class PreLoginClientState extends ChessClientState {
                     "exit out of the client.")
     };
 
-    public PreLoginClientState(ServerFacade serverFacade, PrintStream out, ClientChanger client) {
+    public PreLoginClientState(ServerFacade serverFacade, PrintStream out, ClientStateManager client) {
         super(serverFacade, out, client);
     }
 
@@ -32,16 +31,12 @@ public class PreLoginClientState extends ChessClientState {
 
     private void register(String[] params) throws IOException {
         String username = params[0], password = params[1], email = params[2];
-        enterServer(serverFacade.register(username, password, email).authToken());
+        client.enterServer(serverFacade.register(username, password, email).authToken());
     }
 
     private void signIn(String[] params) throws IOException {
         String username = params[0], password = params[1];
-        enterServer(serverFacade.login(username, password).authToken());
-    }
-
-    private void enterServer(String authToken) {
-        client.changeTo(ChessClient.MenuState.POST_LOGIN, authToken);
+        client.enterServer(serverFacade.login(username, password).authToken());
     }
 
     private void quit() throws ExitException {

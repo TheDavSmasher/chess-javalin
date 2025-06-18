@@ -83,8 +83,7 @@ public class ChessClient implements ServerMessageObserver {
     private enum MenuState {
         PRE_LOGIN,
         POST_LOGIN,
-        MID_GAME,
-        OBSERVING
+        MID_GAME
     }
 
     private void changeState(MenuState state) {

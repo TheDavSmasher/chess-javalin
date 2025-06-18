@@ -34,5 +34,23 @@ public final class ClientCommandProcessing {
             }
             command.process(params);
         }
+
+        public String getHelp(int index, boolean simple) {
+            StringBuilder help = new StringBuilder().append(index).append(" - ").append(option);
+            if (!simple) {
+                help.append(": ").append(description[0]);
+                for (int i = 1; i < description.length; i++) {
+                    help.append("\n   ").append(description[i]);
+                }
+                if (format != null) {
+                    help.append("\n   ").append(format(index));
+                }
+            }
+            return help.append("\n").toString();
+        }
+
+        private String format(int index) {
+            return format != null ? "Format: " + index + " " + format : "";
+        }
     }
 }

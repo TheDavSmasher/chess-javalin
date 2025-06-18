@@ -48,7 +48,7 @@ public class ChessClient {
         help(false);
     }
 
-    public void help(boolean simple) {
+    private void help(boolean simple) {
         clientStates.get(currentState).help(simple);
     }
 }

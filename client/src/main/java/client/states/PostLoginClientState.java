@@ -87,6 +87,7 @@ public class PostLoginClientState extends AuthorizedClientState {
         if (color != null) {
             serverFacade.joinGame(authToken.get(), color, newGameID);
         }
+        serverFacade.connectToGame(authToken.get(), newGameID);
         client.changeTo(ChessClient.MenuState.MID_GAME, newGameID, color);
     }
 

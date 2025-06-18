@@ -84,11 +84,13 @@ public class PostLoginClientState extends AuthorizedClientState {
             throw new ClientException("That game does not exist!");
         }
         int newGameID = existingGames[index];
+        ChessClient.MenuState newState = ChessClient.MenuState.OBSERVING;
         if (color != null) {
             serverFacade.joinGame(authToken.get(), color, newGameID);
+            newState = ChessClient.MenuState.MID_GAME;
         }
         serverFacade.connectToGame(authToken.get(), newGameID);
-        client.changeTo(ChessClient.MenuState.MID_GAME, newGameID, client);
+        client.changeTo(newState, newGameID, color);
     }
 
     private void logout() throws IOException {

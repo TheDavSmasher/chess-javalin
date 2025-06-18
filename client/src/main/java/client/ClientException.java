@@ -1,6 +1,6 @@
 package client;
 
 public class ClientException extends Exception {
-    ClientException() {}
-    ClientException(String message) { super(message); }
+    public ClientException() {}
+    public ClientException(String message) { super(message); }
 }

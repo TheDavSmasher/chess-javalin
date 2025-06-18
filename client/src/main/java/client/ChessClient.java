@@ -38,16 +38,12 @@ public class ChessClient {
                     Arrays.copyOfRange(tokens, 1, tokens.length));
             return null;
         }, IOException.class, ClientException.class),
-                NumberFormatException.class, _ -> help(true), ClientException.class);
+                NumberFormatException.class, _ -> getCurrentState().help(true), ClientException.class);
     }
 
     public void changeState(MenuState state) {
         currentState = state;
-        help(false);
-    }
-
-    private void help(boolean simple) {
-        getCurrentState().help(simple);
+        getCurrentState().help(false);
     }
 
     private ChessClientState getCurrentState() {

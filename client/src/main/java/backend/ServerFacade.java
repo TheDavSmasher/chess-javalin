@@ -19,11 +19,7 @@ public class ServerFacade {
 
     public ServerFacade() {
         this(8080);
-    }
-
-    public ServerFacade(ServerMessageObserver observer) {
-        this();
-        websocket = new WebsocketCommunicator(getUrlString(8080), observer);
+        websocket = new WebsocketCommunicator(getUrlString(8080));
     }
 
     private static String getUrlString(int port) {
@@ -59,6 +55,10 @@ public class ServerFacade {
     }
 
     //Websocket
+    public void registerObserver(ServerMessageObserver observer) {
+        websocket.registerObserver(observer);
+    }
+
     public void connectToGame(String authToken, int gameID) throws IOException {
         websocket.sendCommand(new ConnectCommand(authToken, gameID));
     }

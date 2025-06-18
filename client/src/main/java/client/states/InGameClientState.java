@@ -61,11 +61,8 @@ public class InGameClientState extends AuthorizedClientState implements ServerMe
         super(serverFacade, out, client, authToken);
         this.currentGameID = currentGameID;
         this.whitePlayer = whitePlayer;
-        this.chessUI = new ChessUI(out);
-    }
-
-    public void connectToWebsocket() throws IOException {
-        serverFacade.connectToGame(this, authToken.get(), currentGameID.get());
+        this.chessUI = new ChessUI(this.out);
+        this.serverFacade.registerObserver(this);
     }
 
     @Override

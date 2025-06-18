@@ -32,14 +32,16 @@ public class PreLoginClientState extends ChessClientState {
 
     private void register(String[] params) throws IOException {
         String username = params[0], password = params[1], email = params[2];
-        String token = serverFacade.register(username, password, email).authToken();
-        client.changeTo(ChessClient.MenuState.POST_LOGIN, token);
+        enterServer(serverFacade.register(username, password, email).authToken());
     }
 
     private void signIn(String[] params) throws IOException {
         String username = params[0], password = params[1];
-        String token =  serverFacade.login(username, password).authToken();
-        client.changeTo(ChessClient.MenuState.POST_LOGIN, token);
+        enterServer(serverFacade.login(username, password).authToken());
+    }
+
+    private void enterServer(String authToken) {
+        client.changeTo(ChessClient.MenuState.POST_LOGIN, authToken);
     }
 
     private void quit() throws ExitException {

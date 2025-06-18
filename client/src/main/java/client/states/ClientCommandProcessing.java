@@ -35,8 +35,8 @@ public final class ClientCommandProcessing {
             command.process(params);
         }
 
-        public String getHelp(int index, boolean simple) {
-            StringBuilder help = new StringBuilder().append(index).append(" - ").append(option);
+        public StringBuilder getHelp(StringBuilder help, int index, boolean simple) {
+            help.append(index).append(" - ").append(option);
             if (!simple) {
                 help.append(": ").append(description[0]);
                 for (int i = 1; i < description.length; i++) {
@@ -46,7 +46,7 @@ public final class ClientCommandProcessing {
                     help.append("\n   ").append(format(index));
                 }
             }
-            return help.append("\n").toString();
+            return help.append("\n");
         }
 
         private String format(int index) {

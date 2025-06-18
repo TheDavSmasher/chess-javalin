@@ -25,9 +25,9 @@ public abstract class ChessClientState {
 
         StringBuilder help = new StringBuilder();
         for (int i = 0; i < getStateCommands().length; i++) {
-            help.append(getStateCommands()[i].getHelp(i, simple));
+            getStateCommands()[i].getHelp(help, i, simple);
         }
-        client.out.print(help.append("\n").append(helpCommand.getHelp(0, simple)));
+        client.out.print(helpCommand.getHelp(help.append("\n"), 0, simple));
     }
 
     protected abstract ClientCommand[] getStateCommands();

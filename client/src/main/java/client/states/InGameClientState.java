@@ -7,6 +7,8 @@ import java.util.function.Supplier;
 import backend.ServerFacade;
 import backend.ServerMessageObserver;
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPiece;
 import chess.ChessPosition;
 import client.ChessClient;
 import client.states.ClientCommandProcessing.*;
@@ -17,12 +19,21 @@ import websocket.messages.Notification;
 import websocket.messages.ServerMessage;
 
 import static ui.EscapeSequences.SET_TEXT_COLOR_RED;
+import static utils.Catcher.tryCatchRethrow;
 import static utils.Serializer.deserialize;
 
 public class InGameClientState extends AuthorizedClientState implements ServerMessageObserver {
     protected final ClientCommand redraw =
             new ClientCommand(this::redrawBoard, "Redraw Board",
             "print the board again for the current state of the game.");
+    private final ClientCommand makeMove =
+            new ClientCommand(this::makeMove, "Make Move", 2, 3,
+            """
+            Please provide a start and end position.
+            If a pawn is to be promoted, also provide what it should become.
+            ""","2 start end (pieceType)        Format positions column then row, such as G6.",
+            "select a piece in a given position and give its ending position.",
+            "Please make sure the move is legal.");
     protected final ClientCommand highlight =
             new ClientCommand(this::highlightMoves, "Highlight Legal Moves", 1,
             "Please provide a start position.", "start        Format positions column then row, such as G6.",
@@ -30,8 +41,13 @@ public class InGameClientState extends AuthorizedClientState implements ServerMe
     protected final ClientCommand leave =
             new ClientCommand(this::leaveGame, "Leave",
             "leave the current game, emptying your position and allowing anyone to join. Join again to continue.");
+    private final ClientCommand resign =
+            new ClientCommand(this::resignGame, "Resign",
+            "forfeit the current game, rendering it unplayable and making the opposing player as winner.",
+            "This action cannot be undone after you confirm.");
 
-    private final ClientCommand[] stateCommands = { redraw, highlight, leave };
+    private final ClientCommand[] observerCommands = { redraw, highlight, leave };
+    private final ClientCommand[] playerCommands = { redraw, makeMove, highlight, leave, resign };
 
     protected final Supplier<Integer> currentGameID;
     protected final Supplier<Boolean> whitePlayer;
@@ -48,13 +64,24 @@ public class InGameClientState extends AuthorizedClientState implements ServerMe
         this.chessUI = new ChessUI(out);
     }
 
+    public void connectToWebsocket() throws IOException {
+        serverFacade.connectToGame(this, authToken.get(), currentGameID.get());
+    }
+
     @Override
     protected ClientCommand[] getStateCommands() {
-        return stateCommands;
+        return whitePlayer == null ? observerCommands : playerCommands;
     }
 
     private void redrawBoard() {
         chessUI.printChessBoard(currentGame, null, whitePlayer.get());
+    }
+
+    private void makeMove(String[] params) throws IOException {
+        String start = params[0], end = params[1];
+        ChessPiece.PieceType type = params.length < 3 ? null : typeFromString(params[2]);
+        ChessMove move = new ChessMove(positionFromString(start), positionFromString(end), type);
+        serverFacade.makeMove(authToken.get(), currentGameID.get(), move);
     }
 
     private void highlightMoves(String[] params) throws IOException {
@@ -69,7 +96,17 @@ public class InGameClientState extends AuthorizedClientState implements ServerMe
         client.changeTo(ChessClient.MenuState.POST_LOGIN);
     }
 
-    protected ChessPosition positionFromString(String moveString) throws IOException {
+    private void resignGame() throws IOException {
+        //Add prompt
+        serverFacade.resignGame(authToken.get(), currentGameID.get());
+    }
+
+    private ChessPiece.PieceType typeFromString(String type) throws IOException {
+        return tryCatchRethrow(() -> ChessPiece.PieceType.valueOf(type),
+                IllegalArgumentException.class, IOException.class, _ -> "That Piece Type does not exist.");
+    }
+
+    private ChessPosition positionFromString(String moveString) throws IOException {
         if (moveString.length() != 2) {
             throw new IOException("Wrong move format!");
         }

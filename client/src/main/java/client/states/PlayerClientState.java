@@ -3,7 +3,6 @@ package client.states;
 import backend.ServerFacade;
 import chess.ChessMove;
 import chess.ChessPiece;
-import client.ChessClient;
 import client.states.ClientCommandProcessing.*;
 
 import java.io.IOException;
@@ -48,8 +47,8 @@ public class PlayerClientState extends InGameClientState {
     }
 
     private void resignGame() throws IOException {
+        //Add prompt
         serverFacade.resignGame(authToken.get(), currentGameID.get());
-        client.changeTo(ChessClient.MenuState.POST_LOGIN);
     }
 
     private ChessPiece.PieceType typeFromString(String type) throws IOException {

@@ -33,7 +33,7 @@ public class ChessClient {
     public void evaluate(String input) throws ClientException {
         String[] tokens = input.toLowerCase().split(" ");
         tryCatchDo(() -> tryCatchRethrow(() -> {
-            clientStates.get(currentState).evaluate(
+            getCurrentState().evaluate(
                     (tokens.length > 0 ? Integer.parseInt(tokens[0]) : 0) - 1,
                     Arrays.copyOfRange(tokens, 1, tokens.length));
             return null;
@@ -47,6 +47,10 @@ public class ChessClient {
     }
 
     private void help(boolean simple) {
-        clientStates.get(currentState).help(simple);
+        getCurrentState().help(simple);
+    }
+
+    private ChessClientState getCurrentState() {
+        return clientStates.get(currentState);
     }
 }

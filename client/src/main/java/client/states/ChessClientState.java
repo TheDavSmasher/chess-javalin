@@ -44,6 +44,6 @@ public abstract class ChessClientState {
 
     protected abstract ClientCommand[] getStateCommands();
 
-    private final ClientCommand helpCommand = new ClientCommand(() -> help(false), "0 - Help",
+    private final ClientCommand helpCommand = new ClientCommand(() -> help(false), "Help",
             "print this menu again. Also prints out if input is beyond what's accepted.");
 }

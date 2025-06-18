@@ -17,18 +17,18 @@ public class ChessClient {
         MID_GAME
     }
 
-    private final EnumMap<MenuState, ChessClientState> stateManager = new EnumMap<>(MenuState.class);
+    private final EnumMap<MenuState, ChessClientState> clientStates = new EnumMap<>(MenuState.class);
 
     private MenuState currentState = MenuState.PRE_LOGIN;
 
     public ChessClient(PrintStream out) {
         ServerFacade serverFacade = new ServerFacade();
         ClientStateManager clientStateManager = new ClientStateManager(this);
-        stateManager.put(MenuState.PRE_LOGIN,
+        clientStates.put(MenuState.PRE_LOGIN,
                 new PreLoginClientState(serverFacade, out, clientStateManager));
-        stateManager.put(MenuState.POST_LOGIN,
+        clientStates.put(MenuState.POST_LOGIN,
                 new PostLoginClientState(serverFacade, out, clientStateManager));
-        stateManager.put(MenuState.MID_GAME,
+        clientStates.put(MenuState.MID_GAME,
                 new InGameClientState(serverFacade, out, clientStateManager));
     }
 
@@ -37,7 +37,7 @@ public class ChessClient {
         tryCatchDo(() -> tryCatchRethrow(() -> {
             int command = (tokens.length > 0) ? Integer.parseInt(tokens[0]) : 0;
             String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
-            stateManager.get(currentState).evaluate(command, params);
+            clientStates.get(currentState).evaluate(command, params);
             return null;
         }, IOException.class, ClientException.class),
                 NumberFormatException.class, _ -> help(true), ClientException.class);
@@ -49,6 +49,6 @@ public class ChessClient {
     }
 
     public void help(boolean simple) {
-        stateManager.get(currentState).help(simple);
+        clientStates.get(currentState).help(simple);
     }
 }

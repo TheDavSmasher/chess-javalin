@@ -65,6 +65,7 @@ public class InGameClientState extends AuthorizedClientState implements ServerMe
 
     private void leaveGame() throws IOException {
         serverFacade.leaveGame(authToken.get(), currentGameID.get());
+        currentGame = null;
         client.changeTo(ChessClient.MenuState.POST_LOGIN);
     }
 

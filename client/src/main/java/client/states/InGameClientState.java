@@ -23,6 +23,8 @@ import static utils.Catcher.tryCatchRethrow;
 import static utils.Serializer.deserialize;
 
 public class InGameClientState extends AuthorizedClientState implements ServerMessageObserver {
+    private static final String moveFormat = "        Format positions column then row, such as G6.";
+
     protected final ClientCommand redraw =
             new ClientCommand(this::redrawBoard, "Redraw Board",
             "print the board again for the current state of the game.");
@@ -31,12 +33,12 @@ public class InGameClientState extends AuthorizedClientState implements ServerMe
             """
             Please provide a start and end position.
             If a pawn is to be promoted, also provide what it should become.
-            ""","2 start end (pieceType)        Format positions column then row, such as G6.",
+            ""","start end (pieceType)" + moveFormat,
             "select a piece in a given position and give its ending position.",
             "Please make sure the move is legal.");
     protected final ClientCommand highlight =
             new ClientCommand(this::highlightMoves, "Highlight Legal Moves", 1,
-            "Please provide a start position.", "start        Format positions column then row, such as G6.",
+            "Please provide a start position.", "start" + moveFormat,
             "select a position on the board to see all legal moves the piece in that position can make.");
     protected final ClientCommand leave =
             new ClientCommand(this::leaveGame, "Leave",

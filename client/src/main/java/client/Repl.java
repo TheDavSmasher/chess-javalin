@@ -13,7 +13,7 @@ public class Repl {
 
     public void run() {
         out.println("Welcome to my Chess Server!");
-        client.help(true);
+        client.changeState(ChessClient.MenuState.PRE_LOGIN);
 
         Scanner scanner = new Scanner(System.in);
         while (true) {

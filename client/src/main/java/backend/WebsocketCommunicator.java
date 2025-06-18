@@ -15,11 +15,14 @@ public class WebsocketCommunicator extends Endpoint implements MessageHandler.Wh
     private Session session;
     private boolean connected = false;
     private final String socketUrl;
-    private final ServerMessageObserver observer;
+    private ServerMessageObserver observer;
 
-    public WebsocketCommunicator(String url, ServerMessageObserver messageObserver) {
-        observer = messageObserver;
+    public WebsocketCommunicator(String url) {
         socketUrl = url.replace("http", "ws");
+    }
+
+    public void registerObserver(ServerMessageObserver observer) {
+        this.observer = observer;
     }
 
     @Override

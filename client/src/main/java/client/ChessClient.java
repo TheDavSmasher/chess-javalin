@@ -103,8 +103,9 @@ public class ChessClient implements ServerMessageObserver {
         if (playerState != null) {
             whitePlayer = playerState.equalsIgnoreCase("white");
             changeState(MenuState.MID_GAME);
+        } else {
+            changeState(MenuState.OBSERVING);
         }
-        changeState(MenuState.OBSERVING);
     }
 
     private void changeState(String token) {

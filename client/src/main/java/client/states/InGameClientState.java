@@ -2,6 +2,7 @@ package client.states;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import backend.ServerFacade;
@@ -25,41 +26,42 @@ import static utils.Serializer.deserialize;
 public class InGameClientState extends AuthorizedClientState implements ServerMessageObserver {
     private static final String moveFormat = "        Format positions column then row, such as G6.";
 
-    protected final ClientCommand redraw =
+    private final ClientCommand[] observerCommands = {
             new ClientCommand(this::redrawBoard, "Redraw Board",
-            "print the board again for the current state of the game.");
-    private final ClientCommand makeMove =
-            new ClientCommand(this::makeMove, "Make Move", 2, 3,
-            """
-            Please provide a start and end position.
-            If a pawn is to be promoted, also provide what it should become.
-            ""","start end (pieceType)" + moveFormat,
-            "select a piece in a given position and give its ending position.",
-            "Please make sure the move is legal.");
-    protected final ClientCommand highlight =
+                    "print the board again for the current state of the game."),
             new ClientCommand(this::highlightMoves, "Highlight Legal Moves", 1,
-            "Please provide a start position.", "start" + moveFormat,
-            "select a position on the board to see all legal moves the piece in that position can make.");
-    protected final ClientCommand leave =
+                    "Please provide a start position.", "start" + moveFormat,
+                    "select a position on the board to see all legal moves the piece in that position can make."),
             new ClientCommand(this::leaveGame, "Leave",
-            "leave the current game, emptying your position and allowing anyone to join. Join again to continue.");
-    private final ClientCommand resign =
-            new ClientCommand(this::resignGame, "Resign",
-            "forfeit the current game, rendering it unplayable and making the opposing player as winner.",
-            "This action cannot be undone after you confirm.");
+                    "leave the current game, emptying your position and allowing anyone to join.",
+                    "Join again to continue.")
+    };
 
-    private final ClientCommand[] observerCommands = { redraw, highlight, leave };
-    private final ClientCommand[] playerCommands = { redraw, makeMove, highlight, leave, resign };
+    private final ClientCommand[] playerCommands = {
+            observerCommands[0],
+            new ClientCommand(this::makeMove, "Make Move", 2, 3,
+                    """
+                    Please provide a start and end position.
+                    If a pawn is to be promoted, also provide what it should become.
+                    ""","start end (pieceType)" + moveFormat,
+                    "select a piece in a given position and give its ending position.",
+                    "Please make sure the move is legal."),
+            observerCommands[1],
+            observerCommands[2],
+            new ClientCommand(this::resignGame, "Resign",
+                    "forfeit the current game, rendering it unplayable and making the opposing player as winner.",
+                    "This action cannot be undone after you confirm.")
+    };
 
     protected final Supplier<Integer> currentGameID;
-    protected final Supplier<Boolean> whitePlayer;
+    protected final Supplier<Optional<Boolean>> whitePlayer;
 
     private ChessGame currentGame = null;
     private final ChessUI chessUI;
 
     public InGameClientState(
             ServerFacade serverFacade, PrintStream out, ClientChanger client,
-            Supplier<String> authToken, Supplier<Integer> currentGameID, Supplier<Boolean> whitePlayer) {
+            Supplier<String> authToken, Supplier<Integer> currentGameID, Supplier<Optional<Boolean>> whitePlayer) {
         super(serverFacade, out, client, authToken);
         this.currentGameID = currentGameID;
         this.whitePlayer = whitePlayer;
@@ -69,11 +71,11 @@ public class InGameClientState extends AuthorizedClientState implements ServerMe
 
     @Override
     protected ClientCommand[] getStateCommands() {
-        return whitePlayer == null ? observerCommands : playerCommands;
+        return whitePlayer.get().isEmpty() ? observerCommands : playerCommands;
     }
 
     private void redrawBoard() {
-        chessUI.printChessBoard(currentGame, null, whitePlayer.get());
+        chessUI.printChessBoard(currentGame, null, whitePlayer.get().orElse(true));
     }
 
     private void makeMove(String[] params) throws IOException {
@@ -86,7 +88,7 @@ public class InGameClientState extends AuthorizedClientState implements ServerMe
     private void highlightMoves(String[] params) throws IOException {
         String startPos = params[0];
         ChessPosition start = positionFromString(startPos);
-        chessUI.printChessBoard(currentGame, start, whitePlayer.get());
+        chessUI.printChessBoard(currentGame, start, whitePlayer.get().orElse(true));
     }
 
     private void leaveGame() throws IOException {

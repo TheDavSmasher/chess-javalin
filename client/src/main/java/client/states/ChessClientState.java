@@ -26,13 +26,24 @@ public abstract class ChessClientState {
 
     public void evaluate(int command, String[] params) throws ClientException, IOException {
         if (command < 1 || command > getStateCommands().length) {
-            //help(false);
+            help(false);
             return;
         }
         getStateCommands()[command - 1].process(params, command - 1);
     }
 
-    //define help command
+    public void help(boolean simple) {
+        out.println();
+
+        StringBuilder help = new StringBuilder();
+        for (int i = 0; i < getStateCommands().length; i++) {
+            help.append(getStateCommands()[i].getHelp(i, simple));
+        }
+        out.print(help.append("\n").append(helpCommand.getHelp(0, simple)));
+    }
 
     protected abstract ClientCommand[] getStateCommands();
+
+    private final ClientCommand helpCommand = new ClientCommand(() -> help(false), "0 - Help",
+            "print this menu again. Also prints out if input is beyond what's accepted.");
 }

@@ -13,12 +13,13 @@ public class PostLoginClientState extends ChessClientState {
                     "show all games that are currently being hosted in the server."),
             new ClientCommand(this::createGame, "Create Game", 1,
                     "Please provide a game ID", "gameName",
-                    "create a new game in the database with a name. The game's name can include space."),
+                    "create a new game in the database with the given name.",
+                    "The game's name can include spaces."),
             new ClientCommand(this::joinGame, "Join Game",2,
                     "Please provide a game ID and color", "[WHITE|BLACK] gameID",
                     "join an existing game with as a specific player color."),
             new ClientCommand(this::observeGame, "Observe Game", 1,
-                    "Please provide a game ID", "4 gameID",
+                    "Please provide a game ID", "gameID",
                     "see the current state of a game without becoming a player."),
             new ClientCommand(this::logout, "Logout",
                     "leave your current session and return to login menu.")
@@ -29,7 +30,6 @@ public class PostLoginClientState extends ChessClientState {
     public PostLoginClientState(ClientStateManager client) {
         super(client);
     }
-
 
     @Override
     protected ClientCommand[] getStateCommands() {

@@ -12,7 +12,7 @@ public class PreLoginClientState extends ChessClientState {
                     "creates a new user in the database. Username must be unique."),
             new ClientCommand(this::signIn, "Login", 2,
                     "Please provide a username and password", "username password",
-                    "logs in to the server with a pre-registered username with its corresponding password."),
+                    "logs in to the server with a pre-registered username and its corresponding password."),
             new ClientCommand(this::quit, "Quit",
                     "exit out of the client.")
     };

@@ -1,18 +1,23 @@
 package client.states;
 
+import backend.ServerFacade;
 import client.ChessClient;
 
+import java.io.PrintStream;
 import java.util.Optional;
 
 public class ClientStateManager {
+    public final ServerFacade serverFacade = new ServerFacade();
+    public final PrintStream out;
     private final ChessClient chessClient;
 
     private String authToken = null;
     private int currentGameID = 0;
     private Boolean isPlayerAndWhite = null;
 
-    public ClientStateManager(ChessClient chessClient) {
+    public ClientStateManager(ChessClient chessClient, PrintStream out) {
         this.chessClient = chessClient;
+        this.out = out;
     }
 
     public String getAuthToken() {

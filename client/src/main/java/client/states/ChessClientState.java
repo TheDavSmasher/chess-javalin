@@ -1,20 +1,14 @@
 package client.states;
 
-import backend.ServerFacade;
 import client.ClientException;
 import client.states.ClientCommandProcessing.*;
 
 import java.io.IOException;
-import java.io.PrintStream;
 
 public abstract class ChessClientState {
-    protected final ServerFacade serverFacade;
-    protected final PrintStream out;
     protected final ClientStateManager client;
 
-    protected ChessClientState(ServerFacade serverFacade, PrintStream out, ClientStateManager client) {
-        this.serverFacade = serverFacade;
-        this.out = out;
+    protected ChessClientState(ClientStateManager client) {
         this.client = client;
     }
 
@@ -27,13 +21,13 @@ public abstract class ChessClientState {
     }
 
     public void help(boolean simple) {
-        out.println();
+        client.out.println();
 
         StringBuilder help = new StringBuilder();
         for (int i = 0; i < getStateCommands().length; i++) {
             help.append(getStateCommands()[i].getHelp(i, simple));
         }
-        out.print(help.append("\n").append(helpCommand.getHelp(0, simple)));
+        client.out.print(help.append("\n").append(helpCommand.getHelp(0, simple)));
     }
 
     protected abstract ClientCommand[] getStateCommands();

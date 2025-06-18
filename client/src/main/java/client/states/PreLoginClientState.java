@@ -1,10 +1,7 @@
 package client.states;
 
-import backend.ServerFacade;
 import client.ExitException;
-
 import java.io.IOException;
-import java.io.PrintStream;
 
 import client.states.ClientCommandProcessing.*;
 
@@ -20,8 +17,8 @@ public class PreLoginClientState extends ChessClientState {
                     "exit out of the client.")
     };
 
-    public PreLoginClientState(ServerFacade serverFacade, PrintStream out, ClientStateManager client) {
-        super(serverFacade, out, client);
+    public PreLoginClientState(ClientStateManager client) {
+        super(client);
     }
 
     @Override
@@ -31,12 +28,12 @@ public class PreLoginClientState extends ChessClientState {
 
     private void register(String[] params) throws IOException {
         String username = params[0], password = params[1], email = params[2];
-        client.enterServer(serverFacade.register(username, password, email).authToken());
+        client.enterServer(client.serverFacade.register(username, password, email).authToken());
     }
 
     private void signIn(String[] params) throws IOException {
         String username = params[0], password = params[1];
-        client.enterServer(serverFacade.login(username, password).authToken());
+        client.enterServer(client.serverFacade.login(username, password).authToken());
     }
 
     private void quit() throws ExitException {

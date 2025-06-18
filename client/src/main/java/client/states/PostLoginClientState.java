@@ -1,9 +1,6 @@
 package client.states;
 
-import backend.ServerFacade;
-
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 
 import client.ClientException;
@@ -29,8 +26,8 @@ public class PostLoginClientState extends ChessClientState {
 
     private int[] existingGames = null;
 
-    public PostLoginClientState(ServerFacade serverFacade, PrintStream out, ClientStateManager client) {
-        super(serverFacade, out, client);
+    public PostLoginClientState(ClientStateManager client) {
+        super(client);
     }
 
 
@@ -40,15 +37,15 @@ public class PostLoginClientState extends ChessClientState {
     }
 
     private void listGames() throws IOException {
-        ArrayList<GameData> allGames = serverFacade.listGames(client.getAuthToken());
+        ArrayList<GameData> allGames = client.serverFacade.listGames(client.getAuthToken());
         existingGames = new int[allGames.size()];
-        out.print("Games:");
+        client.out.print("Games:");
         int i = 0;
         for (GameData data : allGames) {
             existingGames[i] = data.gameID();
             String white = (data.whiteUsername() != null) ? data.whiteUsername() : "No one";
             String black = (data.blackUsername() != null) ? data.blackUsername() : "No one";
-            out.print("\n  " + (++i) + ". " + data.gameName() + ": " + white + " vs " + black);
+            client.out.print("\n  " + (++i) + ". " + data.gameName() + ": " + white + " vs " + black);
         }
     }
 
@@ -61,8 +58,8 @@ public class PostLoginClientState extends ChessClientState {
             }
         }
         String fullName = result.toString();
-        serverFacade.createGame(client.getAuthToken(), fullName);
-        out.print("Game created! List all games to see it and be able to join or observe it.");
+        client.serverFacade.createGame(client.getAuthToken(), fullName);
+        client.out.print("Game created! List all games to see it and be able to join or observe it.");
     }
 
     private void joinGame(String[] params) throws ClientException, IOException {
@@ -83,14 +80,14 @@ public class PostLoginClientState extends ChessClientState {
         }
         int newGameID = existingGames[index];
         if (color != null) {
-            serverFacade.joinGame(client.getAuthToken(), color, newGameID);
+            client.serverFacade.joinGame(client.getAuthToken(), color, newGameID);
         }
-        serverFacade.connectToGame(client.getAuthToken(), newGameID);
+        client.serverFacade.connectToGame(client.getAuthToken(), newGameID);
         client.enterGame(newGameID, color);
     }
 
     private void logout() throws IOException {
-        serverFacade.logout(client.getAuthToken());
+        client.serverFacade.logout(client.getAuthToken());
         client.logout();
     }
 }

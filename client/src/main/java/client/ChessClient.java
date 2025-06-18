@@ -1,6 +1,5 @@
 package client;
 
-import backend.*;
 import client.states.*;
 
 import java.io.IOException;
@@ -22,14 +21,13 @@ public class ChessClient {
     private MenuState currentState = MenuState.PRE_LOGIN;
 
     public ChessClient(PrintStream out) {
-        ServerFacade serverFacade = new ServerFacade();
-        ClientStateManager clientStateManager = new ClientStateManager(this);
+        ClientStateManager clientStateManager = new ClientStateManager(this, out);
         clientStates.put(MenuState.PRE_LOGIN,
-                new PreLoginClientState(serverFacade, out, clientStateManager));
+                new PreLoginClientState(clientStateManager));
         clientStates.put(MenuState.POST_LOGIN,
-                new PostLoginClientState(serverFacade, out, clientStateManager));
+                new PostLoginClientState(clientStateManager));
         clientStates.put(MenuState.MID_GAME,
-                new InGameClientState(serverFacade, out, clientStateManager));
+                new InGameClientState(clientStateManager));
     }
 
     public void evaluate(String input) throws ClientException {

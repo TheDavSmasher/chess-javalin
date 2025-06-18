@@ -1,9 +1,7 @@
 package client.states;
 
 import java.io.IOException;
-import java.io.PrintStream;
 
-import backend.ServerFacade;
 import backend.ServerMessageObserver;
 import chess.ChessGame;
 import chess.ChessMove;
@@ -53,11 +51,10 @@ public class InGameClientState extends ChessClientState implements ServerMessage
     private ChessGame currentGame = null;
     private final ChessUI chessUI;
 
-    public InGameClientState(
-            ServerFacade serverFacade, PrintStream out, ClientStateManager client) {
-        super(serverFacade, out, client);
-        this.chessUI = new ChessUI(this.out);
-        this.serverFacade.registerObserver(this);
+    public InGameClientState(ClientStateManager client) {
+        super(client);
+        this.chessUI = new ChessUI(client.out);
+        client.serverFacade.registerObserver(this);
     }
 
     @Override
@@ -73,7 +70,7 @@ public class InGameClientState extends ChessClientState implements ServerMessage
         String start = params[0], end = params[1];
         ChessPiece.PieceType type = params.length < 3 ? null : typeFromString(params[2]);
         ChessMove move = new ChessMove(positionFromString(start), positionFromString(end), type);
-        serverFacade.makeMove(client.getAuthToken(), client.getCurrentGameID(), move);
+        client.serverFacade.makeMove(client.getAuthToken(), client.getCurrentGameID(), move);
     }
 
     private void highlightMoves(String[] params) throws IOException {
@@ -83,14 +80,14 @@ public class InGameClientState extends ChessClientState implements ServerMessage
     }
 
     private void leaveGame() throws IOException {
-        serverFacade.leaveGame(client.getAuthToken(), client.getCurrentGameID());
+        client.serverFacade.leaveGame(client.getAuthToken(), client.getCurrentGameID());
         currentGame = null;
         client.returnFromGame();
     }
 
     private void resignGame() throws IOException {
         //Add prompt
-        serverFacade.resignGame(client.getAuthToken(), client.getCurrentGameID());
+        client.serverFacade.resignGame(client.getAuthToken(), client.getCurrentGameID());
     }
 
     private ChessPiece.PieceType typeFromString(String type) throws IOException {
@@ -122,12 +119,12 @@ public class InGameClientState extends ChessClientState implements ServerMessage
     }
 
     private void displayNotification(Notification notification) {
-        out.println(notification.getNotification());
+        client.out.println(notification.getNotification());
     }
 
     private void displayError(ErrorMessage errorMessage) {
-        out.print(SET_TEXT_COLOR_RED);
-        out.println(errorMessage.getError());
+        client.out.print(SET_TEXT_COLOR_RED);
+        client.out.println(errorMessage.getError());
         chessUI.resetColor();
     }
 

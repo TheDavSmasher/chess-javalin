@@ -11,6 +11,12 @@ import java.util.EnumMap;
 import static utils.Catcher.*;
 
 public class ChessClient {
+    public enum MenuState {
+        PRE_LOGIN,
+        POST_LOGIN,
+        MID_GAME
+    }
+
     private final EnumMap<MenuState, ChessClientState> stateManager = new EnumMap<>(MenuState.class);
 
     private MenuState currentState = MenuState.PRE_LOGIN;
@@ -40,12 +46,6 @@ public class ChessClient {
     public void changeState(MenuState state) {
         currentState = state;
         help(false);
-    }
-
-    public enum MenuState {
-        PRE_LOGIN,
-        POST_LOGIN,
-        MID_GAME
     }
 
     public void help(boolean simple) {

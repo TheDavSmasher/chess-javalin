@@ -6,44 +6,48 @@ import client.states.ClientStateManager.MenuState;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.EnumMap;
+import utils.EnumObjectFactory;
 
 import static utils.Catcher.*;
 
-public class ChessClient {
-    }
+public class ChessClient extends EnumObjectFactory<MenuState, ChessClientState> {
+    private final ClientStateManager clientStateManager;
 
-    private final EnumMap<MenuState, ChessClientState> clientStates = new EnumMap<>(MenuState.class);
-
-    private MenuState currentState = MenuState.PRE_LOGIN;
+    private MenuState currentState = null;
 
     public ChessClient(PrintStream out) {
-        ClientStateManager clientStateManager = new ClientStateManager(this, out);
-        clientStates.put(MenuState.PRE_LOGIN,
-                new PreLoginClientState(clientStateManager));
-        clientStates.put(MenuState.POST_LOGIN,
-                new PostLoginClientState(clientStateManager));
-        clientStates.put(MenuState.MID_GAME,
-                new InGameClientState(clientStateManager));
+        super(false);
+        clientStateManager = new ClientStateManager(this, out);
+        generateValues();
+    }
+
+    @Override
+    protected Class<MenuState> getKeyClass() {
+        return MenuState.class;
+    }
+
+    @Override
+    protected ChessClientState preGenerateValue(MenuState key) {
+        return switch (key) {
+            case PRE_LOGIN -> new PreLoginClientState(clientStateManager);
+            case POST_LOGIN -> new PostLoginClientState(clientStateManager);
+            case MID_GAME -> new InGameClientState(clientStateManager);
+        };
     }
 
     public void evaluate(String input) throws ClientException {
         String[] tokens = input.toLowerCase().split(" ");
         tryCatchDo(() -> tryCatchRethrow(() -> {
-            getCurrentState().evaluate(
+                    get(currentState).evaluate(
                     (tokens.length > 0 ? Integer.parseInt(tokens[0]) : 0) - 1,
                     Arrays.copyOfRange(tokens, 1, tokens.length));
             return null;
         }, IOException.class, ClientException.class),
-                NumberFormatException.class, _ -> getCurrentState().help(true), ClientException.class);
+                NumberFormatException.class, _ -> get(currentState).help(true), ClientException.class);
     }
 
     public void changeState(MenuState state) {
         currentState = state;
-        getCurrentState().help(false);
-    }
-
-    private ChessClientState getCurrentState() {
-        return clientStates.get(currentState);
+        get(currentState).help(false);
     }
 }

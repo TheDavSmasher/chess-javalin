@@ -18,19 +18,23 @@ public final class ClientCommandProcessing {
 
     public record ClientCommand(
             CommandConsumer command, String option, int paramMin, int paramMax,
-            String onWrong, String format, String... description) {
+            String onWrong, String format, String... description)
+    {
         public ClientCommand(
-                CommandConsumer command, String option, int params, String onWrong, String format, String... description) {
+                CommandConsumer command, String option, int params,
+                String onWrong, String format, String... description)
+        {
             this(command, option, params, params, format, onWrong, description);
         }
 
         public ClientCommand(CommandRunnable command, String option, String... description) {
-            this(_ -> command.process(), option, 0, "This command takes no arguments", null, description);
+            this(_ -> command.process(), option, 0,
+                    "This command takes no arguments", null, description);
         }
 
         public void process(String[] params, int index) throws ClientException, IOException {
             if (params.length < paramMin || params.length > paramMax) {
-                throw new FormatException(onWrong + (format(index) instanceof String indexFormat ? "\n " + indexFormat: ""));
+                throw new FormatException(onWrong + (format(index) instanceof String indexFormat ? "\n " + indexFormat : ""));
             }
             command.process(params);
         }

@@ -6,12 +6,12 @@ import java.util.function.Function;
 public final class Catcher {
     //region Throwing
     public static <T, E extends Exception> T throwNew(Class<E> exceptionClass, String message) throws E {
-        ignoreReflection(() -> exceptionClass.getConstructor(String.class).newInstance(message));
+        createError(exceptionClass, new Class[]{String.class}, message);
         return null;
     }
 
     public static <T, E extends Exception> T throwNew(Class<E> exceptionClass) throws E {
-        ignoreReflection(() -> exceptionClass.getConstructor().newInstance());
+        createError(exceptionClass, new Class[0]);
         return null;
     }
     //endregion
@@ -35,11 +35,6 @@ public final class Catcher {
     @FunctionalInterface
     private interface ErrorConsumer<E extends Throwable> {
         void accept(Throwable t) throws E;
-    }
-
-    @FunctionalInterface
-    private interface ErrorSupplier0<T, E extends Throwable> {
-        T get() throws E;
     }
     //endregion
 
@@ -102,14 +97,14 @@ public final class Catcher {
             Class<? extends R> throwAsClass, Function<Throwable, String> errorMessage
     ) throws R {
         return tryCatchInner(supplier, catchClass, rethrowClass, e -> {
-            ignoreReflection(() -> throwAsClass.getConstructor(String.class, Throwable.class).newInstance(errorMessage.apply(e), e));
-            ignoreReflection(() -> throwAsClass.getConstructor(String.class).newInstance(errorMessage.apply(e)));
+            createError(throwAsClass, new Class[]{String.class, Throwable.class}, errorMessage.apply(e), e);
+            createError(throwAsClass, new Class[]{String.class}, errorMessage.apply(e));
         });
     }
 
-    private static <E extends Throwable> void ignoreReflection(ErrorSupplier0<E, ReflectiveOperationException> supplier0) throws E {
+    private static <E extends Throwable> void createError(Class<E> throwAs, Class<?>[] types, Object... values) throws E {
         try {
-            throw supplier0.get();
+            throw throwAs.getConstructor(types).newInstance(values);
         } catch (ReflectiveOperationException _) {}
     }
 

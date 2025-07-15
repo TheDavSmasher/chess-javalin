@@ -38,12 +38,14 @@ public class ChessClient extends EnumObjectFactory<MenuState, ChessClientState> 
     public void evaluate(String input) throws ClientException {
         String[] tokens = input.toLowerCase().split(" ");
         tryCatchDo(() -> tryCatchRethrow(() -> {
-                    get(currentState).evaluate(
+            get(currentState).evaluate(
                     (tokens.length > 0 ? Integer.parseInt(tokens[0]) : 0) - 1,
                     Arrays.copyOfRange(tokens, 1, tokens.length));
             return null;
         }, IOException.class, ClientException.class),
-                NumberFormatException.class, _ -> get(currentState).help(true), ClientException.class);
+        NumberFormatException.class,
+            _ -> get(currentState).help(true),
+        ClientException.class);
     }
 
     public void changeState(MenuState state) {

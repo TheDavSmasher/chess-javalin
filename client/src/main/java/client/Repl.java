@@ -22,12 +22,12 @@ public class Repl {
             printPrompt(out);
 
             tryCatchDo(() -> tryCatchDo(
-                    () -> client.evaluate(scanner.nextLine()),
-                    ExitException.class, _ -> {
-                        out.println();
-                        System.exit(0);
-                    }, Throwable.class), Throwable.class,
-                    e -> out.print(e.getMessage())
+                () -> client.evaluate(scanner.nextLine()),
+            ExitException.class, _ -> {
+                out.println();
+                System.exit(0);
+            }, Throwable.class), Throwable.class,
+                e -> out.print(e.getMessage())
             );
         }
     }

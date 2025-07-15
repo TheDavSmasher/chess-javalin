@@ -6,8 +6,9 @@ public abstract class EnumObjectFactory<K extends Enum<K>, V> {
     private boolean mapGenerated = false;
     private final EnumMap<K, V> preMadeObjects = new EnumMap<>(getKeyClass());
 
-    protected EnumObjectFactory() {
-        generateValues();
+    protected EnumObjectFactory(boolean preGenerate) {
+        if (preGenerate)
+            generateValues();
     }
 
     protected void generateValues() {

@@ -1,6 +1,7 @@
 package client;
 
 import client.states.*;
+import client.states.ClientStateManager.MenuState;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -10,10 +11,6 @@ import java.util.EnumMap;
 import static utils.Catcher.*;
 
 public class ChessClient {
-    public enum MenuState {
-        PRE_LOGIN,
-        POST_LOGIN,
-        MID_GAME
     }
 
     private final EnumMap<MenuState, ChessClientState> clientStates = new EnumMap<>(MenuState.class);

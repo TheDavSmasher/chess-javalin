@@ -7,6 +7,12 @@ import java.io.PrintStream;
 import java.util.Optional;
 
 public class ClientStateManager {
+    public enum MenuState {
+        PRE_LOGIN,
+        POST_LOGIN,
+        MID_GAME
+    }
+
     public final ServerFacade serverFacade = new ServerFacade();
     public final PrintStream out;
     private final ChessClient chessClient;
@@ -35,7 +41,7 @@ public class ClientStateManager {
     public void enterGame(int gameID, String color) {
         currentGameID = gameID;
         isPlayerAndWhite = color != null ? color.equalsIgnoreCase("white") : null;
-        chessClient.changeState(ChessClient.MenuState.MID_GAME);
+        chessClient.changeState(MenuState.MID_GAME);
     }
 
     public void returnFromGame() {
@@ -45,11 +51,11 @@ public class ClientStateManager {
     public void enterServer(String authToken) {
         this.authToken = authToken;
         currentGameID = 0;
-        chessClient.changeState(ChessClient.MenuState.POST_LOGIN);
+        chessClient.changeState(MenuState.POST_LOGIN);
     }
 
     public void logout() {
         this.authToken = null;
-        chessClient.changeState(ChessClient.MenuState.PRE_LOGIN);
+        chessClient.changeState(MenuState.PRE_LOGIN);
     }
 }

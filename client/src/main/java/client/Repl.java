@@ -1,5 +1,7 @@
 package client;
 
+import client.states.ClientStateManager.MenuState;
+
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -13,7 +15,7 @@ public class Repl {
 
     public void run() {
         out.println("Welcome to my Chess Server!");
-        client.changeState(ChessClient.MenuState.PRE_LOGIN);
+        client.changeState(MenuState.PRE_LOGIN);
 
         Scanner scanner = new Scanner(System.in);
         while (true) {

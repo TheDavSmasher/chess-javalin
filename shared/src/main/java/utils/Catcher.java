@@ -5,8 +5,11 @@ import java.util.function.Function;
 
 public final class Catcher {
     //region Throwing
+    private static final Class<?>[] FULL_ERROR = {String.class, Throwable.class};
+    private static final Class<?>[] MSG_ERROR = {String.class};
+
     public static <T, E extends Exception> T throwNew(Class<E> exceptionClass, String message) throws E {
-        createError(exceptionClass, new Class[]{String.class}, message);
+        createError(exceptionClass, MSG_ERROR, message);
         return null;
     }
 
@@ -97,8 +100,8 @@ public final class Catcher {
             Class<? extends R> throwAsClass, Function<Throwable, String> errorMessage
     ) throws R {
         return tryCatchInner(supplier, catchClass, rethrowClass, e -> {
-            createError(throwAsClass, new Class[]{String.class, Throwable.class}, errorMessage.apply(e), e);
-            createError(throwAsClass, new Class[]{String.class}, errorMessage.apply(e));
+            createError(throwAsClass, FULL_ERROR, errorMessage.apply(e), e);
+            createError(throwAsClass, MSG_ERROR, errorMessage.apply(e));
         });
     }
 

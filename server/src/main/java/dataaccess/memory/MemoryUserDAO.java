@@ -6,27 +6,16 @@ import dataaccess.DataAccessObject.*;
 public class MemoryUserDAO extends MemoryDAO<UserData> implements UserDAO {
     @Override
     public UserData getUser(String username) {
-        for (UserData user : data) {
-            if (user.username().equals(username)) {
-                return user;
-            }
-        }
-        return null;
+        return get(UserData::username, username);
     }
-
 
     @Override
     public UserData getUser(String username, String password) {
-        for (UserData user : data) {
-            if (user.username().equals(username) && user.password().equals(password)) {
-                return user;
-            }
-        }
-        return null;
+        return get(user -> user.username().equals(username) && user.password().equals(password));
     }
 
     @Override
     public void createUser(String username, String password, String email) {
-        data.add(new UserData(username, password, email));
+        add(new UserData(username, password, email));
     }
 }

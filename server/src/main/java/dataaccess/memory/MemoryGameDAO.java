@@ -19,15 +19,12 @@ public class MemoryGameDAO extends MemoryDAO<GameData> implements GameDAO {
 
     @Override
     public GameData getGame(int gameID) {
-        return data.stream().filter(g -> g.gameID() == gameID).findFirst().orElse(null);
+        return get(GameData::gameID, gameID);
     }
 
     @Override
     public GameData createGame(String gameName) {
-        int newID = data.size() + 1;
-        GameData newGame = GameData.createNew(newID, gameName);
-        data.add(newGame);
-        return newGame;
+        return add(GameData.createNew(data.size() + 1, gameName));
     }
 
     @Override
@@ -35,9 +32,9 @@ public class MemoryGameDAO extends MemoryDAO<GameData> implements GameDAO {
         GameData oldGame = getGame(gameID);
         deleteGame(gameID);
         if (color.equalsIgnoreCase("WHITE")) {
-            data.add(new GameData(oldGame.gameID(), username, oldGame.blackUsername(), oldGame.gameName(), oldGame.game()));
+            add(new GameData(oldGame.gameID(), username, oldGame.blackUsername(), oldGame.gameName(), oldGame.game()));
         } else {
-            data.add(new GameData(oldGame.gameID(), oldGame.whiteUsername(), username, oldGame.gameName(), oldGame.game()));
+            add(new GameData(oldGame.gameID(), oldGame.whiteUsername(), username, oldGame.gameName(), oldGame.game()));
         }
     }
 
@@ -47,6 +44,6 @@ public class MemoryGameDAO extends MemoryDAO<GameData> implements GameDAO {
     }
 
     private void deleteGame(int gameID) {
-        data.removeIf(game -> game.gameID() == gameID);
+        remove(GameData::gameID, gameID);
     }
 }

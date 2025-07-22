@@ -2,14 +2,11 @@ package dataaccess.memory;
 
 import model.dataaccess.AuthData;
 
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.UUID;
 import dataaccess.DataAccessObject.*;
 
-public class MemoryAuthDAO implements AuthDAO {
-    private final HashSet<AuthData> data = new HashSet<>();
-
+public class MemoryAuthDAO extends MemoryDAO<AuthData> implements AuthDAO {
     @Override
     public AuthData getAuth(String token) {
         for (AuthData auth : data) {
@@ -31,10 +28,5 @@ public class MemoryAuthDAO implements AuthDAO {
     @Override
     public void deleteAuth(String token) {
         data.removeIf(user -> Objects.equals(user.authToken(), token));
-    }
-
-    @Override
-    public void clear() {
-        data.clear();
     }
 }

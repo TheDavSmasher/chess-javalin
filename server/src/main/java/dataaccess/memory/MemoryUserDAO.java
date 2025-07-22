@@ -2,11 +2,8 @@ package dataaccess.memory;
 
 import model.dataaccess.UserData;
 import dataaccess.DataAccessObject.*;
-import java.util.HashSet;
 
-public class MemoryUserDAO implements UserDAO {
-    private final HashSet<UserData> data = new HashSet<>();
-
+public class MemoryUserDAO extends MemoryDAO<UserData> implements UserDAO {
     @Override
     public UserData getUser(String username) {
         for (UserData user : data) {
@@ -32,10 +29,4 @@ public class MemoryUserDAO implements UserDAO {
     public void createUser(String username, String password, String email) {
         data.add(new UserData(username, password, email));
     }
-
-    @Override
-    public void clear() {
-        data.clear();
-    }
-
 }

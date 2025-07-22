@@ -4,12 +4,9 @@ import model.dataaccess.GameData;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import dataaccess.DataAccessObject.*;
 
-public class MemoryGameDAO implements GameDAO {
-    private final HashSet<GameData> data = new HashSet<>();
-
+public class MemoryGameDAO extends MemoryDAO<GameData> implements GameDAO {
     @Override
     public ArrayList<GameData> listGames() {
         ArrayList<GameData> gameList = new ArrayList<>();
@@ -51,10 +48,5 @@ public class MemoryGameDAO implements GameDAO {
 
     private void deleteGame(int gameID) {
         data.removeIf(game -> game.gameID() == gameID);
-    }
-
-    @Override
-    public void clear() {
-        data.clear();
     }
 }

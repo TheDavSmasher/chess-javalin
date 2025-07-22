@@ -1,5 +1,6 @@
 package service;
 
+import dataaccess.DAOFactory;
 import dataaccess.DataAccessException;
 import dataaccess.DataAccessObject.*;
 import dataaccess.memory.*;
@@ -14,16 +15,18 @@ public abstract class Service {
     //region DAO access
     private static final boolean USE_SQL = true;
 
+    protected static final DAOFactory daoFactory = USE_SQL ? new SQLDAOFactory() : new MemoryDAOFactory();
+
     protected static AuthDAO authDAO() throws DataAccessException {
-        return USE_SQL ? SQLAuthDAO.getInstance() : MemoryAuthDAO.getInstance();
+        return daoFactory.getAuthDAO();
     }
 
     protected static UserDAO userDAO() throws DataAccessException {
-        return USE_SQL ? SQLUserDAO.getInstance() : MemoryUserDAO.getInstance();
+        return daoFactory.getUserDAO();
     }
 
     protected static GameDAO gameDAO() throws DataAccessException {
-        return USE_SQL ? SQLGameDAO.getInstance() : MemoryGameDAO.getInstance();
+        return daoFactory.getGameDAO();
     }
     //endregion
 

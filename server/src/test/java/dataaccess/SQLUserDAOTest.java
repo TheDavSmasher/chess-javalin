@@ -1,6 +1,6 @@
 package dataaccess;
 
-import dataaccess.sql.SQLUserDAO;
+import dataaccess.sql.SQLDAOFactory;
 import model.dataaccess.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +17,7 @@ class SQLUserDAOTest {
 
     @BeforeEach
     void setUp() throws DataAccessException {
-        userDAO = SQLUserDAO.getInstance();
+        userDAO = new SQLDAOFactory().getUserDAO();
         userDAO.clear();
     }
     @Test

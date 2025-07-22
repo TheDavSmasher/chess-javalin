@@ -6,7 +6,7 @@ import chess.ChessPosition;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import dataaccess.sql.SQLGameDAO;
+import dataaccess.sql.SQLDAOFactory;
 import model.dataaccess.GameData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +21,7 @@ class SQLGameDAOTest {
 
     @BeforeEach
     void setUp() throws DataAccessException {
-        gameDAO = SQLGameDAO.getInstance();
+        gameDAO = new SQLDAOFactory().getGameDAO();
         gameDAO.clear();
     }
     @Test

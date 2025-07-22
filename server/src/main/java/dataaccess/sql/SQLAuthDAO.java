@@ -7,7 +7,6 @@ import model.dataaccess.AuthData;
 import java.util.UUID;
 
 public class SQLAuthDAO extends SQLDAO implements AuthDAO {
-    private static SQLAuthDAO instance;
     private static boolean tableCreated = false;
 
     public SQLAuthDAO() throws DataAccessException {
@@ -50,9 +49,5 @@ public class SQLAuthDAO extends SQLDAO implements AuthDAO {
                   INDEX (username)
                 )
                 """;
-    }
-
-    public static AuthDAO getInstance() throws DataAccessException {
-        return instance == null ? (instance = new SQLAuthDAO()) : instance;
     }
 }

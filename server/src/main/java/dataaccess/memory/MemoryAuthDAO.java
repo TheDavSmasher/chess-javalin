@@ -8,12 +8,7 @@ import java.util.UUID;
 import dataaccess.DataAccessObject.*;
 
 public class MemoryAuthDAO implements AuthDAO {
-    static MemoryAuthDAO instance;
-    private final HashSet<AuthData> data;
-
-    public MemoryAuthDAO() {
-        data = new HashSet<>();
-    }
+    private final HashSet<AuthData> data = new HashSet<>();
 
     @Override
     public AuthData getAuth(String token) {
@@ -41,9 +36,5 @@ public class MemoryAuthDAO implements AuthDAO {
     @Override
     public void clear() {
         data.clear();
-    }
-
-    static public AuthDAO getInstance() {
-        return instance == null ? (instance = new MemoryAuthDAO()) : instance;
     }
 }

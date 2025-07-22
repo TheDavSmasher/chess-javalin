@@ -5,12 +5,7 @@ import dataaccess.DataAccessObject.*;
 import java.util.HashSet;
 
 public class MemoryUserDAO implements UserDAO {
-    static MemoryUserDAO instance;
-    private final HashSet<UserData> data;
-
-    public MemoryUserDAO() {
-        data = new HashSet<>();
-    }
+    private final HashSet<UserData> data = new HashSet<>();
 
     @Override
     public UserData getUser(String username) {
@@ -43,7 +38,4 @@ public class MemoryUserDAO implements UserDAO {
         data.clear();
     }
 
-    public static UserDAO getInstance() {
-        return instance == null ? instance = new MemoryUserDAO() : instance;
-    }
 }

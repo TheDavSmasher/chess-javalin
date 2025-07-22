@@ -13,7 +13,6 @@ import static utils.Serializer.deserialize;
 import static utils.Serializer.serialize;
 
 public class SQLGameDAO extends SQLDAO implements GameDAO {
-    private static SQLGameDAO instance;
     private static boolean tableCreated = false;
 
     public SQLGameDAO() throws DataAccessException {
@@ -90,9 +89,5 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
                   INDEX (`gameName`)
                 )
                 """;
-    }
-
-    public static GameDAO getInstance() throws DataAccessException {
-        return instance == null ? (instance = new SQLGameDAO()) : instance;
     }
 }

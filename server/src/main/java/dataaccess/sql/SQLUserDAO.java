@@ -6,7 +6,6 @@ import model.dataaccess.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class SQLUserDAO extends SQLDAO implements UserDAO {
-    private static SQLUserDAO instance;
     private static boolean tableCreated = false;
 
     public SQLUserDAO() throws DataAccessException {
@@ -51,9 +50,5 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
                   INDEX (`username`)
                 )
                 """;
-    }
-
-    public static UserDAO getInstance() throws DataAccessException {
-        return instance == null ? (instance = new SQLUserDAO()) : instance;
     }
 }

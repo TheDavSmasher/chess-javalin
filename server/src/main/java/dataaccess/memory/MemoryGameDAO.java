@@ -8,12 +8,7 @@ import java.util.HashSet;
 import dataaccess.DataAccessObject.*;
 
 public class MemoryGameDAO implements GameDAO {
-    static MemoryGameDAO instance;
-    private final HashSet<GameData> data;
-
-    public MemoryGameDAO() {
-        data = new HashSet<>();
-    }
+    private final HashSet<GameData> data = new HashSet<>();
 
     @Override
     public ArrayList<GameData> listGames() {
@@ -61,9 +56,5 @@ public class MemoryGameDAO implements GameDAO {
     @Override
     public void clear() {
         data.clear();
-    }
-
-    public static GameDAO getInstance() {
-        return instance == null ? (instance = new MemoryGameDAO()) :  instance;
     }
 }

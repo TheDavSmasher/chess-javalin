@@ -5,13 +5,11 @@ import dataaccess.DataAccessException;
 import model.dataaccess.AuthData;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SQLAuthDAO extends SQLDAO implements AuthDAO {
-    private static boolean tableCreated = false;
-
-    public SQLAuthDAO() throws DataAccessException {
+    public SQLAuthDAO(AtomicBoolean tableCreated) throws DataAccessException {
         super(tableCreated);
-        tableCreated = true;
     }
 
     @Override

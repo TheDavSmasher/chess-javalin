@@ -5,12 +5,11 @@ import dataaccess.DataAccessException;
 import model.dataaccess.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 
-public class SQLUserDAO extends SQLDAO implements UserDAO {
-    private static boolean tableCreated = false;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-    public SQLUserDAO() throws DataAccessException {
+public class SQLUserDAO extends SQLDAO implements UserDAO {
+    public SQLUserDAO(AtomicBoolean tableCreated) throws DataAccessException {
         super(tableCreated);
-        tableCreated = true;
     }
 
     @Override

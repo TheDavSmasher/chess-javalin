@@ -7,17 +7,15 @@ import dataaccess.DataAccessObject.*;
 import org.intellij.lang.annotations.Language;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static utils.Serializer.deserialize;
 import static utils.Serializer.serialize;
 
 public class SQLGameDAO extends SQLDAO implements GameDAO {
-    private static boolean tableCreated = false;
-
-    public SQLGameDAO() throws DataAccessException {
+    public SQLGameDAO(AtomicBoolean tableCreated) throws DataAccessException {
         super(tableCreated);
-        tableCreated = true;
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.intellij.lang.annotations.Language;
 import dataaccess.DataAccessObject.*;
 
 import java.sql.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static utils.Catcher.*;
 import static java.sql.Types.NULL;
@@ -17,12 +18,13 @@ public abstract class SQLDAO implements ChessDAO {
     @Language("SQL")
     protected abstract String getTableSetup();
 
-    protected SQLDAO(boolean tableExists) throws DataAccessException {
-        if (tableExists) return;
+    public SQLDAO(AtomicBoolean tableExists) throws DataAccessException {
+        if (tableExists.get()) return;
         DatabaseManager.createDatabase();
         tryCatchResources(() -> getStatement("CREATE TABLE IF NOT EXISTS " + getTableName() + getTableSetup()),
                 PreparedStatement::executeUpdate,
                 SQLException.class, DataAccessException.class, _ -> "could not configure table " + getTableName());
+        tableExists.set(true);
     }
 
     @Override

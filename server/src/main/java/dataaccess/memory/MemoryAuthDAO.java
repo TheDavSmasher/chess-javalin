@@ -11,7 +11,7 @@ public class MemoryAuthDAO implements AuthDAO {
     static MemoryAuthDAO instance;
     private final HashSet<AuthData> data;
 
-    private MemoryAuthDAO() {
+    public MemoryAuthDAO() {
         data = new HashSet<>();
     }
 

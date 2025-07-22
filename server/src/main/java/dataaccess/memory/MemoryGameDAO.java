@@ -11,7 +11,7 @@ public class MemoryGameDAO implements GameDAO {
     static MemoryGameDAO instance;
     private final HashSet<GameData> data;
 
-    private MemoryGameDAO() {
+    public MemoryGameDAO() {
         data = new HashSet<>();
     }
 

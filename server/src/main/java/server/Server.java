@@ -22,7 +22,7 @@ public class Server {
             config.jsonMapper(new JavalinGson());
         });
 
-        WebsocketMessageHandlerFactory websocketMessageHandlers = new WebsocketMessageHandlerFactory(true);
+        WebsocketMessageHandlerFactory websocketMessageHandlers = new WebsocketMessageHandlerFactory();
 
         // Register your endpoints and exception handlers here.
         javalin.delete("/db", new ClearHandler())

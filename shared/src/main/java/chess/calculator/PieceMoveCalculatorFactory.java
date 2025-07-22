@@ -6,8 +6,8 @@ import utils.EnumObjectFactory;
 import static chess.ChessPiece.PieceType;
 
 public final class PieceMoveCalculatorFactory extends EnumObjectFactory<PieceType, PieceMoveCalculator> {
-    private PieceMoveCalculatorFactory(boolean preGenerate) {
-        super(preGenerate);
+    private PieceMoveCalculatorFactory() {
+        super(true);
     }
 
     @Override
@@ -31,5 +31,5 @@ public final class PieceMoveCalculatorFactory extends EnumObjectFactory<PieceTyp
         return INSTANCE.get(type);
     }
 
-    private static final PieceMoveCalculatorFactory INSTANCE = new PieceMoveCalculatorFactory(true);
+    private static final PieceMoveCalculatorFactory INSTANCE = new PieceMoveCalculatorFactory();
 }

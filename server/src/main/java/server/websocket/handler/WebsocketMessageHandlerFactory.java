@@ -6,8 +6,8 @@ import websocket.commands.UserGameCommand;
 import static websocket.commands.UserGameCommand.CommandType;
 
 public final class WebsocketMessageHandlerFactory extends EnumObjectFactory<CommandType, MessageHandler<? extends UserGameCommand>> {
-    public WebsocketMessageHandlerFactory(boolean preGenerate) {
-        super(preGenerate);
+    public WebsocketMessageHandlerFactory() {
+        super(true);
     }
 
     @Override

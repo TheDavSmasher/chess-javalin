@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import static utils.Catcher.*;
-import static ui.EscapeSequences.UNSET_TEXT_COLOR;
+import static ui.EscapeSequences.RESET_TEXT_COLOR;
 
 public class Repl {
     private final PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
@@ -33,6 +33,6 @@ public class Repl {
     }
 
     private void printPrompt(PrintStream out) {
-        out.print("\n" + UNSET_TEXT_COLOR + ">>> ");
+        out.print("\n" + RESET_TEXT_COLOR + ">>> ");
     }
 }

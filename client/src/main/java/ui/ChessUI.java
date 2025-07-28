@@ -79,6 +79,7 @@ public record ChessUI(PrintStream out) implements BoardPrinter {
         printSquare(piece);
     }
 
+    @Override
     public void resetColor() {
         out.print(UNSET_BG_COLOR);
         out.print(UNSET_TEXT_COLOR);

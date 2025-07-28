@@ -36,7 +36,7 @@ public record ChessUI(PrintStream out) implements BoardPrinter {
     }
 
     private void printTopHeader(boolean whiteBottom) {
-        printRow(null, col -> printSquare((char) ('a' + invertIf(whiteBottom, col))));
+        printRow(null, col -> printRowBorders((char) ('a' + invertIf(whiteBottom, col))));
     }
 
     private void drawChessRow(int col, ChessBoard board, Boolean[][] moves, boolean firstIsWhite, boolean whiteBottom) {
@@ -62,28 +62,26 @@ public record ChessUI(PrintStream out) implements BoardPrinter {
     }
 
     private void printRowBorders(Object border) {
-        out.print(SET_BG_COLOR_LIGHT_GREY);
-        out.print(SET_TEXT_COLOR_BLACK);
-        printSquare(border);
+        printSquare(border, SET_BG_COLOR_LIGHT_GREY, SET_TEXT_COLOR_BLACK);
     }
 
     private void drawChessSquare(ChessPiece piece, Boolean moveSpot, boolean isWhite) {
-        out.print(moveSpot != null ?
-                moveSpot ? SET_BG_COLOR_YELLOW : isWhite ? SET_BG_COLOR_GREEN : SET_BG_COLOR_DARK_GREEN :
-                isWhite ? SET_BG_COLOR_WHITE : SET_BG_COLOR_BLACK);
-        out.print(moveSpot != null ? SET_TEXT_COLOR_BLACK :
-                piece != null ? piece.color() == ChessGame.TeamColor.WHITE ? SET_TEXT_COLOR_RED : SET_TEXT_COLOR_BLUE : "");
-        printSquare(piece);
+        printSquare(piece,
+                moveSpot != null ?
+                        moveSpot ? SET_BG_COLOR_YELLOW : isWhite ? SET_BG_COLOR_GREEN : SET_BG_COLOR_DARK_GREEN :
+                        isWhite ? SET_BG_COLOR_WHITE : SET_BG_COLOR_BLACK,
+                moveSpot != null || piece == null ? SET_TEXT_COLOR_BLACK :
+                        piece.color() == ChessGame.TeamColor.WHITE ? SET_TEXT_COLOR_RED : SET_TEXT_COLOR_BLUE
+                );
     }
 
     @Override
     public void resetColor() {
-        out.print(UNSET_BG_COLOR);
-        out.print(UNSET_TEXT_COLOR);
-        out.println();
+        printSquare("\n", UNSET_BG_COLOR, UNSET_TEXT_COLOR);
     }
 
-    private void printSquare(Object value) {
+    private void printSquare(Object value, String background, String textColor) {
+        out.print(background + textColor);
         out.print(" " + (value == null ? " " : value.toString().toUpperCase()) + " ");
     }
 }

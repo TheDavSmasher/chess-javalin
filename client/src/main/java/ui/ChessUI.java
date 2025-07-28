@@ -55,12 +55,6 @@ public record ChessUI(PrintStream out) implements BoardPrinter {
         return invert ? i : BOARD_SIZE - i - 1;
     }
 
-    private void printRowBorders(Object border) {
-        out.print(SET_BG_COLOR_LIGHT_GREY);
-        out.print(SET_TEXT_COLOR_BLACK);
-        printSquare(border);
-    }
-
     private void printRow(Object borders, Consumer<Integer> rowPrinter) {
         printRowBorders(borders);
         for (int i = 0; i < BOARD_SIZE; i++) {
@@ -68,6 +62,12 @@ public record ChessUI(PrintStream out) implements BoardPrinter {
         }
         printRowBorders(borders);
         resetColor();
+    }
+
+    private void printRowBorders(Object border) {
+        out.print(SET_BG_COLOR_LIGHT_GREY);
+        out.print(SET_TEXT_COLOR_BLACK);
+        printSquare(border);
     }
 
     private void drawChessSquare(ChessPiece piece, Boolean moveSpot, boolean isWhite) {

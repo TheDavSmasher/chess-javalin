@@ -8,7 +8,8 @@ import java.util.function.Consumer;
 import static chess.ChessBoard.BOARD_SIZE;
 import static ui.EscapeSequences.*;
 
-public record ChessUI(PrintStream out) {
+public record ChessUI(PrintStream out) implements BoardPrinter {
+    @Override
     public void printChessBoard(ChessGame chessGame, ChessPosition start, boolean whiteBottom) {
         out.println();
         printTopHeader(whiteBottom);

@@ -36,10 +36,7 @@ public record ChessUI(PrintStream out) implements BoardPrinter {
     }
 
     private void printTopHeader(boolean whiteBottom) {
-        printRow(null, i -> {
-            int boardCol = invertIf(whiteBottom, i);
-            printSquare((char) ('a' + boardCol));
-        });
+        printRow(null, col -> printSquare((char) ('a' + invertIf(whiteBottom, col))));
     }
 
     private void drawChessRow(int col, ChessBoard board, Boolean[][] moves, boolean firstIsWhite, boolean whiteBottom) {

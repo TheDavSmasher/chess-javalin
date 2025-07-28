@@ -16,6 +16,7 @@ public final class EscapeSequences {
     public static final String ERASE_SCREEN = CONTROL_SEQUENCE + "H" + CONTROL_SEQUENCE + "2J";
     public static final String ERASE_LINE = CONTROL_SEQUENCE + "2K";
 
+    //region Text Format
     public static final String SET_TEXT_BOLD = CONTROL_SEQUENCE + "1m";
     public static final String SET_TEXT_FAINT = CONTROL_SEQUENCE + "2m";
     public static final String RESET_TEXT_BOLD_FAINT = CONTROL_SEQUENCE + "22m";
@@ -25,7 +26,9 @@ public final class EscapeSequences {
     public static final String RESET_TEXT_UNDERLINE = CONTROL_SEQUENCE + "24m";
     public static final String SET_TEXT_BLINKING = CONTROL_SEQUENCE + "5m";
     public static final String RESET_TEXT_BLINKING = CONTROL_SEQUENCE + "25m";
+    //endregion
 
+    //region Text Color
     private static final String SET_TEXT_COLOR = CONTROL_SEQUENCE + "38;5;";
 
     public static final String SET_TEXT_COLOR_BLACK = SET_TEXT_COLOR + "0m";
@@ -39,7 +42,9 @@ public final class EscapeSequences {
     public static final String SET_TEXT_COLOR_MAGENTA = SET_TEXT_COLOR + "5m";
     public static final String SET_TEXT_COLOR_WHITE = SET_TEXT_COLOR + "15m";
     public static final String RESET_TEXT_COLOR = CONTROL_SEQUENCE + "39m";
+    //endregion
 
+    //region BG Color
     private static final String SET_BG_COLOR = CONTROL_SEQUENCE + "48;5;";
 
     public static final String SET_BG_COLOR_BLACK = SET_BG_COLOR + "0m";
@@ -53,7 +58,9 @@ public final class EscapeSequences {
     public static final String SET_BG_COLOR_MAGENTA = SET_BG_COLOR + "5m";
     public static final String SET_BG_COLOR_WHITE = SET_BG_COLOR + "15m";
     public static final String RESET_BG_COLOR = CONTROL_SEQUENCE + "49m";
+    //endregion
 
+    //region Pieces
     public static final String WHITE_KING = " ♔ ";
     public static final String WHITE_QUEEN = " ♕ ";
     public static final String WHITE_BISHOP = " ♗ ";
@@ -67,6 +74,7 @@ public final class EscapeSequences {
     public static final String BLACK_ROOK = " ♜ ";
     public static final String BLACK_PAWN = " ♟ ";
     public static final String EMPTY = " \u2003 ";
+    //endregion
 
     public static String moveCursorToLocation(int x, int y) { return CONTROL_SEQUENCE + y + ";" + x + "H"; }
 }

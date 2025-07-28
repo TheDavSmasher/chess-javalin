@@ -77,7 +77,7 @@ public record ChessUI(PrintStream out) implements BoardPrinter {
 
     @Override
     public void resetColor() {
-        printSquare("\n", UNSET_BG_COLOR, UNSET_TEXT_COLOR);
+        out.println(RESET_FORMATTING);
     }
 
     private void printSquare(Object value, String background, String textColor) {

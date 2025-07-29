@@ -11,8 +11,6 @@ public final class EscapeSequences {
 
     private static final String CONTROL_SEQUENCE = UNICODE_ESCAPE + "[";
 
-    public static final String RESET_FORMATTING = CONTROL_SEQUENCE + "0m";
-
     public static final String ERASE_SCREEN = CONTROL_SEQUENCE + "H" + CONTROL_SEQUENCE + "2J";
     public static final String ERASE_LINE = CONTROL_SEQUENCE + "2K";
 
@@ -26,39 +24,46 @@ public final class EscapeSequences {
     public static final String RESET_TEXT_UNDERLINE = CONTROL_SEQUENCE + "24m";
     public static final String SET_TEXT_BLINKING = CONTROL_SEQUENCE + "5m";
     public static final String RESET_TEXT_BLINKING = CONTROL_SEQUENCE + "25m";
+
+    public static final String RESET_FORMATTING = CONTROL_SEQUENCE + "0m";
+
     //endregion
 
     //region Text Color
-    private static final String SET_TEXT_COLOR = CONTROL_SEQUENCE + "38;5;";
+    public enum Color {
+        BLACK(0),
+        LIGHT_GREY(242),
+        DARK_GREY(235),
+        RED(160),
+        GREEN(46),
+        DARK_GREEN(22),
+        YELLOW(226),
+        BLUE(12),
+        MAGENTA(5),
+        WHITE(15);
 
-    public static final String SET_TEXT_COLOR_BLACK = SET_TEXT_COLOR + "0m";
-    public static final String SET_TEXT_COLOR_LIGHT_GREY = SET_TEXT_COLOR + "242m";
-    public static final String SET_TEXT_COLOR_DARK_GREY = SET_TEXT_COLOR + "235m";
-    public static final String SET_TEXT_COLOR_RED = SET_TEXT_COLOR + "160m";
-    public static final String SET_TEXT_COLOR_GREEN = SET_TEXT_COLOR + "46m";
-    public static final String SET_TEXT_COLOR_DARK_GREEN = SET_TEXT_COLOR + "22m";
-    public static final String SET_TEXT_COLOR_YELLOW = SET_TEXT_COLOR + "226m";
-    public static final String SET_TEXT_COLOR_BLUE = SET_TEXT_COLOR + "12m";
-    public static final String SET_TEXT_COLOR_MAGENTA = SET_TEXT_COLOR + "5m";
-    public static final String SET_TEXT_COLOR_WHITE = SET_TEXT_COLOR + "15m";
-    public static final String RESET_TEXT_COLOR = CONTROL_SEQUENCE + "39m";
-    //endregion
+        final int sgrParam;
 
-    //region BG Color
-    private static final String SET_BG_COLOR = CONTROL_SEQUENCE + "48;5;";
+        Color(int sgrParam) {
+            this.sgrParam = sgrParam;
+        }
 
-    public static final String SET_BG_COLOR_BLACK = SET_BG_COLOR + "0m";
-    public static final String SET_BG_COLOR_LIGHT_GREY = SET_BG_COLOR + "242m";
-    public static final String SET_BG_COLOR_DARK_GREY = SET_BG_COLOR + "235m";
-    public static final String SET_BG_COLOR_RED = SET_BG_COLOR + "160m";
-    public static final String SET_BG_COLOR_GREEN = SET_BG_COLOR + "46m";
-    public static final String SET_BG_COLOR_DARK_GREEN = SET_BG_COLOR + "22m";
-    public static final String SET_BG_COLOR_YELLOW = SET_BG_COLOR + "226m";
-    public static final String SET_BG_COLOR_BLUE = SET_BG_COLOR + "12m";
-    public static final String SET_BG_COLOR_MAGENTA = SET_BG_COLOR + "5m";
-    public static final String SET_BG_COLOR_WHITE = SET_BG_COLOR + "15m";
-    public static final String RESET_BG_COLOR = CONTROL_SEQUENCE + "49m";
-    //endregion
+        public String setText() {
+            return getSGR(false);
+        }
+
+        public String setBG() {
+            return getSGR(true);
+        }
+
+        String getSGR(boolean isBG) {
+            return CONTROL_SEQUENCE + (isBG ? "4" : "3") + "8;5;" + sgrParam + "m";
+        }
+
+        public static String reset(boolean isBG) {
+            return CONTROL_SEQUENCE + (isBG ? "4" : "3") + "9m";
+        }
+    }
 
     //region Pieces
     public static final String WHITE_KING = " ♔ ";

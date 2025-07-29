@@ -62,16 +62,16 @@ public record ChessUI(PrintStream out) implements BoardPrinter {
     }
 
     private void printRowBorders(Object border) {
-        printSquare(border, SET_BG_COLOR_LIGHT_GREY, SET_TEXT_COLOR_BLACK);
+        printSquare(border, Color.LIGHT_GREY, Color.BLACK);
     }
 
     private void drawChessSquare(ChessPiece piece, Boolean moveSpot, boolean isWhite) {
         printSquare(piece,
                 moveSpot != null ?
-                        moveSpot ? SET_BG_COLOR_YELLOW : isWhite ? SET_BG_COLOR_GREEN : SET_BG_COLOR_DARK_GREEN :
-                        isWhite ? SET_BG_COLOR_WHITE : SET_BG_COLOR_BLACK,
-                moveSpot != null || piece == null ? SET_TEXT_COLOR_BLACK :
-                        piece.color() == ChessGame.TeamColor.WHITE ? SET_TEXT_COLOR_RED : SET_TEXT_COLOR_BLUE
+                        moveSpot ? Color.YELLOW : isWhite ? Color.GREEN: Color.DARK_GREEN :
+                        isWhite ? Color.WHITE : Color.BLACK,
+                moveSpot != null || piece == null ? Color.BLACK :
+                        piece.color() == ChessGame.TeamColor.WHITE ? Color.RED : Color.BLUE
                 );
     }
 
@@ -80,8 +80,8 @@ public record ChessUI(PrintStream out) implements BoardPrinter {
         out.println(RESET_FORMATTING);
     }
 
-    private void printSquare(Object value, String background, String textColor) {
-        out.print(background + textColor);
+    private void printSquare(Object value, Color background, Color textColor) {
+        out.print(background.setBG() + textColor.setText());
         out.print(" " + (value == null ? " " : value.toString().toUpperCase()) + " ");
     }
 }

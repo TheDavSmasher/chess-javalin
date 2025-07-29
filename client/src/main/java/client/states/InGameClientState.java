@@ -10,12 +10,12 @@ import chess.ChessPosition;
 import client.states.ClientCommandProcessing.*;
 import ui.BoardPrinter;
 import ui.ChessUI;
+import ui.EscapeSequences.Color;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.Notification;
 import websocket.messages.ServerMessage;
 
-import static ui.EscapeSequences.SET_TEXT_COLOR_RED;
 import static utils.Catcher.tryCatchRethrow;
 import static utils.Serializer.deserialize;
 
@@ -124,7 +124,7 @@ public class InGameClientState extends ChessClientState implements ServerMessage
     }
 
     private void displayError(ErrorMessage errorMessage) {
-        client.out.print(SET_TEXT_COLOR_RED);
+        client.out.print(Color.RED.setText());
         client.out.println(errorMessage.getError());
         boardPrinter.resetColor();
     }

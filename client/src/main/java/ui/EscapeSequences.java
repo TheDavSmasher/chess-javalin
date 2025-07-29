@@ -15,18 +15,29 @@ public final class EscapeSequences {
     public static final String ERASE_LINE = CONTROL_SEQUENCE + "2K";
 
     //region Text Format
-    public static final String SET_TEXT_BOLD = CONTROL_SEQUENCE + "1m";
-    public static final String SET_TEXT_FAINT = CONTROL_SEQUENCE + "2m";
-    public static final String RESET_TEXT_BOLD_FAINT = CONTROL_SEQUENCE + "22m";
-    public static final String SET_TEXT_ITALIC = CONTROL_SEQUENCE + "3m";
-    public static final String RESET_TEXT_ITALIC = CONTROL_SEQUENCE + "23m";
-    public static final String SET_TEXT_UNDERLINE = CONTROL_SEQUENCE + "4m";
-    public static final String RESET_TEXT_UNDERLINE = CONTROL_SEQUENCE + "24m";
-    public static final String SET_TEXT_BLINKING = CONTROL_SEQUENCE + "5m";
-    public static final String RESET_TEXT_BLINKING = CONTROL_SEQUENCE + "25m";
-
     public static final String RESET_FORMATTING = CONTROL_SEQUENCE + "0m";
 
+    public enum Format {
+        BOLD,
+        FAINT,
+        ITALIC,
+        UNDERLINE,
+        BLINKING;
+
+        final int sgrParam = ordinal() + 1;
+
+        public String set() {
+            return getSGR(sgrParam);
+        }
+
+        public String reset() {
+            return getSGR(20 + sgrParam);
+        }
+
+        static String getSGR(int param) {
+            return CONTROL_SEQUENCE + param + "m";
+        }
+    }
     //endregion
 
     //region Text Color
@@ -49,21 +60,22 @@ public final class EscapeSequences {
         }
 
         public String setText() {
-            return getSGR(false);
+            return getSGR(false, sgrParam);
         }
 
         public String setBG() {
-            return getSGR(true);
-        }
-
-        String getSGR(boolean isBG) {
-            return CONTROL_SEQUENCE + (isBG ? "4" : "3") + "8;5;" + sgrParam + "m";
+            return getSGR(true, sgrParam);
         }
 
         public static String reset(boolean isBG) {
             return CONTROL_SEQUENCE + (isBG ? "4" : "3") + "9m";
         }
+
+        static String getSGR(boolean isBG, int param) {
+            return CONTROL_SEQUENCE + (isBG ? "4" : "3") + "8;5;" + param + "m";
+        }
     }
+    //endregion
 
     //region Pieces
     public static final String WHITE_KING = " ♔ ";

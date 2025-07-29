@@ -8,6 +8,7 @@ import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import client.states.ClientCommandProcessing.*;
+import ui.BoardPrinter;
 import ui.ChessUI;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
@@ -49,11 +50,11 @@ public class InGameClientState extends ChessClientState implements ServerMessage
     };
 
     private ChessGame currentGame = null;
-    private final ChessUI chessUI;
+    private final BoardPrinter boardPrinter;
 
     public InGameClientState(ClientStateManager client) {
         super(client);
-        this.chessUI = new ChessUI(client.out);
+        this.boardPrinter = new ChessUI(client.out);
         client.serverFacade.registerObserver(this);
     }
 
@@ -63,7 +64,7 @@ public class InGameClientState extends ChessClientState implements ServerMessage
     }
 
     private void redrawBoard() {
-        chessUI.printChessBoard(currentGame, null, client.getIsPlayerAndWhite().orElse(true));
+        boardPrinter.printChessBoard(currentGame, null, client.getIsPlayerAndWhite().orElse(true));
     }
 
     private void makeMove(String[] params) throws IOException {
@@ -76,7 +77,7 @@ public class InGameClientState extends ChessClientState implements ServerMessage
     private void highlightMoves(String[] params) throws IOException {
         String startPos = params[0];
         ChessPosition start = positionFromString(startPos);
-        chessUI.printChessBoard(currentGame, start, client.getIsPlayerAndWhite().orElse(true));
+        boardPrinter.printChessBoard(currentGame, start, client.getIsPlayerAndWhite().orElse(true));
     }
 
     private void leaveGame() throws IOException {
@@ -125,7 +126,7 @@ public class InGameClientState extends ChessClientState implements ServerMessage
     private void displayError(ErrorMessage errorMessage) {
         client.out.print(SET_TEXT_COLOR_RED);
         client.out.println(errorMessage.getError());
-        chessUI.resetColor();
+        boardPrinter.resetColor();
     }
 
     private void loadGame(LoadGameMessage message) {

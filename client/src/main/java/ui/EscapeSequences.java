@@ -1,5 +1,8 @@
 package ui;
 
+import chess.ChessGame;
+import chess.ChessPiece;
+
 import java.util.function.Function;
 
 /**
@@ -90,18 +93,14 @@ public final class EscapeSequences {
     //endregion
 
     //region Pieces
-    public static final String WHITE_KING = " ♔ ";
-    public static final String WHITE_QUEEN = " ♕ ";
-    public static final String WHITE_BISHOP = " ♗ ";
-    public static final String WHITE_KNIGHT = " ♘ ";
-    public static final String WHITE_ROOK = " ♖ ";
-    public static final String WHITE_PAWN = " ♙ ";
-    public static final String BLACK_KING = " ♚ ";
-    public static final String BLACK_QUEEN = " ♛ ";
-    public static final String BLACK_BISHOP = " ♝ ";
-    public static final String BLACK_KNIGHT = " ♞ ";
-    public static final String BLACK_ROOK = " ♜ ";
-    public static final String BLACK_PAWN = " ♟ ";
+    public static String getAsUnicode(ChessPiece piece) {
+        return getAsUnicode(piece.type(), piece.getTeamColor() == ChessGame.TeamColor.WHITE);
+    }
+
+    public static String getAsUnicode(ChessPiece.PieceType type, boolean isWhite) {
+        return " " + ('♔' + type.ordinal() + (isWhite ? 0 : 6)) + " ";
+    }
+
     public static final String EMPTY = " \u2003 ";
     //endregion
 

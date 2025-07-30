@@ -1,7 +1,7 @@
 package client;
 
 import client.states.ClientStateManager.MenuState;
-import ui.EscapeSequences.Color;
+import ui.EscapeSequences.Format;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -33,6 +33,6 @@ public class Repl {
     }
 
     private void printPrompt(PrintStream out) {
-        out.print("\n" + Color.reset(false) + ">>> ");
+        out.print("\n" + Format.TEXT.reset() + ">>> ");
     }
 }

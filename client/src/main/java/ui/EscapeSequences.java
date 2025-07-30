@@ -1,5 +1,7 @@
 package ui;
 
+import java.util.function.Function;
+
 /**
  * This class contains constants and functions relating to ANSI Escape Sequences that are useful in the Client display
  */
@@ -14,34 +16,72 @@ public final class EscapeSequences {
     public static final String ERASE_SCREEN = CONTROL_SEQUENCE + "H" + CONTROL_SEQUENCE + "2J";
     public static final String ERASE_LINE = CONTROL_SEQUENCE + "2K";
 
-    //region Text Format
-    public static final String RESET_FORMATTING = CONTROL_SEQUENCE + "0m";
+    public interface SGR {
+        int param();
+        int[] EMPTY = {};
+        default int[] extraParams(Format<?> format) {
+            return EMPTY;
+        }
+    }
 
-    public enum Format {
+    public static class Format<T extends SGR> {
+        public static final Format<Style> STYLE = new Format<>(2, Style::param);
+        public static final Format<Color> TEXT = new Format<>(3, Color::reset);
+        public static final Format<Color> BG = new Format<>(4, Color::reset);
+
+        private final int formatMod;
+        private final Function<T, Integer> resetMod;
+
+        private Format(int formatMod, Function<T, Integer> resetMod) {
+            this.formatMod = formatMod;
+            this.resetMod = resetMod;
+        }
+
+        public String set(T sgr) {
+            return setSequence(sgr.param(), sgr.extraParams(this));
+        }
+
+        public String reset(T sgr) {
+            return setSequence(formatMod(resetMod.apply(sgr)));
+        }
+
+        public String reset() {
+            return setSequence(formatMod(resetMod.apply(null)));
+        }
+
+        public static String resetAll() {
+            return setSequence(0);
+        }
+
+        public int formatMod(int sum) {
+            return formatMod * 10 + sum;
+        }
+
+        static String setSequence(int param, int... params) {
+            StringBuilder result = new StringBuilder().append(CONTROL_SEQUENCE);
+            for (int p : params) {
+                result.append(p).append(";");
+            }
+            return result.append(param).append("m").toString();
+        }
+    }
+
+    //region Text Format
+    public enum Style implements SGR {
         BOLD,
         FAINT,
         ITALIC,
         UNDERLINE,
         BLINKING;
 
-        final int sgrParam = ordinal() + 1;
-
-        public String set() {
-            return getSGR(sgrParam);
-        }
-
-        public String reset() {
-            return getSGR(20 + sgrParam);
-        }
-
-        static String getSGR(int param) {
-            return CONTROL_SEQUENCE + param + "m";
+        public int param() {
+            return ordinal() + 1;
         }
     }
     //endregion
 
     //region Text Color
-    public enum Color {
+    public enum Color implements SGR {
         BLACK(0),
         LIGHT_GREY(242),
         DARK_GREY(235),
@@ -59,20 +99,16 @@ public final class EscapeSequences {
             this.sgrParam = sgrParam;
         }
 
-        public String setText() {
-            return getSGR(false, sgrParam);
+        public static int reset(Color color) {
+            return 9;
         }
 
-        public String setBG() {
-            return getSGR(true, sgrParam);
+        public int param() {
+            return sgrParam;
         }
 
-        public static String reset(boolean isBG) {
-            return CONTROL_SEQUENCE + (isBG ? "4" : "3") + "9m";
-        }
-
-        static String getSGR(boolean isBG, int param) {
-            return CONTROL_SEQUENCE + (isBG ? "4" : "3") + "8;5;" + param + "m";
+        public int[] extraParams(Format<?> format) {
+            return new int[] { format.formatMod(8), 5 };
         }
     }
     //endregion

@@ -77,11 +77,11 @@ public record ChessUI(PrintStream out) implements BoardPrinter {
 
     @Override
     public void resetColor() {
-        out.println(RESET_FORMATTING);
+        out.println(Format.resetAll());
     }
 
     private void printSquare(Object value, Color background, Color textColor) {
-        out.print(background.setBG() + textColor.setText());
+        out.print(Format.BG.set(background) + Format.TEXT.set(textColor));
         out.print(" " + (value == null ? " " : value.toString().toUpperCase()) + " ");
     }
 }

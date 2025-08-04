@@ -30,7 +30,6 @@ public class ClientStateManager {
         this.clientStates = new ClientStateFactory(this);
     }
 
-    //Repl
     public void evaluate(int command, String[] params) throws ClientException, IOException {
         getCurrentState().evaluate(command - 1, params);
     }
@@ -39,14 +38,13 @@ public class ClientStateManager {
         getCurrentState().help(simple);
     }
 
-    //Helper methods
     public Optional<Boolean> getIsPlayerAndWhite() {
         return Optional.ofNullable(isPlayerAndWhite);
     }
 
     public void changeState(MenuState state) {
         currentState = state;
-        getCurrentState().help(false);
+        help(false);
     }
 
     private ChessClientState getCurrentState() {

@@ -16,6 +16,7 @@ import static utils.Serializer.serialize;
 
 public record HttpCommunicator(String serverUrl) {
     private static final HttpClient client = HttpClient.newHttpClient();
+    private static final HttpRequest.Builder standardRequest = HttpRequest.newBuilder().timeout(Duration.ofMillis(5000));
 
     public <T> T doPost(String path, Object body, String authToken, Class<T> responseClass) throws IOException {
         return doServerMethod(path, getRequestBuilder(authToken).POST(bodyPublisher(body)), responseClass);
@@ -55,7 +56,7 @@ public record HttpCommunicator(String serverUrl) {
     }
 
     private static HttpRequest.Builder getRequestBuilder(String authToken) {
-        return HttpRequest.newBuilder().timeout(Duration.ofMillis(5000)).header("Authorization", authToken);
+        return standardRequest.copy().header("Authorization", authToken);
     }
 
     private static HttpRequest.BodyPublisher bodyPublisher(Object body) {

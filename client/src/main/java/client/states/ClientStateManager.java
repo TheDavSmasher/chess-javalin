@@ -1,7 +1,9 @@
 package client.states;
 
 import backend.ServerFacade;
+import client.ClientException;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Optional;
 
@@ -24,6 +26,14 @@ public class ClientStateManager {
     public ClientStateManager(PrintStream out) {
         this.out = out;
         this.clientStates = new ClientStateFactory(this);
+    }
+
+    public void evaluate(int command, String[] params) throws ClientException, IOException {
+        getCurrentState().evaluate(command - 1, params);
+    }
+
+    public void help(boolean simple) {
+        getCurrentState().help(simple);
     }
 
     public String getAuthToken() {

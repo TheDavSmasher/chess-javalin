@@ -27,11 +27,11 @@ public class Repl {
                 tryCatchDo(() -> tryCatchRethrow(() -> {
                     int command = tokens.length > 0 ? Integer.parseInt(tokens[0]) : 0;
                     String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
-                    clientStates.getCurrentState().evaluate(command - 1, params);
+                    clientStates.evaluate(command, params);
                     return null;
                 }, IOException.class, ClientException.class),
                 NumberFormatException.class,
-                    _ -> clientStates.getCurrentState().help(true),
+                    _ -> clientStates.help(true),
                 ClientException.class);
             }, ExitException.class, _ -> {
                 out.println();

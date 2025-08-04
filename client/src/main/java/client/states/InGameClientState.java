@@ -60,35 +60,35 @@ public class InGameClientState extends ChessClientState implements ServerMessage
 
     @Override
     protected ClientCommand[] getStateCommands() {
-        return client.getIsPlayerAndWhite().isEmpty() ? observerCommands : playerCommands;
+        return stateManager.getIsPlayerAndWhite().isEmpty() ? observerCommands : playerCommands;
     }
 
     private void redrawBoard() {
-        boardPrinter.printChessBoard(currentGame, null, client.getIsPlayerAndWhite().orElse(true));
+        boardPrinter.printChessBoard(currentGame, null, stateManager.getIsPlayerAndWhite().orElse(true));
     }
 
     private void makeMove(String[] params) throws IOException {
         String start = params[0], end = params[1];
         ChessPiece.PieceType type = params.length < 3 ? null : typeFromString(params[2]);
         ChessMove move = new ChessMove(positionFromString(start), positionFromString(end), type);
-        client.serverFacade.makeMove(client.getAuthToken(), client.getCurrentGameID(), move);
+        stateManager.serverFacade.makeMove(stateManager.getAuthToken(), stateManager.getCurrentGameID(), move);
     }
 
     private void highlightMoves(String[] params) throws IOException {
         String startPos = params[0];
         ChessPosition start = positionFromString(startPos);
-        boardPrinter.printChessBoard(currentGame, start, client.getIsPlayerAndWhite().orElse(true));
+        boardPrinter.printChessBoard(currentGame, start, stateManager.getIsPlayerAndWhite().orElse(true));
     }
 
     private void leaveGame() throws IOException {
-        client.serverFacade.leaveGame(client.getAuthToken(), client.getCurrentGameID());
+        stateManager.serverFacade.leaveGame(stateManager.getAuthToken(), stateManager.getCurrentGameID());
         currentGame = null;
-        client.returnFromGame();
+        stateManager.returnFromGame();
     }
 
     private void resignGame() throws IOException {
         //Add prompt
-        client.serverFacade.resignGame(client.getAuthToken(), client.getCurrentGameID());
+        stateManager.serverFacade.resignGame(stateManager.getAuthToken(), stateManager.getCurrentGameID());
     }
 
     private ChessPiece.PieceType typeFromString(String type) throws IOException {
@@ -120,11 +120,11 @@ public class InGameClientState extends ChessClientState implements ServerMessage
     }
 
     private void displayNotification(Notification notification) {
-        client.out.println(notification.getNotification());
+        stateManager.out.println(notification.getNotification());
     }
 
     private void displayError(ErrorMessage errorMessage) {
-        client.out.println(Format.TEXT.set(Color.RED) + errorMessage.getError() + Format.resetAll());
+        stateManager.out.println(Format.TEXT.set(Color.RED) + errorMessage.getError() + Format.resetAll());
     }
 
     private void loadGame(LoadGameMessage message) {

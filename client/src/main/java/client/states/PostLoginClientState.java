@@ -37,15 +37,15 @@ public class PostLoginClientState extends ChessClientState {
     }
 
     private void listGames() throws IOException {
-        ArrayList<GameData> allGames = client.serverFacade.listGames(client.getAuthToken());
+        ArrayList<GameData> allGames = stateManager.serverFacade.listGames(stateManager.getAuthToken());
         existingGames = new int[allGames.size()];
-        client.out.print("Games:");
+        stateManager.out.print("Games:");
         int i = 0;
         for (GameData data : allGames) {
             existingGames[i] = data.gameID();
             String white = (data.whiteUsername() != null) ? data.whiteUsername() : "No one";
             String black = (data.blackUsername() != null) ? data.blackUsername() : "No one";
-            client.out.print("\n  " + (++i) + ". " + data.gameName() + ": " + white + " vs " + black);
+            stateManager.out.print("\n  " + (++i) + ". " + data.gameName() + ": " + white + " vs " + black);
         }
     }
 
@@ -58,8 +58,8 @@ public class PostLoginClientState extends ChessClientState {
             }
         }
         String fullName = result.toString();
-        client.serverFacade.createGame(client.getAuthToken(), fullName);
-        client.out.print("Game created! List all games to see it and be able to join or observe it.");
+        stateManager.serverFacade.createGame(stateManager.getAuthToken(), fullName);
+        stateManager.out.print("Game created! List all games to see it and be able to join or observe it.");
     }
 
     private void joinGame(String[] params) throws ClientException, IOException {
@@ -80,14 +80,14 @@ public class PostLoginClientState extends ChessClientState {
         }
         int newGameID = existingGames[index];
         if (color != null) {
-            client.serverFacade.joinGame(client.getAuthToken(), color, newGameID);
+            stateManager.serverFacade.joinGame(stateManager.getAuthToken(), color, newGameID);
         }
-        client.serverFacade.connectToGame(client.getAuthToken(), newGameID);
-        client.enterGame(newGameID, color);
+        stateManager.serverFacade.connectToGame(stateManager.getAuthToken(), newGameID);
+        stateManager.enterGame(newGameID, color);
     }
 
     private void logout() throws IOException {
-        client.serverFacade.logout(client.getAuthToken());
-        client.logout();
+        stateManager.serverFacade.logout(stateManager.getAuthToken());
+        stateManager.logout();
     }
 }

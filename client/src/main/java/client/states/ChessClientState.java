@@ -6,10 +6,10 @@ import client.states.ClientCommandProcessing.*;
 import java.io.IOException;
 
 public abstract class ChessClientState {
-    protected final ClientStateManager client;
+    protected final ClientStateManager stateManager;
 
-    protected ChessClientState(ClientStateManager client) {
-        this.client = client;
+    protected ChessClientState(ClientStateManager stateManager) {
+        this.stateManager = stateManager;
     }
 
     public void evaluate(int command, String[] params) throws ClientException, IOException {
@@ -21,13 +21,13 @@ public abstract class ChessClientState {
     }
 
     public void help(boolean simple) {
-        client.out.println();
+        stateManager.out.println();
 
         StringBuilder help = new StringBuilder();
         for (int i = 0; i < getStateCommands().length; i++) {
             getStateCommands()[i].getHelp(help, i, simple);
         }
-        client.out.print(helpCommand.getHelp(help.append("\n"), 0, simple));
+        stateManager.out.print(helpCommand.getHelp(help.append("\n"), 0, simple));
     }
 
     protected abstract ClientCommand[] getStateCommands();

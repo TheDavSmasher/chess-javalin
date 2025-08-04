@@ -71,7 +71,7 @@ public class InGameClientState extends ChessClientState implements ServerMessage
         String start = params[0], end = params[1];
         ChessPiece.PieceType type = params.length < 3 ? null : typeFromString(params[2]);
         ChessMove move = new ChessMove(positionFromString(start), positionFromString(end), type);
-        stateManager.serverFacade.makeMove(stateManager.getAuthToken(), stateManager.getCurrentGameID(), move);
+        stateManager.serverFacade.makeMove(stateManager.authToken, stateManager.currentGameID, move);
     }
 
     private void highlightMoves(String[] params) throws IOException {
@@ -81,16 +81,16 @@ public class InGameClientState extends ChessClientState implements ServerMessage
     }
 
     private void leaveGame() throws IOException {
-        stateManager.serverFacade.leaveGame(stateManager.getAuthToken(), stateManager.getCurrentGameID());
+        stateManager.serverFacade.leaveGame(stateManager.authToken, stateManager.currentGameID);
         currentGame = null;
-        stateManager.setCurrentGameID(0);
-        stateManager.setIsPlayerAndWhite(null);
+        stateManager.currentGameID = 0;
+        stateManager.isPlayerAndWhite = null;
         stateManager.changeState(ClientStateManager.MenuState.POST_LOGIN);
     }
 
     private void resignGame() throws IOException {
         //Add prompt
-        stateManager.serverFacade.resignGame(stateManager.getAuthToken(), stateManager.getCurrentGameID());
+        stateManager.serverFacade.resignGame(stateManager.authToken, stateManager.currentGameID);
     }
 
     private ChessPiece.PieceType typeFromString(String type) throws IOException {

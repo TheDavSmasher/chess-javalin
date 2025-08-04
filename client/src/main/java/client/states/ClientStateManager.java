@@ -20,9 +20,9 @@ public class ClientStateManager {
     private final ClientStateFactory clientStates;
 
     //State variables
-    private String authToken = null;
-    private int currentGameID = 0;
-    private Boolean isPlayerAndWhite = null;
+    public String authToken = null;
+    public int currentGameID = 0;
+    public Boolean isPlayerAndWhite = null;
     private MenuState currentState = null;
 
     public ClientStateManager(PrintStream out) {
@@ -39,32 +39,11 @@ public class ClientStateManager {
         getCurrentState().help(simple);
     }
 
-    //Getters
-    public void setAuthToken(String authToken) {
-        this.authToken = authToken;
-    }
-
-    public String getAuthToken() {
-        return authToken;
-    }
-
-    public void setCurrentGameID(int currentGameID) {
-        this.currentGameID = currentGameID;
-    }
-
-    public int getCurrentGameID() {
-        return currentGameID;
-    }
-
-    public void setIsPlayerAndWhite(Boolean isPlayerAndWhite) {
-        this.isPlayerAndWhite = isPlayerAndWhite;
-    }
-
+    //Helper methods
     public Optional<Boolean> getIsPlayerAndWhite() {
         return Optional.ofNullable(isPlayerAndWhite);
     }
 
-    //Helper methods
     public void changeState(MenuState state) {
         currentState = state;
         getCurrentState().help(false);

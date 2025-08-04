@@ -37,7 +37,7 @@ public class PreLoginClientState extends ChessClientState {
     }
 
     private void enterServer(String authToken) {
-        stateManager.setAuthToken(authToken);
+        stateManager.authToken = authToken;
         stateManager.changeState(ClientStateManager.MenuState.POST_LOGIN);
     }
 

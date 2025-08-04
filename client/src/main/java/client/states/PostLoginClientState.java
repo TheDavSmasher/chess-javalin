@@ -37,7 +37,7 @@ public class PostLoginClientState extends ChessClientState {
     }
 
     private void listGames() throws IOException {
-        ArrayList<GameData> allGames = stateManager.serverFacade.listGames(stateManager.getAuthToken());
+        ArrayList<GameData> allGames = stateManager.serverFacade.listGames(stateManager.authToken);
         existingGames = new int[allGames.size()];
         stateManager.out.print("Games:");
         int i = 0;
@@ -58,7 +58,7 @@ public class PostLoginClientState extends ChessClientState {
             }
         }
         String fullName = result.toString();
-        stateManager.serverFacade.createGame(stateManager.getAuthToken(), fullName);
+        stateManager.serverFacade.createGame(stateManager.authToken, fullName);
         stateManager.out.print("Game created! List all games to see it and be able to join or observe it.");
     }
 
@@ -80,17 +80,17 @@ public class PostLoginClientState extends ChessClientState {
         }
         int newGameID = existingGames[index];
         if (color != null) {
-            stateManager.serverFacade.joinGame(stateManager.getAuthToken(), color, newGameID);
+            stateManager.serverFacade.joinGame(stateManager.authToken, color, newGameID);
         }
-        stateManager.serverFacade.connectToGame(stateManager.getAuthToken(), newGameID);
-        stateManager.setCurrentGameID(newGameID);
-        stateManager.setIsPlayerAndWhite(color != null ? color.equalsIgnoreCase("white") : null);
+        stateManager.serverFacade.connectToGame(stateManager.authToken, newGameID);
+        stateManager.currentGameID = newGameID;
+        stateManager.isPlayerAndWhite = color != null ? color.equalsIgnoreCase("white") : null;
         stateManager.changeState(ClientStateManager.MenuState.MID_GAME);
     }
 
     private void logout() throws IOException {
-        stateManager.serverFacade.logout(stateManager.getAuthToken());
-        stateManager.setAuthToken(null);
+        stateManager.serverFacade.logout(stateManager.authToken);
+        stateManager.authToken = null;
         stateManager.changeState(ClientStateManager.MenuState.PRE_LOGIN);
     }
 }

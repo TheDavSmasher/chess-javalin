@@ -14,10 +14,12 @@ public class ClientStateManager {
         MID_GAME
     }
 
+    //Utils
     public final ServerFacade serverFacade = new ServerFacade();
     public final PrintStream out;
     private final ClientStateFactory clientStates;
 
+    //State variables
     private String authToken = null;
     private int currentGameID = 0;
     private Boolean isPlayerAndWhite = null;
@@ -28,6 +30,7 @@ public class ClientStateManager {
         this.clientStates = new ClientStateFactory(this);
     }
 
+    //Repl
     public void evaluate(int command, String[] params) throws ClientException, IOException {
         getCurrentState().evaluate(command - 1, params);
     }
@@ -36,6 +39,7 @@ public class ClientStateManager {
         getCurrentState().help(simple);
     }
 
+    //Getters
     public String getAuthToken() {
         return authToken;
     }
@@ -48,10 +52,7 @@ public class ClientStateManager {
         return Optional.ofNullable(isPlayerAndWhite);
     }
 
-    public ChessClientState getCurrentState() {
-        return clientStates.get(currentState);
-    }
-
+    //Transitions
     public void enterGame(int gameID, String color) {
         currentGameID = gameID;
         isPlayerAndWhite = color != null ? color.equalsIgnoreCase("white") : null;
@@ -74,8 +75,13 @@ public class ClientStateManager {
         changeState(MenuState.PRE_LOGIN);
     }
 
+    //Helper methods
     public void changeState(MenuState state) {
         currentState = state;
         getCurrentState().help(false);
+    }
+
+    private ChessClientState getCurrentState() {
+        return clientStates.get(currentState);
     }
 }

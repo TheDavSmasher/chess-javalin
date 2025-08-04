@@ -5,6 +5,7 @@ import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.json.JavalinGson;
 import io.javalin.websocket.WsContext;
+import io.javalin.websocket.WsMessageContext;
 import model.response.ErrorResponse;
 import server.handler.*;
 import server.websocket.handler.*;
@@ -16,13 +17,13 @@ public class Server {
 
     private final Javalin javalin;
 
+    private final WebsocketMessageHandlerFactory websocketMessageHandlers = new WebsocketMessageHandlerFactory();
+
     public Server() {
         javalin = Javalin.create(config -> {
             config.staticFiles.add("web");
             config.jsonMapper(new JavalinGson());
         });
-
-        WebsocketMessageHandlerFactory websocketMessageHandlers = new WebsocketMessageHandlerFactory();
 
         // Register your endpoints and exception handlers here.
         javalin.delete("/db", new ClearHandler())
@@ -35,10 +36,7 @@ public class Server {
                 .exception(ServiceException.class, this::handleServerException)
                 .ws("/ws", ws -> {
                     ws.onConnect(WsContext::enableAutomaticPings);
-                    ws.onMessage(context ->
-                            websocketMessageHandlers.get(
-                                            context.messageAsClass(UserGameCommand.class).getCommandType()
-                                    ).handleMessage(context));
+                    ws.onMessage(this::handleWebsocketMessage);
                 }).wsException(ServiceException.class, this::handleWebsocketException);
     }
 
@@ -57,6 +55,11 @@ public class Server {
             case PreexistingException _ -> HttpStatus.FORBIDDEN;
             default -> HttpStatus.INTERNAL_SERVER_ERROR;
         }).json(new ErrorResponse("Error: " + e.getMessage()));
+    }
+
+    private void handleWebsocketMessage(WsMessageContext context) throws ServiceException {
+        websocketMessageHandlers.get(context.messageAsClass(UserGameCommand.class).getCommandType())
+                .handleMessage(context);
     }
 
     private void handleWebsocketException(ServiceException e, WsContext wsContext) {

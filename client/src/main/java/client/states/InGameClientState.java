@@ -124,9 +124,7 @@ public class InGameClientState extends ChessClientState implements ServerMessage
     }
 
     private void displayError(ErrorMessage errorMessage) {
-        client.out.print(Format.TEXT.set(Color.RED));
-        client.out.println(errorMessage.getError());
-        client.out.print(Format.resetAll());
+        client.out.println(Format.TEXT.set(Color.RED) + errorMessage.getError() + Format.resetAll());
     }
 
     private void loadGame(LoadGameMessage message) {

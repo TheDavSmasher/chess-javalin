@@ -22,28 +22,24 @@ public class Repl {
         while (true) {
             printPrompt(out);
 
-            tryCatchDo(() -> tryCatchDo(
-                    this::evaluate,
-            ExitException.class, _ -> {
+            tryCatchDo(() -> tryCatchDo(() -> {
+                String[] tokens = scanner.nextLine().toLowerCase().split(" ");
+                tryCatchDo(() -> tryCatchRethrow(() -> {
+                    int command = tokens.length > 0 ? Integer.parseInt(tokens[0]) : 0;
+                    String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
+                    clientStates.getCurrentState().evaluate(command - 1, params);
+                    return null;
+                }, IOException.class, ClientException.class),
+                NumberFormatException.class,
+                    _ -> clientStates.getCurrentState().help(true),
+                ClientException.class);
+            }, ExitException.class, _ -> {
                 out.println();
                 System.exit(0);
             }, Throwable.class), Throwable.class,
-                e -> out.print(e.getMessage())
+                    e -> out.print(e.getMessage())
             );
         }
-    }
-
-    private void evaluate() throws ClientException {
-        String[] tokens = scanner.nextLine().toLowerCase().split(" ");
-        tryCatchDo(() -> tryCatchRethrow(() -> {
-            int command = tokens.length > 0 ? Integer.parseInt(tokens[0]) : 0;
-            String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
-            clientStates.getCurrentState().evaluate(command - 1, params);
-            return null;
-        }, IOException.class, ClientException.class),
-        NumberFormatException.class,
-        _ -> clientStates.getCurrentState().help(true),
-        ClientException.class);
     }
 
     private void printPrompt(PrintStream out) {

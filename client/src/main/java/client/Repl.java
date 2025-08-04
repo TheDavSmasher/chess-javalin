@@ -1,6 +1,5 @@
 package client;
 
-import client.states.ClientStateManager.MenuState;
 import ui.EscapeSequences.Format;
 
 import java.io.PrintStream;
@@ -14,8 +13,7 @@ public class Repl {
     private final ChessClient client = new ChessClient(out);
 
     public void run() {
-        out.println("Welcome to my Chess Server!");
-        client.changeState(MenuState.PRE_LOGIN);
+        out.println("Welcome to my Chess Server!\nRun the 'help' command to see available commands.");
 
         Scanner scanner = new Scanner(System.in);
         while (true) {

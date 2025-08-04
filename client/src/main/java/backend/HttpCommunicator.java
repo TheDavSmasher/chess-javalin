@@ -14,13 +14,8 @@ import static utils.Catcher.*;
 import static utils.Serializer.deserialize;
 import static utils.Serializer.serialize;
 
-public class HttpCommunicator {
+public record HttpCommunicator(String serverUrl) {
     private static final HttpClient client = HttpClient.newHttpClient();
-    private final String serverUrl;
-
-    public HttpCommunicator(String url) {
-        serverUrl = url;
-    }
 
     public <T> T doPost(String path, Object body, String authToken, Class<T> responseClass) throws IOException {
         return doServerMethod(path, getRequestBuilder().POST(bodyPublisher(body)), authToken, responseClass);

@@ -60,11 +60,11 @@ public class InGameClientState extends ChessClientState implements ServerMessage
 
     @Override
     protected ClientCommand[] getStateCommands() {
-        return stateManager.getIsPlayerAndWhite().isEmpty() ? observerCommands : playerCommands;
+        return stateManager.isPlayerAndWhite == null ? observerCommands : playerCommands;
     }
 
     private void redrawBoard() {
-        boardPrinter.printChessBoard(currentGame, null, stateManager.getIsPlayerAndWhite().orElse(true));
+        boardPrinter.printChessBoard(currentGame, null, getIsPlayerAndWhite());
     }
 
     private void makeMove(String[] params) throws IOException {
@@ -77,7 +77,7 @@ public class InGameClientState extends ChessClientState implements ServerMessage
     private void highlightMoves(String[] params) throws IOException {
         String startPos = params[0];
         ChessPosition start = positionFromString(startPos);
-        boardPrinter.printChessBoard(currentGame, start, stateManager.getIsPlayerAndWhite().orElse(true));
+        boardPrinter.printChessBoard(currentGame, start, getIsPlayerAndWhite());
     }
 
     private void leaveGame() throws IOException {
@@ -91,6 +91,10 @@ public class InGameClientState extends ChessClientState implements ServerMessage
     private void resignGame() throws IOException {
         //Add prompt
         stateManager.serverFacade.resignGame(stateManager.authToken, stateManager.currentGameID);
+    }
+
+    private Boolean getIsPlayerAndWhite() {
+        return stateManager.isPlayerAndWhite instanceof Boolean res ? res : true;
     }
 
     private ChessPiece.PieceType typeFromString(String type) throws IOException {

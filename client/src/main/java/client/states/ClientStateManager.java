@@ -5,7 +5,6 @@ import client.ClientException;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Optional;
 
 public class ClientStateManager {
     public enum MenuState {
@@ -36,10 +35,6 @@ public class ClientStateManager {
 
     public void help(boolean simple) {
         getCurrentState().help(simple);
-    }
-
-    public Optional<Boolean> getIsPlayerAndWhite() {
-        return Optional.ofNullable(isPlayerAndWhite);
     }
 
     public void changeState(MenuState state) {

@@ -83,7 +83,9 @@ public class InGameClientState extends ChessClientState implements ServerMessage
     private void leaveGame() throws IOException {
         stateManager.serverFacade.leaveGame(stateManager.getAuthToken(), stateManager.getCurrentGameID());
         currentGame = null;
-        stateManager.returnFromGame();
+        stateManager.setCurrentGameID(0);
+        stateManager.setIsPlayerAndWhite(null);
+        stateManager.changeState(ClientStateManager.MenuState.POST_LOGIN);
     }
 
     private void resignGame() throws IOException {

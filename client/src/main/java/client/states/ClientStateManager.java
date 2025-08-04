@@ -40,39 +40,28 @@ public class ClientStateManager {
     }
 
     //Getters
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
+
     public String getAuthToken() {
         return authToken;
+    }
+
+    public void setCurrentGameID(int currentGameID) {
+        this.currentGameID = currentGameID;
     }
 
     public int getCurrentGameID() {
         return currentGameID;
     }
 
+    public void setIsPlayerAndWhite(Boolean isPlayerAndWhite) {
+        this.isPlayerAndWhite = isPlayerAndWhite;
+    }
+
     public Optional<Boolean> getIsPlayerAndWhite() {
         return Optional.ofNullable(isPlayerAndWhite);
-    }
-
-    //Transitions
-    public void enterGame(int gameID, String color) {
-        currentGameID = gameID;
-        isPlayerAndWhite = color != null ? color.equalsIgnoreCase("white") : null;
-        changeState(MenuState.MID_GAME);
-    }
-
-    public void returnFromGame() {
-        currentGameID = 0;
-        isPlayerAndWhite = null;
-        changeState(MenuState.POST_LOGIN);
-    }
-
-    public void enterServer(String authToken) {
-        this.authToken = authToken;
-        changeState(MenuState.POST_LOGIN);
-    }
-
-    public void logout() {
-        this.authToken = null;
-        changeState(MenuState.PRE_LOGIN);
     }
 
     //Helper methods

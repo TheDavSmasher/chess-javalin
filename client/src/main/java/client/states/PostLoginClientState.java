@@ -83,11 +83,14 @@ public class PostLoginClientState extends ChessClientState {
             stateManager.serverFacade.joinGame(stateManager.getAuthToken(), color, newGameID);
         }
         stateManager.serverFacade.connectToGame(stateManager.getAuthToken(), newGameID);
-        stateManager.enterGame(newGameID, color);
+        stateManager.setCurrentGameID(newGameID);
+        stateManager.setIsPlayerAndWhite(color != null ? color.equalsIgnoreCase("white") : null);
+        stateManager.changeState(ClientStateManager.MenuState.MID_GAME);
     }
 
     private void logout() throws IOException {
         stateManager.serverFacade.logout(stateManager.getAuthToken());
-        stateManager.logout();
+        stateManager.setAuthToken(null);
+        stateManager.changeState(ClientStateManager.MenuState.PRE_LOGIN);
     }
 }

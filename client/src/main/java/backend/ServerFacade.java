@@ -10,20 +10,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class ServerFacade {
-    private WebsocketCommunicator websocket;
+    private final WebsocketCommunicator websocket;
     private final HttpCommunicator http;
-
-    public ServerFacade(int port) {
-        http = new HttpCommunicator(getUrlString(port));
-    }
 
     public ServerFacade() {
         this(8080);
-        websocket = new WebsocketCommunicator(getUrlString(8080));
     }
 
-    private static String getUrlString(int port) {
-        return "http://localhost:" + port + "/";
+    public ServerFacade(int port) {
+        String url = "http://localhost:%d/".formatted(port);
+        http = new HttpCommunicator(url);
+        websocket = new WebsocketCommunicator(url);
     }
 
     public UserEnterResponse register(String username, String password, String email) throws IOException {

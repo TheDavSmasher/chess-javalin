@@ -58,7 +58,7 @@ public record ChessUI(PrintStream out) implements BoardPrinter {
             rowPrinter.accept(i);
         }
         printRowBorders(borders);
-        resetColor();
+        out.println(Format.resetAll());
     }
 
     private void printRowBorders(Object border) {
@@ -73,11 +73,6 @@ public record ChessUI(PrintStream out) implements BoardPrinter {
                 moveSpot != null || piece == null ? Color.BLACK :
                         piece.color() == ChessGame.TeamColor.WHITE ? Color.RED : Color.BLUE
                 );
-    }
-
-    @Override
-    public void resetColor() {
-        out.println(Format.resetAll());
     }
 
     private void printSquare(Object value, Color background, Color textColor) {

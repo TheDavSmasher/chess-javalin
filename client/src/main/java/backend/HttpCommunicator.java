@@ -18,35 +18,31 @@ public record HttpCommunicator(String serverUrl) {
     private static final HttpClient client = HttpClient.newHttpClient();
 
     public <T> T doPost(String path, Object body, String authToken, Class<T> responseClass) throws IOException {
-        return doServerMethod(path, getRequestBuilder().POST(bodyPublisher(body)), authToken, responseClass);
+        return doServerMethod(path, getRequestBuilder(authToken).POST(bodyPublisher(body)), responseClass);
     }
 
     public <T> T doPost(String path, Object body, Class<T> responseClass) throws IOException {
-        return doPost(path, body, null, responseClass);
+        return doPost(path, body, "", responseClass);
     }
 
     public void doDelete(String path, String authToken) throws IOException {
-        doServerMethod(path, getRequestBuilder().DELETE(), authToken, null);
+        doServerMethod(path, getRequestBuilder(authToken).DELETE(), null);
     }
 
     public void doDelete(String path) throws IOException {
-        doDelete(path, null);
+        doDelete(path, "");
     }
 
     public void doPut(String path, Object body, String authToken) throws IOException {
-        doServerMethod(path, getRequestBuilder().PUT(bodyPublisher(body)), authToken, null);
+        doServerMethod(path, getRequestBuilder(authToken).PUT(bodyPublisher(body)), null);
     }
 
     public <T> T doGet(String path, String authToken, Class<T> responseClass) throws IOException {
-        return doServerMethod(path, getRequestBuilder().GET(), authToken, responseClass);
+        return doServerMethod(path, getRequestBuilder(authToken).GET(), responseClass);
     }
 
-    private <T> T doServerMethod(String path, HttpRequest.Builder builder, String authToken, Class<T> responseClass) throws IOException {
+    private <T> T doServerMethod(String path, HttpRequest.Builder builder, Class<T> responseClass) throws IOException {
         builder.uri(URI.create(serverUrl + path));
-
-        if (authToken != null) {
-            builder.header("Authorization", authToken);
-        }
 
         HttpResponse<String> response = tryCatchRethrow(
                 () -> client.send(builder.build(), HttpResponse.BodyHandlers.ofString()),
@@ -58,8 +54,8 @@ public record HttpCommunicator(String serverUrl) {
         return responseClass != null ? deserialize(response.body(), responseClass) : null;
     }
 
-    private static HttpRequest.Builder getRequestBuilder() {
-        return HttpRequest.newBuilder().timeout(Duration.ofMillis(5000));
+    private static HttpRequest.Builder getRequestBuilder(String authToken) {
+        return HttpRequest.newBuilder().timeout(Duration.ofMillis(5000)).header("Authorization", authToken);
     }
 
     private static HttpRequest.BodyPublisher bodyPublisher(Object body) {

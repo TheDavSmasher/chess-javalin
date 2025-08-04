@@ -23,7 +23,7 @@ public class Repl {
             printPrompt(out);
 
             tryCatchDo(() -> tryCatchDo(
-                () -> evaluate(scanner.nextLine()),
+                    this::evaluate,
             ExitException.class, _ -> {
                 out.println();
                 System.exit(0);
@@ -33,12 +33,12 @@ public class Repl {
         }
     }
 
-    private void evaluate(String input) throws ClientException {
-        String[] tokens = input.toLowerCase().split(" ");
+    private void evaluate() throws ClientException {
+        String[] tokens = scanner.nextLine().toLowerCase().split(" ");
         tryCatchDo(() -> tryCatchRethrow(() -> {
-            clientStates.getCurrentState().evaluate(
-                    (tokens.length > 0 ? Integer.parseInt(tokens[0]) : 0) - 1,
-                    Arrays.copyOfRange(tokens, 1, tokens.length));
+            int command = tokens.length > 0 ? Integer.parseInt(tokens[0]) : 0;
+            String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
+            clientStates.getCurrentState().evaluate(command - 1, params);
             return null;
         }, IOException.class, ClientException.class),
         NumberFormatException.class,

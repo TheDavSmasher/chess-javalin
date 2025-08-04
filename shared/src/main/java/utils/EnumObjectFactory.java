@@ -14,7 +14,7 @@ public abstract class EnumObjectFactory<K extends Enum<K>, V> {
     protected void generateValues() {
         if (mapGenerated) return;
         for (K key : getKeyClass().getEnumConstants()) {
-            preMadeObjects.put(key, preGenerateValue(key));
+            preMadeObjects.put(key, generateValue(key));
         }
         mapGenerated = true;
     }
@@ -24,5 +24,5 @@ public abstract class EnumObjectFactory<K extends Enum<K>, V> {
     }
 
     protected abstract Class<K> getKeyClass();
-    protected abstract V preGenerateValue(K key);
+    protected abstract V generateValue(K key);
 }

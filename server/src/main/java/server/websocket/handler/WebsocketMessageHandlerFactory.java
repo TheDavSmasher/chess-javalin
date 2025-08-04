@@ -16,7 +16,7 @@ public final class WebsocketMessageHandlerFactory extends EnumObjectFactory<Comm
     }
 
     @Override
-    protected MessageHandler<? extends UserGameCommand> preGenerateValue(CommandType key) {
+    protected MessageHandler<? extends UserGameCommand> generateValue(CommandType key) {
         return switch (key) {
             case CONNECT -> new ConnectHandler();
             case MAKE_MOVE -> new MakeMoveHandler();

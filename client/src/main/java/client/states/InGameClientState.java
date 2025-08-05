@@ -69,7 +69,9 @@ public class InGameClientState extends ChessClientState implements ServerMessage
 
     private void makeMove(String[] params) throws IOException {
         String start = params[0], end = params[1];
-        ChessPiece.PieceType type = params.length < 3 ? null : typeFromString(params[2]);
+        ChessPiece.PieceType type = params.length < 3 ? null : tryCatchRethrow(() ->
+                        ChessPiece.PieceType.valueOf(params[2]),
+                IllegalArgumentException.class, IOException.class, _ -> "That Piece Type does not exist.");
         ChessMove move = new ChessMove(positionFromString(start), positionFromString(end), type);
         stateManager.serverFacade.makeMove(stateManager.authToken, stateManager.currentGameID, move);
     }
@@ -95,11 +97,6 @@ public class InGameClientState extends ChessClientState implements ServerMessage
 
     private Boolean getIsPlayerAndWhite() {
         return stateManager.isPlayerAndWhite instanceof Boolean res ? res : true;
-    }
-
-    private ChessPiece.PieceType typeFromString(String type) throws IOException {
-        return tryCatchRethrow(() -> ChessPiece.PieceType.valueOf(type),
-                IllegalArgumentException.class, IOException.class, _ -> "That Piece Type does not exist.");
     }
 
     private ChessPosition positionFromString(String moveString) throws IOException {

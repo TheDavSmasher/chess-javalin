@@ -115,10 +115,11 @@ public class ChessGame {
     }
 
     private void makeMoveInGame(ChessMove move, ChessBoard board) {
+        ChessPiece oldPiece = board.getPiece(move.getStartPosition());
         if (move.getPromotionPiece() == null) {
-            board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
+            board.addPiece(move.getEndPosition(), oldPiece);
         } else {
-            board.addPiece(move.getEndPosition(), new ChessPiece(board.getPiece(move.getStartPosition()).getTeamColor(), move.getPromotionPiece()));
+            board.addPiece(move.getEndPosition(), new ChessPiece(oldPiece.getTeamColor(), move.getPromotionPiece()));
         }
         board.addPiece(move.getStartPosition(), null);
     }

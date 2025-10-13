@@ -27,17 +27,17 @@ public class Server {
 
         // Register your endpoints and exception handlers here.
         javalin.delete("/db", new ClearHandler())
-                .post("/user", new RegisterHandler())
-                .post("/session", new LoginHandler())
-                .delete("/session", new LogoutHandler())
-                .get("/game", new ListGameHandler())
-                .post("/game", new CreateGameHandler())
-                .put("/game", new JoinGameHandler())
-                .exception(ServiceException.class, this::handleServerException)
-                .ws("/ws", ws -> {
-                    ws.onConnect(WsContext::enableAutomaticPings);
-                    ws.onMessage(this::handleWebsocketMessage);
-                }).wsException(ServiceException.class, this::handleWebsocketException);
+               .post("/user", new RegisterHandler())
+               .post("/session", new LoginHandler())
+               .delete("/session", new LogoutHandler())
+               .get("/game", new ListGameHandler())
+               .post("/game", new CreateGameHandler())
+               .put("/game", new JoinGameHandler())
+               .exception(ServiceException.class, this::handleServerException)
+               .ws("/ws", ws -> {
+                   ws.onConnect(WsContext::enableAutomaticPings);
+                   ws.onMessage(this::handleWebsocketMessage);
+               }).wsException(ServiceException.class, this::handleWebsocketException);
     }
 
     public int run(int desiredPort) {

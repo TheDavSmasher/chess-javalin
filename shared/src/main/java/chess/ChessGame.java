@@ -103,12 +103,12 @@ public class ChessGame {
         if (!inPlay) {
             throw new InvalidMoveException("The game has already ended.");
         }
-        Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
-        if (validMoves == null || !validMoves.contains(move)) {
-            throw new InvalidMoveException("Move chosen is illegal.");
-        }
         if (gameBoard.getPiece(move.getStartPosition()).getTeamColor() != currentTurn) {
             throw new InvalidMoveException("Piece not part of current turn's color.");
+        }
+        if (!(validMoves(move.getStartPosition()) instanceof Collection<ChessMove> validMoves)
+                || !validMoves.contains(move)) {
+            throw new InvalidMoveException("Move chosen is illegal.");
         }
         makeMoveInGame(move, gameBoard);
         changeTurn();

@@ -31,7 +31,8 @@ public class ConnectionManager {
     }
 
     public String getFromUsers(String authToken) {
-        return userConnections.get(authToken) instanceof Connection conn ? conn.username : null;
+        return userConnections.get(authToken == null ? "" : authToken) instanceof Connection conn
+                ? conn.username : null;
     }
 
     public void notifyGame(int gameID, ServerMessage serverMessage, String authToken) {
@@ -39,9 +40,9 @@ public class ConnectionManager {
 
         gameConnections.removeIf(c -> !c.context.session.isOpen());
 
-        Connection user = userConnections.get(authToken == null ? "" : authToken);
+        String user = getFromUsers(authToken);
         for (Connection current : gameConnections) {
-            if (current == user) continue;
+            if (current.username.equals(user)) continue;
             current.context.send(serverMessage);
         }
     }

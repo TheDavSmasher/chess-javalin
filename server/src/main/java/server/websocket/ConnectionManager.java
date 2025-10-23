@@ -20,7 +20,8 @@ public class ConnectionManager {
     }
 
     public void removeFromGame(int gameID, String authToken) {
-        ArrayList<Connection> gameConnections = connectionsToGames.get(gameID);
+        if (!(connectionsToGames.get(gameID) instanceof ArrayList<Connection> gameConnections)) return;
+
         gameConnections.remove(userConnections.get(authToken));
         if (gameConnections.isEmpty()) {
             connectionsToGames.remove(gameID);

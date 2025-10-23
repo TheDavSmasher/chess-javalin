@@ -30,7 +30,7 @@ public class MakeMoveHandler extends ChessMessageHandler<MakeMoveCommand> {
 
         GameService.updateGameState(command, game);
 
-        notifyGame(gameData.gameID(), null, getLoadGame(gameData));
+        loadGame(gameData, null);
 
         notifyGame(command.getGameID(), command.getAuthToken(), username + " has moved piece at " +
                 move.getStartPosition() + " to " + move.getEndPosition() + ".");

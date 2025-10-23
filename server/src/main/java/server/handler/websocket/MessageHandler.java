@@ -27,10 +27,6 @@ public abstract class MessageHandler<T extends UserGameCommand> implements WsMes
         execute(context.messageAsClass(getCommandClass()), context);
     }
 
-    protected static LoadGameMessage getLoadGame(GameData gameData) {
-        return new LoadGameMessage(serialize(gameData.game()));
-    }
-
     protected ChessGame.TeamColor getPlayerColor(String user, GameData gameData) {
         return switch (user) {
             case String w when w.equals(gameData.whiteUsername()) -> ChessGame.TeamColor.WHITE;
@@ -49,5 +45,15 @@ public abstract class MessageHandler<T extends UserGameCommand> implements WsMes
 
     protected void notifyGame(int gameID, String authToken, ServerMessage serverMessage) {
         connectionManager.notifyGame(gameID, serverMessage, authToken);
+    }
+
+    protected void loadGame(GameData gameData, WsContext context) {
+        LoadGameMessage loadMessage = new LoadGameMessage(serialize(gameData.game()));
+        if (context != null) {
+            context.send(loadMessage);
+        }
+        else {
+            notifyGame(gameData.gameID(), null, loadMessage);
+        }
     }
 }

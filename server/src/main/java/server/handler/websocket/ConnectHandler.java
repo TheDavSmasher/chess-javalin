@@ -22,7 +22,7 @@ public class ConnectHandler extends MessageHandler<ConnectCommand> {
         String watchingAs = getPlayerColor(username, data) instanceof ChessGame.TeamColor color
                 ? "playing as " + color.toString().toLowerCase() : "observing the game";
         notifyGame(command.getGameID(), username + " is now " + watchingAs);
-        context.send(getLoadGame(data));
+        loadGame(data, context);
         connectionManager.addToGame(data.gameID(), command.getAuthToken(), username, context);
     }
 }

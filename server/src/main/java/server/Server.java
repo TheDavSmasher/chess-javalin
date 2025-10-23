@@ -37,7 +37,8 @@ public class Server {
                .ws("/ws", ws -> {
                    ws.onConnect(WsContext::enableAutomaticPings);
                    ws.onMessage(this::handleWebsocketMessage);
-               }).wsException(ServiceException.class, this::handleWebsocketException);
+               })
+               .wsException(ServiceException.class, this::handleWebsocketException);
     }
 
     public int run(int desiredPort) {

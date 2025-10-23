@@ -1,4 +1,4 @@
-package server.websocket;
+package server.handler.websocket;
 
 import service.ServiceException;
 

@@ -1,4 +1,4 @@
-package server.handler;
+package server.handler.http;
 
 import model.request.CreateGameRequest;
 import model.response.CreateGameResponse;

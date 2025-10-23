@@ -1,4 +1,4 @@
-package server.websocket.handler;
+package server.handler.websocket;
 
 import utils.EnumObjectFactory;
 import websocket.commands.UserGameCommand;

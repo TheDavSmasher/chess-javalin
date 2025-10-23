@@ -1,4 +1,4 @@
-package server.websocket.handler;
+package server.handler.websocket;
 
 import service.ServiceException;
 import io.javalin.websocket.WsContext;

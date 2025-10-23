@@ -1,4 +1,4 @@
-package server.handler;
+package server.handler.http;
 
 import io.javalin.http.Context;
 import service.ServiceException;

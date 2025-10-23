@@ -1,10 +1,9 @@
-package server.websocket.handler;
+package server.handler.websocket;
 
 import chess.ChessGame;
 import chess.ChessMove;
 import chess.InvalidMoveException;
 import model.dataaccess.GameData;
-import server.websocket.WebsocketException;
 import service.ServiceException;
 import io.javalin.websocket.WsContext;
 import service.GameService;

@@ -1,4 +1,4 @@
-package server.websocket.handler;
+package server.handler.websocket;
 
 import chess.ChessGame;
 import io.javalin.websocket.WsContext;

@@ -4,6 +4,7 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.json.JavalinGson;
+import io.javalin.websocket.WsConfig;
 import io.javalin.websocket.WsContext;
 import io.javalin.websocket.WsMessageContext;
 import model.response.ErrorResponse;
@@ -11,7 +12,6 @@ import server.handler.*;
 import server.websocket.handler.*;
 import service.*;
 import websocket.commands.UserGameCommand;
-import websocket.messages.ErrorMessage;
 
 public class Server {
 
@@ -34,10 +34,7 @@ public class Server {
                .post("/game", new CreateGameHandler())
                .put("/game", new JoinGameHandler())
                .exception(ServiceException.class, this::handleServerException)
-               .ws("/ws", ws -> {
-                   ws.onConnect(WsContext::enableAutomaticPings);
-                   ws.onMessage(this::handleWebsocketMessage);
-               })
+               .ws("/ws", this::setupWebsocket)
                .wsException(ServiceException.class, this::handleWebsocketException);
     }
 
@@ -55,7 +52,12 @@ public class Server {
             case UnauthorizedException _ -> HttpStatus.UNAUTHORIZED;
             case PreexistingException _ -> HttpStatus.FORBIDDEN;
             default -> HttpStatus.INTERNAL_SERVER_ERROR;
-        }).json(new ErrorResponse("Error: " + e.getMessage()));
+        }).json(getErrorResponse(e));
+    }
+
+    private void setupWebsocket(WsConfig ws) {
+        ws.onConnect(WsContext::enableAutomaticPings);
+        ws.onMessage(this::handleWebsocketMessage);
     }
 
     private void handleWebsocketMessage(WsMessageContext context) throws ServiceException {
@@ -64,6 +66,10 @@ public class Server {
     }
 
     private void handleWebsocketException(ServiceException e, WsContext wsContext) {
-        wsContext.send(new ErrorMessage(e.getMessage()));
+        wsContext.send(getErrorResponse(e));
+    }
+
+    private static ErrorResponse getErrorResponse(Exception e) {
+        return new ErrorResponse("Error: " + e.getMessage());
     }
 }

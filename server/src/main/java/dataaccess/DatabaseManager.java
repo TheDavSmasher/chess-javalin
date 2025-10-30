@@ -28,7 +28,7 @@ public class DatabaseManager {
         tryCatchResources(() -> DriverManager.getConnection(connectionUrl, dbUsername, dbPassword),
                 conn -> conn.prepareStatement(statement),
                 PreparedStatement::executeUpdate,
-                SQLException.class, DataAccessException.class, e -> "failed to create database");
+                SQLException.class, DataAccessException.class, _ -> "failed to create database");
         databaseExists = true;
     }
 
@@ -50,7 +50,7 @@ public class DatabaseManager {
             var conn = DriverManager.getConnection(connectionUrl, dbUsername, dbPassword);
             conn.setCatalog(databaseName);
             return conn;
-        }, SQLException.class, DataAccessException.class, e -> "failed to get connection");
+        }, SQLException.class, DataAccessException.class, _ -> "failed to get connection");
     }
 
     private static void loadPropertiesFromResources() {
@@ -62,7 +62,7 @@ public class DatabaseManager {
             props.load(propStream);
             loadProperties(props);
             return null;
-        }, Exception.class, RuntimeException.class, e -> "unable to process db.properties");
+        }, Exception.class, RuntimeException.class, _ -> "unable to process db.properties");
     }
 
     private static void loadProperties(Properties props) {

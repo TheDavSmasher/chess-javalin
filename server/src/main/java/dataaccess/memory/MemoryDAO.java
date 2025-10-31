@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class MemoryDAO<T> implements ChessDAO {
+public abstract class MemoryDAO<T> implements ChessDAO {
     protected final HashSet<T> data = new HashSet<>();
 
     protected T get(Predicate<T> predicate) {

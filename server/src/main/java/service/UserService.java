@@ -11,8 +11,8 @@ import static utils.Catcher.*;
 
 public class UserService extends Service {
     public static UserEnterResponse register(UserEnterRequest request) throws ServiceException {
-        return enterUser(request, true, () -> {
-            if (userDAO().getUser(request.username()) != null) {
+        return enterUser(request, true, userData -> {
+            if (userData != null) {
                 throwNew(PreexistingException.class);
             }
             userDAO().createUser(
@@ -21,9 +21,8 @@ public class UserService extends Service {
     }
 
     public static UserEnterResponse login(UserEnterRequest request) throws ServiceException {
-        return enterUser(request, false, () -> {
-            if (!(userDAO().getUser(request.username()) instanceof UserData data) ||
-                    !BCrypt.checkpw(request.password(), data.password())) {
+        return enterUser(request, false, userData -> {
+            if (userData == null || !BCrypt.checkpw(request.password(), userData.password())) {
                 throwNew(UnauthorizedException.class);
             }
         });
@@ -40,13 +39,13 @@ public class UserService extends Service {
 
     @FunctionalInterface
     private interface EndpointRunnable {
-        void method() throws ServiceException, DataAccessException;
+        void method(UserData userData) throws ServiceException, DataAccessException;
     }
 
     private static UserEnterResponse enterUser(UserEnterRequest request, boolean checkEmail, EndpointRunnable logic) throws ServiceException {
         return tryCatch(() -> {
             String username = getValidParameters(request.username(), request.password(), checkEmail ? request.email() : ".");
-            logic.method();
+            logic.method(userDAO().getUser(request.username()));
             return new UserEnterResponse(username, authDAO().createAuth(username).authToken());
         });
     }

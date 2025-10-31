@@ -9,9 +9,13 @@ import websocket.commands.UserGameCommand;
 import static utils.Catcher.*;
 
 public abstract class ChessMessageHandler<T extends UserGameCommand> extends MessageHandler<T> {
+    public ChessMessageHandler(GameService gameService) {
+        super(gameService);
+    }
+
     protected void endGame(UserGameCommand command, ChessGame game, String extendMessage) throws ServiceException {
         game.endGame();
-        GameService.updateGameState(command, game);
+        gameService.updateGameState(command, game);
         notifyGame(command.getGameID(), extendMessage + "\nThe game has ended.");
     }
 
@@ -23,7 +27,7 @@ public abstract class ChessMessageHandler<T extends UserGameCommand> extends Mes
     protected GameData checkPlayerGameState(UserGameCommand command, String username, boolean isMakeMove) throws ServiceException {
         String description = isMakeMove ? "make a move" : "resign";
 
-        GameData gameData = GameService.getGame(command.getGameID());
+        GameData gameData = gameService.getGame(command.getGameID());
 
         return gameData.game().isGameOver() ?
                 throwNew(WebsocketException.class, "Game is already finished. You cannot " + description + " anymore.") :

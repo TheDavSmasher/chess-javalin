@@ -6,8 +6,12 @@ import service.ServiceException;
 import service.UserService;
 
 public class RegisterHandler extends UserEnterHandler {
+    public RegisterHandler(UserService service) {
+        super(service);
+    }
+
     @Override
     protected UserEnterResponse serviceCall(UserEnterRequest userEnterRequest, String ignored) throws ServiceException {
-        return UserService.register(userEnterRequest);
+        return service.register(userEnterRequest);
     }
 }

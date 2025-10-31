@@ -7,6 +7,7 @@ import io.javalin.websocket.WsMessageHandler;
 import model.dataaccess.GameData;
 import org.jetbrains.annotations.NotNull;
 import server.websocket.ConnectionManager;
+import service.GameService;
 import service.ServiceException;
 import websocket.commands.UserGameCommand;
 import websocket.messages.LoadGameMessage;
@@ -17,6 +18,12 @@ import static utils.Serializer.serialize;
 
 public abstract class MessageHandler<T extends UserGameCommand> implements WsMessageHandler {
     protected static final ConnectionManager connectionManager = new ConnectionManager();
+
+    protected final GameService gameService;
+
+    protected MessageHandler(GameService gameService) {
+        this.gameService = gameService;
+    }
 
     protected abstract Class<T> getCommandClass();
 

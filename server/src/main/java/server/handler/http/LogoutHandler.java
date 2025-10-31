@@ -4,9 +4,13 @@ import io.javalin.http.Context;
 import service.ServiceException;
 import service.UserService;
 
-public class LogoutHandler extends ResponseHandler<Void> {
+public class LogoutHandler extends ResponseHandler<Void, UserService> {
+    public LogoutHandler(UserService service) {
+        super(service);
+    }
+
     @Override
     public Void serviceHandle(Context context) throws ServiceException {
-        return UserService.logout(getAuthToken(context));
+        return service.logout(getAuthToken(context));
     }
 }

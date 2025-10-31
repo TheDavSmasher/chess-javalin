@@ -4,10 +4,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 
-class AppServiceTest {
+class AppServiceTest extends ServiceTests<AppService> {
+    public AppServiceTest() {
+        super(daoFactory -> new AppService(daoFactory));
+    }
 
     @Test
     void clearData() {
-        Assertions.assertDoesNotThrow(AppService::clearData);
+        Assertions.assertDoesNotThrow(service::clearData);
     }
 }

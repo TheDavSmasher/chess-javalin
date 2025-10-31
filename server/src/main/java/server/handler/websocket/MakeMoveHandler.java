@@ -12,6 +12,10 @@ import websocket.commands.MakeMoveCommand;
 import static utils.Catcher.*;
 
 public class MakeMoveHandler extends ChessMessageHandler<MakeMoveCommand> {
+    public MakeMoveHandler(GameService gameService) {
+        super(gameService);
+    }
+
     @Override
     protected Class<MakeMoveCommand> getCommandClass() {
         return MakeMoveCommand.class;
@@ -28,7 +32,7 @@ public class MakeMoveHandler extends ChessMessageHandler<MakeMoveCommand> {
             game.makeMove(move); return null;
         }, InvalidMoveException.class, WebsocketException.class);
 
-        GameService.updateGameState(command, game);
+        gameService.updateGameState(command, game);
 
         loadGame(gameData, null);
 

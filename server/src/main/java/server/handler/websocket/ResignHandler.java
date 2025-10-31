@@ -1,11 +1,16 @@
 package server.handler.websocket;
 
 import chess.ChessGame;
+import service.GameService;
 import service.ServiceException;
 import io.javalin.websocket.WsContext;
 import websocket.commands.ResignCommand;
 
 public class ResignHandler extends ChessMessageHandler<ResignCommand> {
+    public ResignHandler(GameService gameService) {
+        super(gameService);
+    }
+
     @Override
     protected Class<ResignCommand> getCommandClass() {
         return ResignCommand.class;

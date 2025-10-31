@@ -1,5 +1,7 @@
 package server;
 
+import dataaccess.DAOFactory;
+import dataaccess.sql.SQLDAOFactory;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
@@ -17,22 +19,28 @@ public class Server {
 
     private final Javalin javalin;
 
-    private final WebsocketMessageHandlerFactory websocketMessageHandlers = new WebsocketMessageHandlerFactory();
+    private final WebsocketMessageHandlerFactory websocketMessageHandlers;
 
     public Server() {
+        DAOFactory daoFactory = new SQLDAOFactory();
+        AppService appService = new AppService(daoFactory);
+        UserService userService = new UserService(daoFactory);
+        GameService gameService = new GameService(daoFactory);
+        websocketMessageHandlers = new WebsocketMessageHandlerFactory(gameService);
+
         javalin = Javalin.create(config -> {
             config.staticFiles.add("web");
             config.jsonMapper(new JavalinGson());
         });
 
         // Register your endpoints and exception handlers here.
-        javalin.delete("/db", new ClearHandler())
-               .post("/user", new RegisterHandler())
-               .post("/session", new LoginHandler())
-               .delete("/session", new LogoutHandler())
-               .get("/game", new ListGameHandler())
-               .post("/game", new CreateGameHandler())
-               .put("/game", new JoinGameHandler())
+        javalin.delete("/db", new ClearHandler(appService))
+               .post("/user", new RegisterHandler(userService))
+               .post("/session", new LoginHandler(userService))
+               .delete("/session", new LogoutHandler(userService))
+               .get("/game", new ListGameHandler(gameService))
+               .post("/game", new CreateGameHandler(gameService))
+               .put("/game", new JoinGameHandler(gameService))
                .exception(ServiceException.class, this::handleServerException)
                .ws("/ws", this::setupWebsocket)
                .wsException(ServiceException.class, this::handleWebsocketException);

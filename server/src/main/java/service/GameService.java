@@ -1,6 +1,7 @@
 package service;
 
 import chess.ChessGame;
+import dataaccess.DAOFactory;
 import model.dataaccess.GameData;
 import model.request.CreateGameRequest;
 import model.request.JoinGameRequest;
@@ -13,20 +14,24 @@ import static utils.Catcher.*;
 import static utils.Serializer.serialize;
 
 public class GameService extends Service {
-    public static ListGamesResponse getAllGames(String authToken) throws ServiceException {
+    public GameService(DAOFactory daoFactory) {
+        super(daoFactory);
+    }
+
+    public ListGamesResponse getAllGames(String authToken) throws ServiceException {
         return tryAuthorized(authToken, () -> new ListGamesResponse(gameDAO().listGames()));
     }
 
-    public static CreateGameResponse createGame(CreateGameRequest request, String authToken) throws ServiceException {
+    public CreateGameResponse createGame(CreateGameRequest request, String authToken) throws ServiceException {
         return tryAuthorized(authToken, () ->
                 new CreateGameResponse(gameDAO().createGame(getValidParameters(request.gameName())).gameID()));
     }
 
-    public static GameData getGame(int gameID) throws ServiceException {
+    public GameData getGame(int gameID) throws ServiceException {
         return tryCatch(() -> gameDAO().getGame(gameID) instanceof GameData data ? data : throwNew(BadRequestException.class));
     }
 
-    public static Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
+    public Void joinGame(JoinGameRequest request, String authToken) throws ServiceException {
         return updateGameConnection(authToken, request.gameID(), true, (oldGame, username) ->
                 (switch (getValidParameters(request.playerColor()).toUpperCase()) {
                     case "WHITE" -> oldGame.whiteUsername();
@@ -38,7 +43,7 @@ public class GameService extends Service {
     }
 
     //region WebSocket
-    public static void leaveGame(LeaveCommand command) throws ServiceException {
+    public void leaveGame(LeaveCommand command) throws ServiceException {
         updateGameConnection(command.getAuthToken(), command.getGameID(), false, (oldGame, username) ->
                 oldGame.game().isGameOver() ? null
                         : username.equals(oldGame.whiteUsername()) ? "WHITE"
@@ -47,7 +52,7 @@ public class GameService extends Service {
         );
     }
 
-    public static void updateGameState(UserGameCommand command, ChessGame game) throws ServiceException {
+    public void updateGameState(UserGameCommand command, ChessGame game) throws ServiceException {
         tryAuthorized(command.getAuthToken(), _ -> gameDAO().updateGameBoard(command.getGameID(), serialize(game)));
     }
     //endregion
@@ -57,7 +62,7 @@ public class GameService extends Service {
         String update(GameData oldGame, String username) throws ServiceException;
     }
 
-    private static Void updateGameConnection(String authToken, int gameID, boolean isJoining, GameJoinUpdate color) throws ServiceException {
+    private Void updateGameConnection(String authToken, int gameID, boolean isJoining, GameJoinUpdate color) throws ServiceException {
         return tryAuthorized(authToken, username -> {
             if (color.update(getGame(gameID), username) instanceof String playerColor) {
                 gameDAO().updateGamePlayer(gameID, playerColor, isJoining ? username : null);

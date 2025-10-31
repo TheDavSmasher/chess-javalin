@@ -1,7 +1,13 @@
 package service;
 
+import dataaccess.DAOFactory;
+
 public class AppService extends Service {
-    public static Void clearData() throws ServiceException {
+    public AppService(DAOFactory daoFactory) {
+        super(daoFactory);
+    }
+
+    public Void clearData() throws ServiceException {
         return tryCatch(() -> {
             authDAO().clear();
             userDAO().clear();

@@ -5,10 +5,14 @@ import model.response.CreateGameResponse;
 import service.ServiceException;
 import service.GameService;
 
-public class CreateGameHandler extends RequestHandler<CreateGameRequest, CreateGameResponse> {
+public class CreateGameHandler extends RequestHandler<CreateGameRequest, CreateGameResponse, GameService> {
+    public CreateGameHandler(GameService service) {
+        super(service);
+    }
+
     @Override
     protected CreateGameResponse serviceCall(CreateGameRequest createGameRequest, String authToken) throws ServiceException {
-        return GameService.createGame(createGameRequest, authToken);
+        return service.createGame(createGameRequest, authToken);
     }
 
     @Override

@@ -2,8 +2,10 @@ package service;
 
 import dataaccess.DataAccessException;
 import model.dataaccess.AuthData;
+import model.dataaccess.UserData;
 import model.request.UserEnterRequest;
 import model.response.UserEnterResponse;
+import org.mindrot.jbcrypt.BCrypt;
 
 import static utils.Catcher.*;
 
@@ -13,13 +15,15 @@ public class UserService extends Service {
             if (userDAO().getUser(request.username()) != null) {
                 throwNew(PreexistingException.class);
             }
-            userDAO().createUser(request.username(), request.password(), request.email());
+            userDAO().createUser(
+                    request.username(), BCrypt.hashpw(request.password(), BCrypt.gensalt()), request.email());
         });
     }
 
     public static UserEnterResponse login(UserEnterRequest request) throws ServiceException {
         return enterUser(request, false, () -> {
-            if (userDAO().getUser(request.username(), request.password()) == null) {
+            if (!(userDAO().getUser(request.username()) instanceof UserData data) ||
+                    !BCrypt.checkpw(request.password(), data.password())) {
                 throwNew(UnauthorizedException.class);
             }
         });

@@ -3,7 +3,6 @@ package dataaccess.sql;
 import dataaccess.DataAccessObject.*;
 import dataaccess.DataAccessException;
 import model.dataaccess.UserData;
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -27,15 +26,9 @@ public class SQLUserDAO extends SQLDAO implements UserDAO {
     }
 
     @Override
-    public UserData getUser(String username, String password) throws DataAccessException {
-        return getUser(username) instanceof UserData userData && BCrypt.checkpw(password, userData.password())
-                ? userData : null;
-    }
-
-    @Override
     public void createUser(String username, String password, String email) throws DataAccessException {
         tryInsert("username, password, email", SQLDAO::confirmUpdate,
-                username, BCrypt.hashpw(password, BCrypt.gensalt()), email);
+                username, password, email);
     }
 
     @Override

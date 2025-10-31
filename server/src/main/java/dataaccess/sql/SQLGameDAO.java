@@ -32,8 +32,7 @@ public class SQLGameDAO extends SQLDAO implements GameDAO {
                 String white = rs.getString("whiteUsername");
                 String black = rs.getString("blackUsername");
                 String name = rs.getString("gameName");
-
-                gameList.add(GameData.forList(id, white, black, name));
+                gameList.add(new GameData(id, white, black, name, null));
             }
             return gameList;
         });

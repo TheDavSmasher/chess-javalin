@@ -11,7 +11,7 @@ public class MemoryGameDAO extends MemoryDAO<GameData> implements GameDAO {
     public ArrayList<GameData> listGames() {
         ArrayList<GameData> gameList = new ArrayList<>();
         for (GameData game : data) {
-            gameList.add(GameData.forList(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName()));
+            gameList.add(game.forList());
         }
         gameList.sort(Comparator.comparingInt(GameData::gameID));
         return gameList;

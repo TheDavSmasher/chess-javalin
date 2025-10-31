@@ -20,7 +20,7 @@ public abstract class ResponseHandler<T, S extends Service> implements Handler {
 
     protected abstract T serviceHandle(Context context) throws ServiceException;
 
-    protected static String getAuthToken(Context context) {
+    protected String getAuthToken(Context context) {
         return context.header("authorization");
     }
 }

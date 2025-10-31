@@ -13,7 +13,7 @@ public class MemoryDAO<T> implements ChessDAO {
         return data.stream().filter(predicate).findFirst().orElse(null);
     }
 
-    protected T get(Function<T, Object> factor, Object compared) {
+    protected <O> T get(Function<T, O> factor, O compared) {
         return get(value -> factor.apply(value).equals(compared));
     }
 
@@ -22,7 +22,7 @@ public class MemoryDAO<T> implements ChessDAO {
         return value;
     }
 
-    protected void remove(Function<T, Object> factor, Object compared) {
+    protected <O> void remove(Function<T, O> factor, O compared) {
         data.removeIf(value -> factor.apply(value).equals(compared));
     }
 

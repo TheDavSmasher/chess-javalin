@@ -3,6 +3,7 @@ package service;
 import dataaccess.DAOFactory;
 import dataaccess.sql.SQLDAOFactory;
 import org.junit.jupiter.api.BeforeEach;
+import service.exception.ServiceException;
 
 import java.util.function.Function;
 

@@ -3,10 +3,12 @@ package service;
 import dataaccess.DAOFactory;
 import dataaccess.DataAccessException;
 import dataaccess.DataAccessObject.*;
-import dataaccess.memory.*;
-import dataaccess.sql.*;
 import model.dataaccess.AuthData;
 import org.eclipse.jetty.util.StringUtil;
+import service.exception.BadRequestException;
+import service.exception.ServiceException;
+import service.exception.UnauthorizedException;
+import service.exception.UnexpectedException;
 
 import java.util.Arrays;
 

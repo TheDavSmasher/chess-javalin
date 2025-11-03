@@ -1,4 +1,4 @@
-package server.handler.websocket;
+package server.websocket;
 
 import chess.ChessGame;
 import io.javalin.websocket.WsContext;
@@ -6,9 +6,8 @@ import io.javalin.websocket.WsMessageContext;
 import io.javalin.websocket.WsMessageHandler;
 import model.dataaccess.GameData;
 import org.jetbrains.annotations.NotNull;
-import server.websocket.ConnectionManager;
 import service.GameService;
-import service.ServiceException;
+import service.exception.ServiceException;
 import websocket.commands.UserGameCommand;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.Notification;

@@ -6,6 +6,9 @@ import model.dataaccess.UserData;
 import model.request.UserEnterRequest;
 import model.response.UserEnterResponse;
 import org.mindrot.jbcrypt.BCrypt;
+import service.exception.PreexistingException;
+import service.exception.ServiceException;
+import service.exception.UnauthorizedException;
 
 import static utils.Catcher.*;
 

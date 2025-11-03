@@ -7,6 +7,9 @@ import model.request.CreateGameRequest;
 import model.request.JoinGameRequest;
 import model.response.CreateGameResponse;
 import model.response.ListGamesResponse;
+import service.exception.BadRequestException;
+import service.exception.PreexistingException;
+import service.exception.ServiceException;
 import websocket.commands.LeaveCommand;
 import websocket.commands.UserGameCommand;
 

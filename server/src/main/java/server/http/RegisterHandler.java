@@ -1,8 +1,8 @@
-package server.handler.http;
+package server.http;
 
 import model.request.UserEnterRequest;
 import model.response.UserEnterResponse;
-import service.ServiceException;
+import service.exception.ServiceException;
 import service.UserService;
 
 public class RegisterHandler extends UserEnterHandler {

@@ -1,4 +1,4 @@
-package server.handler.websocket;
+package server.websocket;
 
 import service.GameService;
 import utils.EnumObjectFactory;

@@ -10,9 +10,13 @@ import io.javalin.websocket.WsConfig;
 import io.javalin.websocket.WsContext;
 import io.javalin.websocket.WsMessageContext;
 import model.response.ErrorResponse;
-import server.handler.http.*;
-import server.handler.websocket.WebsocketMessageHandlerFactory;
+import server.http.*;
+import server.websocket.WebsocketMessageHandlerFactory;
 import service.*;
+import service.exception.BadRequestException;
+import service.exception.PreexistingException;
+import service.exception.ServiceException;
+import service.exception.UnauthorizedException;
 import websocket.commands.UserGameCommand;
 
 public class Server {

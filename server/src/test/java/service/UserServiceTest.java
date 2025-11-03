@@ -4,6 +4,10 @@ import model.request.UserEnterRequest;
 import model.response.UserEnterResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import service.exception.BadRequestException;
+import service.exception.PreexistingException;
+import service.exception.ServiceException;
+import service.exception.UnauthorizedException;
 
 class UserServiceTest extends ServiceTests<UserService> {
 

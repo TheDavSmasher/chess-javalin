@@ -1,8 +1,8 @@
-package server.handler.websocket;
+package server.websocket;
 
 import chess.ChessGame;
 import model.dataaccess.GameData;
-import service.ServiceException;
+import service.exception.ServiceException;
 import io.javalin.websocket.WsContext;
 import service.GameService;
 import websocket.commands.ConnectCommand;

@@ -1,6 +1,6 @@
-package server.handler.websocket;
+package server.websocket;
 
-import service.ServiceException;
+import service.exception.ServiceException;
 
 public class WebsocketException extends ServiceException {
     public WebsocketException(String message) {

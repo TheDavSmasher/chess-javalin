@@ -1,10 +1,10 @@
-package server.handler.http;
+package server.http;
 
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.HttpStatus;
 import service.Service;
-import service.ServiceException;
+import service.exception.ServiceException;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class ResponseHandler<T, S extends Service> implements Handler {

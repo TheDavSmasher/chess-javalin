@@ -9,6 +9,9 @@ import model.response.ListGamesResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import service.exception.BadRequestException;
+import service.exception.ServiceException;
+import service.exception.UnauthorizedException;
 
 import java.util.ArrayList;
 

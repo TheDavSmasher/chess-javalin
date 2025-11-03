@@ -1,6 +1,6 @@
-package server.handler.websocket;
+package server.websocket;
 
-import service.ServiceException;
+import service.exception.ServiceException;
 import io.javalin.websocket.WsContext;
 import service.GameService;
 import websocket.commands.LeaveCommand;

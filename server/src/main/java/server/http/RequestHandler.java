@@ -1,8 +1,8 @@
-package server.handler.http;
+package server.http;
 
 import io.javalin.http.Context;
 import service.Service;
-import service.ServiceException;
+import service.exception.ServiceException;
 
 public abstract class RequestHandler<T, U, S extends Service>  extends ResponseHandler<U, S> {
     protected RequestHandler(S service) {

@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.DAOFactory;
+import service.exception.ServiceException;
 
 public class AppService extends Service {
     public AppService(DAOFactory daoFactory) {

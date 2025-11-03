@@ -1,7 +1,7 @@
-package server.handler.http;
+package server.http;
 
 import io.javalin.http.Context;
-import service.ServiceException;
+import service.exception.ServiceException;
 import service.AppService;
 
 public class ClearHandler extends ResponseHandler<Void, AppService> {

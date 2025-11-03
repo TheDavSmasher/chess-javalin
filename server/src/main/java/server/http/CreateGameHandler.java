@@ -1,8 +1,8 @@
-package server.handler.http;
+package server.http;
 
 import model.request.CreateGameRequest;
 import model.response.CreateGameResponse;
-import service.ServiceException;
+import service.exception.ServiceException;
 import service.GameService;
 
 public class CreateGameHandler extends RequestHandler<CreateGameRequest, CreateGameResponse, GameService> {

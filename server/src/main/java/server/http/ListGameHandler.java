@@ -1,8 +1,8 @@
-package server.handler.http;
+package server.http;
 
 import io.javalin.http.Context;
 import model.response.ListGamesResponse;
-import service.ServiceException;
+import service.exception.ServiceException;
 import service.GameService;
 
 public class ListGameHandler extends ResponseHandler<ListGamesResponse, GameService> {

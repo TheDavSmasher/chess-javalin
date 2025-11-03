@@ -7,6 +7,7 @@ public final class Catcher {
     //region Throwing
     private static final Class<?>[] FULL_ERROR = {String.class, Throwable.class};
     private static final Class<?>[] MSG_ERROR = {String.class};
+    private static final Class<?>[] NO_ERROR = {};
 
     public static <T, E extends Exception> T throwNew(Class<E> exceptionClass, String message) throws E {
         createError(exceptionClass, MSG_ERROR, message);
@@ -14,7 +15,7 @@ public final class Catcher {
     }
 
     public static <T, E extends Exception> T throwNew(Class<E> exceptionClass) throws E {
-        createError(exceptionClass, new Class[0]);
+        createError(exceptionClass, NO_ERROR);
         return null;
     }
     //endregion

@@ -2,7 +2,7 @@ package server.websocket;
 
 import chess.ChessGame;
 import model.dataaccess.GameData;
-import service.exception.ServiceException;
+import service.exception.*;
 import service.GameService;
 import websocket.commands.UserGameCommand;
 
@@ -21,7 +21,7 @@ public abstract class ChessMessageHandler<T extends UserGameCommand> extends Mes
 
     protected String checkConnection(String authToken) throws ServiceException {
         return connectionManager.getFromUsers(authToken) instanceof String username ?
-                username : throwNew(WebsocketException.class, "You are unauthorized.");
+                username : throwNew(UnauthorizedException.class);
     }
 
     protected GameData checkPlayerGameState(UserGameCommand command, String username, boolean isMakeMove) throws ServiceException {

@@ -23,10 +23,10 @@ public final class WebsocketMessageHandlerFactory extends EnumObjectFactory<Comm
     @Override
     protected MessageHandler<? extends UserGameCommand> generateValue(CommandType key) {
         return switch (key) {
-            case CONNECT -> new ConnectHandler(gameService);
+            case CONNECT   -> new ConnectHandler(gameService);
             case MAKE_MOVE -> new MakeMoveHandler(gameService);
-            case LEAVE -> new LeaveHandler(gameService);
-            case RESIGN -> new ResignHandler(gameService);
+            case LEAVE     -> new LeaveHandler(gameService);
+            case RESIGN    -> new ResignHandler(gameService);
         };
     }
 }

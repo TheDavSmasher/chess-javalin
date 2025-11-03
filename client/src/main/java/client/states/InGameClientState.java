@@ -117,8 +117,8 @@ public class InGameClientState extends ChessClientState implements ServerMessage
     public void notify(ServerMessage message) {
         switch (message.getServerMessageType()) {
             case NOTIFICATION -> displayNotification((Notification) message);
-            case ERROR -> displayError((ErrorMessage) message);
-            case LOAD_GAME -> loadGame((LoadGameMessage) message);
+            case ERROR        -> displayError((ErrorMessage) message);
+            case LOAD_GAME    -> loadGame((LoadGameMessage) message);
         }
     }
 

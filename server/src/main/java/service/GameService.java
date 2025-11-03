@@ -36,7 +36,7 @@ public class GameService extends Service {
                 (switch (getValidParameters(request.playerColor()).toUpperCase()) {
                     case "WHITE" -> oldGame.whiteUsername();
                     case "BLACK" -> oldGame.blackUsername();
-                    default -> throwNew(BadRequestException.class);
+                    default      -> throwNew(BadRequestException.class);
                 }) instanceof String gameUser && !username.equals(gameUser)
                         ? throwNew(PreexistingException.class) : request.playerColor()
         );

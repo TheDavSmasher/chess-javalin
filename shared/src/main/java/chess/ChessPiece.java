@@ -55,10 +55,10 @@ public record ChessPiece(ChessGame.TeamColor color, PieceType type) {
         String s = switch (type) {
             case BISHOP -> "b";
             case KNIGHT -> "n";
-            case ROOK -> "r";
-            case KING -> "k";
-            case PAWN -> "p";
-            case QUEEN -> "q";
+            case ROOK   -> "r";
+            case KING   -> "k";
+            case PAWN   -> "p";
+            case QUEEN  -> "q";
         };
         return color == ChessGame.TeamColor.WHITE ? s.toUpperCase() : s;
     }

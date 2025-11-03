@@ -72,9 +72,9 @@ public abstract class SQLDAO implements ChessDAO {
         PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         for (int i = 0; i < params.length;) {
             switch (params[i]) {
-                case String s -> statement.setString(++i, s);
+                case String s  -> statement.setString(++i, s);
                 case Integer s -> statement.setInt(++i, s);
-                case null, default -> statement.setNull(++i, NULL);
+                default        -> statement.setNull(++i, NULL);
             }
         }
         return statement;

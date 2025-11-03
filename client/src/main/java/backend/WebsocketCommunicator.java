@@ -30,8 +30,8 @@ public class WebsocketCommunicator extends Endpoint implements MessageHandler.Wh
         Class<? extends ServerMessage> messageClass =
             switch (deserialize(message, ServerMessage.class).getServerMessageType()) {
                 case NOTIFICATION -> Notification.class;
-                case LOAD_GAME -> LoadGameMessage.class;
-                case ERROR -> ErrorMessage.class;
+                case LOAD_GAME    -> LoadGameMessage.class;
+                case ERROR        -> ErrorMessage.class;
             };
         observer.notify(deserialize(message, messageClass));
     }

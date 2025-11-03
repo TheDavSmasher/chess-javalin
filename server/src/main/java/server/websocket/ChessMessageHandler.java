@@ -26,14 +26,17 @@ public abstract class ChessMessageHandler<T extends UserGameCommand> extends Mes
 
     protected GameData checkPlayerGameState(UserGameCommand command, String username, boolean isMakeMove) throws ServiceException {
         String description = isMakeMove ? "make a move" : "resign";
-
         GameData gameData = gameService.getGame(command.getGameID());
 
         return gameData.game().isGameOver() ?
-                throwNew(WebsocketException.class, "Game is already finished. You cannot " + description + " anymore.") :
+                throwNewWs("Game is already finished. You cannot " + description + " anymore.") :
                 getPlayerColor(username, gameData) instanceof ChessGame.TeamColor color ?
                     color != gameData.game().getTeamTurn() && isMakeMove ?
-                    throwNew(WebsocketException.class, "It is not your turn to make a move.") : gameData :
-                throwNew(WebsocketException.class,"You need to be a player to " + description + ".");
+                    throwNewWs("It is not your turn to make a move.") : gameData :
+                throwNewWs("You need to be a player to " + description + ".");
+    }
+
+    private static <T> T throwNewWs(String message) throws WebsocketException {
+        return throwNew(WebsocketException.class, message);
     }
 }

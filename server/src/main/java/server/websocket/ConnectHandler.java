@@ -8,8 +8,8 @@ import service.GameService;
 import websocket.commands.ConnectCommand;
 
 public class ConnectHandler extends MessageHandler<ConnectCommand> {
-    public ConnectHandler(GameService gameService) {
-        super(gameService);
+    public ConnectHandler(GameService gameService, ConnectionManager connectionManager) {
+        super(gameService, connectionManager);
     }
 
     @Override

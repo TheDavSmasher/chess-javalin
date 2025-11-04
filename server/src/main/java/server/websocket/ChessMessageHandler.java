@@ -9,8 +9,8 @@ import websocket.commands.UserGameCommand;
 import static utils.Catcher.*;
 
 public abstract class ChessMessageHandler<T extends UserGameCommand> extends MessageHandler<T> {
-    public ChessMessageHandler(GameService gameService) {
-        super(gameService);
+    public ChessMessageHandler(GameService gameService, ConnectionManager connectionManager) {
+        super(gameService, connectionManager);
     }
 
     protected void endGame(UserGameCommand command, ChessGame game, String extendMessage) throws ServiceException {

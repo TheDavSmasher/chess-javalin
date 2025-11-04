@@ -12,8 +12,8 @@ import websocket.commands.MakeMoveCommand;
 import static utils.Catcher.*;
 
 public class MakeMoveHandler extends ChessMessageHandler<MakeMoveCommand> {
-    public MakeMoveHandler(GameService gameService) {
-        super(gameService);
+    public MakeMoveHandler(GameService gameService, ConnectionManager connectionManager) {
+        super(gameService, connectionManager);
     }
 
     @Override

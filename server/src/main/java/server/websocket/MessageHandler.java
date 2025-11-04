@@ -16,12 +16,12 @@ import websocket.messages.ServerMessage;
 import static utils.Serializer.serialize;
 
 public abstract class MessageHandler<T extends UserGameCommand> implements WsMessageHandler {
-    protected static final ConnectionManager connectionManager = new ConnectionManager();
-
+    protected final ConnectionManager connectionManager;
     protected final GameService gameService;
 
-    protected MessageHandler(GameService gameService) {
+    protected MessageHandler(GameService gameService, ConnectionManager connectionManager) {
         this.gameService = gameService;
+        this.connectionManager = connectionManager;
     }
 
     protected abstract Class<T> getCommandClass();

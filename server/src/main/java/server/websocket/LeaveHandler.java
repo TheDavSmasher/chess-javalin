@@ -6,8 +6,8 @@ import service.GameService;
 import websocket.commands.LeaveCommand;
 
 public class LeaveHandler extends ChessMessageHandler<LeaveCommand> {
-    public LeaveHandler(GameService gameService) {
-        super(gameService);
+    public LeaveHandler(GameService gameService, ConnectionManager connectionManager) {
+        super(gameService, connectionManager);
     }
 
     @Override

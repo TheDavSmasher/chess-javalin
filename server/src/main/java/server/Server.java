@@ -11,6 +11,7 @@ import io.javalin.websocket.WsContext;
 import io.javalin.websocket.WsMessageContext;
 import model.response.ErrorResponse;
 import server.http.*;
+import server.websocket.ConnectionManager;
 import server.websocket.WebsocketMessageHandlerFactory;
 import service.*;
 import service.exception.BadRequestException;
@@ -30,7 +31,9 @@ public class Server {
         AppService appService = new AppService(daoFactory);
         UserService userService = new UserService(daoFactory);
         GameService gameService = new GameService(daoFactory);
-        websocketMessageHandlers = new WebsocketMessageHandlerFactory(gameService);
+
+        ConnectionManager connectionManager = new ConnectionManager();
+        websocketMessageHandlers = new WebsocketMessageHandlerFactory(gameService, connectionManager);
 
         javalin = Javalin.create(config -> {
             config.staticFiles.add("web");

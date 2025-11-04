@@ -7,8 +7,8 @@ import io.javalin.websocket.WsContext;
 import websocket.commands.ResignCommand;
 
 public class ResignHandler extends ChessMessageHandler<ResignCommand> {
-    public ResignHandler(GameService gameService) {
-        super(gameService);
+    public ResignHandler(GameService gameService, ConnectionManager connectionManager) {
+        super(gameService, connectionManager);
     }
 
     @Override

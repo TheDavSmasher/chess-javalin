@@ -36,7 +36,7 @@ public abstract class ChessMessageHandler<T extends UserGameCommand> extends Mes
                 throwNewWs("You need to be a player to " + description + ".");
     }
 
-    private static <T> T throwNewWs(String message) throws WebsocketException {
+    private <Ts> Ts throwNewWs(String message) throws WebsocketException {
         return throwNew(WebsocketException.class, message);
     }
 }

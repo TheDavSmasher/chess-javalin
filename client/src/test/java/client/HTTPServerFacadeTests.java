@@ -1,6 +1,6 @@
 package client;
 
-import backend.ServerFacade;
+import backend.http.HTTPServerFacade;
 import model.dataaccess.GameData;
 import model.response.CreateGameResponse;
 import org.junit.jupiter.api.*;
@@ -10,10 +10,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class ServerFacadeTests {
+public class HTTPServerFacadeTests {
 
     private static Server server;
-    private static ServerFacade serverFacade;
+    private static HTTPServerFacade serverFacade;
     private final String username = "davhig";
     private final String password = "passTest";
     private final String email = "davhig@gmeia.com";
@@ -27,7 +27,7 @@ public class ServerFacadeTests {
         server = new Server();
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
-        serverFacade = new ServerFacade(port);
+        serverFacade = new HTTPServerFacade(port);
     }
 
     @BeforeEach

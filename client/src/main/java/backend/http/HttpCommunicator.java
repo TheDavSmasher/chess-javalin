@@ -1,4 +1,4 @@
-package backend;
+package backend.http;
 
 import model.response.ErrorResponse;
 

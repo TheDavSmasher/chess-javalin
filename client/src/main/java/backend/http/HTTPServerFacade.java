@@ -1,5 +1,6 @@
-package backend;
+package backend.http;
 
+import backend.ServerMessageObserver;
 import chess.ChessMove;
 import model.dataaccess.GameData;
 import model.request.*;
@@ -9,15 +10,15 @@ import websocket.commands.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ServerFacade {
+public class HTTPServerFacade {
     private final WebsocketCommunicator websocket;
     private final HttpCommunicator http;
 
-    public ServerFacade() {
+    public HTTPServerFacade() {
         this(8080);
     }
 
-    public ServerFacade(int port) {
+    public HTTPServerFacade(int port) {
         String url = "http://localhost:%d/".formatted(port);
         http = new HttpCommunicator(url);
         websocket = new WebsocketCommunicator(url);

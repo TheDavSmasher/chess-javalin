@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class HTTPServerFacadeTests {
+public class ServerFacadeTests {
 
     private static Server server;
     private static ServerFacade serverFacade;

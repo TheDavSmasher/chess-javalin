@@ -1,6 +1,6 @@
 package backend.http;
 
-import backend.ServerMessageObserver;
+import backend.ServerFacade.ServerMessageObserver;
 import jakarta.websocket.*;
 import websocket.commands.UserGameCommand;
 import websocket.messages.*;

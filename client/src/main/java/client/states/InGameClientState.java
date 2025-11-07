@@ -2,7 +2,7 @@ package client.states;
 
 import java.io.IOException;
 
-import backend.ServerMessageObserver;
+import backend.ServerFacade.ServerMessageObserver;
 import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPiece;

@@ -2,6 +2,7 @@ package backend;
 
 import chess.ChessMove;
 import model.dataaccess.GameData;
+import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -19,4 +20,8 @@ public interface ServerFacade {
     void makeMove(String authToken, int gameID, ChessMove move) throws IOException ;
     void leaveGame(String authToken, int gameID) throws IOException;
     void resignGame(String authToken, int gameID) throws IOException;
+
+    interface ServerMessageObserver {
+        void notify(ServerMessage message);
+    }
 }

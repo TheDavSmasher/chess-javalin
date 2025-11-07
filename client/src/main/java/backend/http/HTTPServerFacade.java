@@ -1,7 +1,6 @@
 package backend.http;
 
 import backend.ServerFacade;
-import backend.ServerMessageObserver;
 import chess.ChessMove;
 import model.dataaccess.GameData;
 import model.request.*;

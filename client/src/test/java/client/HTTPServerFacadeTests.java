@@ -1,8 +1,8 @@
 package client;
 
+import backend.ServerFacade;
 import backend.http.HTTPServerFacade;
 import model.dataaccess.GameData;
-import model.response.CreateGameResponse;
 import org.junit.jupiter.api.*;
 import server.Server;
 
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class HTTPServerFacadeTests {
 
     private static Server server;
-    private static HTTPServerFacade serverFacade;
+    private static ServerFacade serverFacade;
     private final String username = "davhig";
     private final String password = "passTest";
     private final String email = "davhig@gmeia.com";
@@ -44,7 +44,7 @@ public class HTTPServerFacadeTests {
     @Test
     public void registerTest() {
         Assertions.assertDoesNotThrow(() ->
-                Assertions.assertNotNull(serverFacade.register(username, password, email).authToken()));
+                Assertions.assertNotNull(serverFacade.register(username, password, email)));
     }
 
     @Test
@@ -61,7 +61,7 @@ public class HTTPServerFacadeTests {
     public void LoginTest() {
         Assertions.assertDoesNotThrow(() -> serverFacade.register(username, password, email));
 
-        Assertions.assertDoesNotThrow(() -> Assertions.assertNotNull(serverFacade.login(username, password).authToken()));
+        Assertions.assertDoesNotThrow(() -> Assertions.assertNotNull(serverFacade.login(username, password)));
     }
 
     @Test
@@ -76,7 +76,7 @@ public class HTTPServerFacadeTests {
 
     @Test
     public void ListGamesTest() throws IOException {
-        String auth = serverFacade.register(username, password, email).authToken();
+        String auth = serverFacade.register(username, password, email);
         serverFacade.createGame(auth, gameName);
         ArrayList<GameData> expected = new ArrayList<>();
         expected.add(GameData.testEmpty(1, gameName));
@@ -95,7 +95,7 @@ public class HTTPServerFacadeTests {
     public void ListGamesFail() throws IOException {
         Assertions.assertThrows(IOException.class, () -> serverFacade.listGames(wrongAuth));
 
-        String auth = serverFacade.register(username, password, email).authToken();
+        String auth = serverFacade.register(username, password, email);
 
         Assertions.assertThrows(IOException.class, () -> serverFacade.listGames(wrongAuth));
         Assertions.assertTrue(serverFacade.listGames(auth).isEmpty());
@@ -103,22 +103,22 @@ public class HTTPServerFacadeTests {
 
     @Test
     public void CreateGameTest() throws IOException {
-        String auth = serverFacade.register(username, password, email).authToken();
-        Assertions.assertEquals(new CreateGameResponse(1), serverFacade.createGame(auth, gameName));
-        Assertions.assertEquals(new CreateGameResponse(2), serverFacade.createGame(auth, gameName));
+        String auth = serverFacade.register(username, password, email);
+        Assertions.assertEquals(1, serverFacade.createGame(auth, gameName));
+        Assertions.assertEquals(2, serverFacade.createGame(auth, gameName));
     }
 
     @Test
     public void CreateGameFail() throws IOException {
         Assertions.assertThrows(IOException.class, () -> serverFacade.createGame(wrongAuth, gameName));
-        String auth = serverFacade.register(username, password, email).authToken();
+        String auth = serverFacade.register(username, password, email);
         Assertions.assertThrows(IOException.class, () -> serverFacade.createGame(wrongAuth, gameName));
         Assertions.assertThrows(IOException.class, () -> serverFacade.createGame(auth, ""));
     }
 
     @Test
     public void JoinGameTest() throws IOException {
-        String auth = serverFacade.register(username, password, email).authToken();
+        String auth = serverFacade.register(username, password, email);
         serverFacade.createGame(auth, gameName);
         Assertions.assertDoesNotThrow(() -> serverFacade.joinGame(auth, "white", 1));
     }
@@ -127,7 +127,7 @@ public class HTTPServerFacadeTests {
     public void JoinGameFail() throws IOException {
         Assertions.assertThrows(IOException.class, () -> serverFacade.joinGame(wrongAuth, "white", 1));
 
-        String auth = serverFacade.register(username, password, email).authToken();
+        String auth = serverFacade.register(username, password, email);
 
         Assertions.assertThrows(IOException.class, () -> serverFacade.joinGame(auth, "white", 1));
 
@@ -143,11 +143,11 @@ public class HTTPServerFacadeTests {
 
     @Test
     public void LogoutTest() throws IOException {
-        String tempAuth = serverFacade.register(username, password, email).authToken();
+        String tempAuth = serverFacade.register(username, password, email);
 
         Assertions.assertDoesNotThrow(() -> serverFacade.logout(tempAuth));
 
-        String tempAuth2 = serverFacade.login(username,password).authToken();
+        String tempAuth2 = serverFacade.login(username,password);
 
         Assertions.assertDoesNotThrow(() -> serverFacade.logout(tempAuth2));
     }
@@ -156,7 +156,7 @@ public class HTTPServerFacadeTests {
     public void LogoutFail() throws IOException {
         Assertions.assertThrows(IOException.class, () -> serverFacade.logout(wrongAuth));
 
-        String tempAuth = serverFacade.register(username, password, email).authToken();
+        String tempAuth = serverFacade.register(username, password, email);
         serverFacade.logout(tempAuth);
 
         Assertions.assertThrows(IOException.class, () -> serverFacade.logout(tempAuth));

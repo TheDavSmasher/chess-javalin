@@ -1,5 +1,6 @@
 package backend.http;
 
+import backend.ServerFacade;
 import backend.ServerMessageObserver;
 import chess.ChessMove;
 import model.dataaccess.GameData;
@@ -8,9 +9,9 @@ import model.response.*;
 import websocket.commands.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collection;
 
-public class HTTPServerFacade {
+public class HTTPServerFacade implements ServerFacade {
     private final WebsocketCommunicator websocket;
     private final HttpCommunicator http;
 
@@ -24,20 +25,20 @@ public class HTTPServerFacade {
         websocket = new WebsocketCommunicator(url);
     }
 
-    public UserEnterResponse register(String username, String password, String email) throws IOException {
-        return http.doPost("user", new UserEnterRequest(username, password, email), UserEnterResponse.class);
+    public String register(String username, String password, String email) throws IOException {
+        return http.doPost("user", new UserEnterRequest(username, password, email), UserEnterResponse.class).authToken();
     }
 
-    public UserEnterResponse login(String username, String password) throws IOException {
-        return http.doPost("session", new UserEnterRequest(username, password), UserEnterResponse.class);
+    public String login(String username, String password) throws IOException {
+        return http.doPost("session", new UserEnterRequest(username, password), UserEnterResponse.class).authToken();
     }
 
-    public ArrayList<GameData> listGames(String authToken) throws IOException {
+    public Collection<GameData> listGames(String authToken) throws IOException {
         return http.doGet("game", authToken, ListGamesResponse.class).games();
     }
 
-    public CreateGameResponse createGame(String authToken, String gameName) throws IOException {
-        return http.doPost("game", new CreateGameRequest(gameName), authToken, CreateGameResponse.class);
+    public int createGame(String authToken, String gameName) throws IOException {
+        return http.doPost("game", new CreateGameRequest(gameName), authToken, CreateGameResponse.class).gameID();
     }
 
     public void joinGame(String authToken, String color, int gameID) throws IOException {

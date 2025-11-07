@@ -28,12 +28,12 @@ public class PreLoginClientState extends ChessClientState {
 
     private void register(String[] params) throws IOException {
         String username = params[0], password = params[1], email = params[2];
-        enterServer(stateManager.serverFacade.register(username, password, email).authToken());
+        enterServer(stateManager.serverFacade.register(username, password, email));
     }
 
     private void signIn(String[] params) throws IOException {
         String username = params[0], password = params[1];
-        enterServer(stateManager.serverFacade.login(username, password).authToken());
+        enterServer(stateManager.serverFacade.login(username, password));
     }
 
     private void enterServer(String authToken) {

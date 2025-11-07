@@ -1,5 +1,6 @@
 package client.states;
 
+import backend.ServerFacade;
 import backend.http.HTTPServerFacade;
 import client.ClientException;
 
@@ -14,7 +15,7 @@ public class ClientStateManager {
     }
 
     //Utils
-    public final HTTPServerFacade serverFacade = new HTTPServerFacade();
+    public final ServerFacade serverFacade = new HTTPServerFacade();
     public final PrintStream out;
     private final ClientStateFactory clientStates;
 

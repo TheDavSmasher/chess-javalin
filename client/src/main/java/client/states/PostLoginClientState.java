@@ -1,7 +1,7 @@
 package client.states;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collection;
 
 import client.ClientException;
 import client.states.ClientCommandProcessing.*;
@@ -37,7 +37,7 @@ public class PostLoginClientState extends ChessClientState {
     }
 
     private void listGames() throws IOException {
-        ArrayList<GameData> allGames = stateManager.serverFacade.listGames(stateManager.authToken);
+        Collection<GameData> allGames = stateManager.serverFacade.listGames(stateManager.authToken);
         existingGames = new int[allGames.size()];
         stateManager.out.print("Games:");
         int i = 0;

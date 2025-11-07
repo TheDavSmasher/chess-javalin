@@ -1,5 +1,7 @@
 package client;
 
+import client.exceptions.ClientException;
+import client.exceptions.ExitException;
 import client.states.ClientStateManager;
 import ui.EscapeSequences.Format;
 
@@ -11,7 +13,7 @@ import java.util.Scanner;
 
 import static utils.Catcher.*;
 
-public class Repl {
+public class RPL {
     private final PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
     private final ClientStateManager clientStates = new ClientStateManager(out);
     private final Scanner scanner = new Scanner(System.in);

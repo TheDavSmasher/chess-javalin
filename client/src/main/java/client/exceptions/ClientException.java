@@ -1,4 +1,4 @@
-package client;
+package client.exceptions;
 
 public class ClientException extends Exception {
     public ClientException() {}

@@ -2,7 +2,7 @@ package client.states;
 
 import backend.ServerFacade;
 import backend.http.HTTPServerFacade;
-import client.ClientException;
+import client.exceptions.ClientException;
 
 import java.io.IOException;
 import java.io.PrintStream;

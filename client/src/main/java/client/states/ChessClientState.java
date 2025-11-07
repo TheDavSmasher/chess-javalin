@@ -1,6 +1,6 @@
 package client.states;
 
-import client.ClientException;
+import client.exceptions.ClientException;
 import client.states.ClientCommandProcessing.*;
 
 import java.io.IOException;

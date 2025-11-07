@@ -1,7 +1,7 @@
 package client.states;
 
-import client.ClientException;
-import client.FormatException;
+import client.exceptions.ClientException;
+import client.exceptions.FormatException;
 
 import java.io.IOException;
 

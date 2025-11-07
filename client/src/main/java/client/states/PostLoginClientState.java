@@ -3,7 +3,7 @@ package client.states;
 import java.io.IOException;
 import java.util.Collection;
 
-import client.ClientException;
+import client.exceptions.ClientException;
 import client.states.ClientCommandProcessing.*;
 import model.dataaccess.GameData;
 

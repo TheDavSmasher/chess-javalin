@@ -13,7 +13,7 @@ import websocket.messages.LoadGameMessage;
 import websocket.messages.Notification;
 import websocket.messages.ServerMessage;
 
-import static utils.Serializer.serialize;
+import static utils.Serializer.*;
 
 public abstract class MessageHandler<T extends UserGameCommand> implements WsMessageHandler {
     protected final ConnectionManager connectionManager;

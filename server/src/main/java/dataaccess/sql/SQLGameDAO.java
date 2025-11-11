@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static utils.Serializer.deserialize;
-import static utils.Serializer.serialize;
+import static utils.Serializer.*;
 
 public class SQLGameDAO extends SQLDAO implements GameDAO {
     public SQLGameDAO(AtomicBoolean tableCreated) throws DataAccessException {

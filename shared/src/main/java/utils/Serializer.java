@@ -1,9 +1,18 @@
 package utils;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
+import websocket.messages.*;
 
 public final class Serializer {
-    private static final Gson gson = new Gson();
+    private static final Gson gson;
+
+    static {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+
+        gsonBuilder.registerTypeAdapter(ServerMessage.class, new ServerMessageDeserializer());
+
+        gson = gsonBuilder.create();
+    }
 
     public static <T> T deserialize(String json, Class<T> type) {
         return gson.fromJson(json, type);

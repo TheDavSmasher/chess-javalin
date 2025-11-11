@@ -14,7 +14,7 @@ import websocket.commands.LeaveCommand;
 import websocket.commands.UserGameCommand;
 
 import static utils.Catcher.*;
-import static utils.Serializer.serialize;
+import static utils.Serializer.*;
 
 public class GameService extends Service {
     public GameService(DAOFactory daoFactory) {

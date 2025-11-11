@@ -9,8 +9,7 @@ import java.io.IOException;
 import java.net.URI;
 
 import static utils.Catcher.*;
-import static utils.Serializer.deserialize;
-import static utils.Serializer.serialize;
+import static utils.Serializer.*;
 
 public class WebsocketCommunicator extends Endpoint implements MessageHandler.Whole<String> {
     private Session session;
@@ -28,13 +27,7 @@ public class WebsocketCommunicator extends Endpoint implements MessageHandler.Wh
 
     @Override
     public void onMessage(String message) {
-        Class<? extends ServerMessage> messageClass =
-            switch (deserialize(message, ServerMessage.class).getServerMessageType()) {
-                case NOTIFICATION -> Notification.class;
-                case LOAD_GAME    -> LoadGameMessage.class;
-                case ERROR        -> ErrorMessage.class;
-            };
-        observer.notify(deserialize(message, messageClass));
+        observer.notify(deserialize(message, ServerMessage.class));
     }
 
     @Override

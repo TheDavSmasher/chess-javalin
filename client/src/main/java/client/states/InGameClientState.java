@@ -17,7 +17,7 @@ import websocket.messages.Notification;
 import websocket.messages.ServerMessage;
 
 import static utils.Catcher.tryCatchRethrow;
-import static utils.Serializer.deserialize;
+import static utils.Serializer.*;
 
 public class InGameClientState extends ChessClientState implements ServerMessageObserver {
     private static final String moveFormat = "        Format positions column then row, such as G6.";

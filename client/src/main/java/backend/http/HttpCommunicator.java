@@ -11,8 +11,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 
 import static utils.Catcher.*;
-import static utils.Serializer.deserialize;
-import static utils.Serializer.serialize;
+import static utils.Serializer.*;
 
 public record HttpCommunicator(String serverUrl) {
     private static final HttpClient client = HttpClient.newHttpClient();

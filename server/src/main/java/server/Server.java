@@ -41,13 +41,13 @@ public class Server {
         });
 
         // Register your endpoints and exception handlers here.
-        javalin.delete("/db", new ClearHandler(appService))
-               .post("/user", new RegisterHandler(userService))
-               .post("/session", new LoginHandler(userService))
-               .delete("/session", new LogoutHandler(userService))
-               .get("/game", new ListGameHandler(gameService))
-               .post("/game", new CreateGameHandler(gameService))
-               .put("/game", new JoinGameHandler(gameService))
+        javalin.delete( "/db", new ClearHandler(appService))
+               .post(   "/user", new RegisterHandler(userService))
+               .post(   "/session", new LoginHandler(userService))
+               .delete( "/session", new LogoutHandler(userService))
+               .get(    "/game", new ListGameHandler(gameService))
+               .post(   "/game", new CreateGameHandler(gameService))
+               .put(    "/game", new JoinGameHandler(gameService))
                .exception(ServiceException.class, this::handleServerException)
                .ws("/ws", this::setupWebsocket)
                .wsException(ServiceException.class, this::handleWebsocketException);

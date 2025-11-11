@@ -18,48 +18,65 @@ public record HttpCommunicator(String serverUrl) {
     private static final HttpClient client = HttpClient.newHttpClient();
     private static final HttpRequest.Builder standardRequest = HttpRequest.newBuilder().timeout(Duration.ofMillis(5000));
 
+    // region HTTP Methods
     public <T> T doPost(String path, Object body, String authToken, Class<T> responseClass) throws IOException {
-        return doServerMethod(path, getRequestBuilder(authToken).POST(bodyPublisher(body)), responseClass);
+        return makeRequest(HttpMethod.POST, path, body, authToken, responseClass);
     }
 
     public <T> T doPost(String path, Object body, Class<T> responseClass) throws IOException {
-        return doPost(path, body, "", responseClass);
+        return doPost(path, body, null, responseClass);
     }
 
     public void doDelete(String path, String authToken) throws IOException {
-        doServerMethod(path, getRequestBuilder(authToken).DELETE(), null);
+        makeRequest(HttpMethod.DELETE, path, null, authToken, null);
     }
 
     public void doDelete(String path) throws IOException {
-        doDelete(path, "");
+        doDelete(path, null);
     }
 
     public void doPut(String path, Object body, String authToken) throws IOException {
-        doServerMethod(path, getRequestBuilder(authToken).PUT(bodyPublisher(body)), null);
+        makeRequest(HttpMethod.PUT, path, body, authToken, null);
     }
 
     public <T> T doGet(String path, String authToken, Class<T> responseClass) throws IOException {
-        return doServerMethod(path, getRequestBuilder(authToken).GET(), responseClass);
+        return makeRequest(HttpMethod.GET, path, null, authToken, responseClass);
+    }
+    // endregion
+
+    private <T> T makeRequest(HttpMethod method, String path, Object body, String authToken, Class<T> responseClass)
+            throws IOException {
+        return sendRequest(createRequest(method, path, body, authToken), responseClass);
     }
 
-    private <T> T doServerMethod(String path, HttpRequest.Builder builder, Class<T> responseClass) throws IOException {
-        builder.uri(URI.create(serverUrl + path));
+    private HttpRequest createRequest(HttpMethod method, String path, Object body, String authToken) {
+        HttpRequest.Builder builder = standardRequest.copy()
+                .uri(URI.create(serverUrl + path))
+                .method(method.name(), bodyPublisher(body));
+        if (authToken != null) {
+            builder.header("Authorization", authToken);
+        }
+        return builder.build();
+    }
 
+    private static HttpRequest.BodyPublisher bodyPublisher(Object body) {
+        if (body == null) {
+            return HttpRequest.BodyPublishers.noBody();
+        }
+        return HttpRequest.BodyPublishers.ofString(serialize(body));
+    }
+
+    private static <T> T sendRequest(HttpRequest request, Class<T> responseClass) throws IOException {
         HttpResponse<String> response = tryCatchRethrow(
-                () -> client.send(builder.build(), HttpResponse.BodyHandlers.ofString()),
+                () -> client.send(request, HttpResponse.BodyHandlers.ofString()),
                 InterruptedException.class, IOException.class);
 
         if (response.statusCode() != HttpURLConnection.HTTP_OK) {
             throw new IOException(deserialize(response.body(), ErrorResponse.class).message());
         }
-        return responseClass != null ? deserialize(response.body(), responseClass) : null;
-    }
-
-    private static HttpRequest.Builder getRequestBuilder(String authToken) {
-        return standardRequest.copy().header("Authorization", authToken);
-    }
-
-    private static HttpRequest.BodyPublisher bodyPublisher(Object body) {
-        return HttpRequest.BodyPublishers.ofString(serialize(body));
+        if (responseClass == null) {
+            return null;
+        }
+        return deserialize(response.body(), responseClass);
     }
 }

@@ -18,8 +18,8 @@ public final class PieceMoveCalculatorFactory extends EnumObjectFactory<PieceTyp
     @Override
     protected PieceMoveCalculator generateValue(PieceType key) {
         return switch (key) {
-            case BISHOP -> new DiagonalMoveCalculator();
-            case ROOK   -> new CrossMoveCalculator();
+            case BISHOP -> new BishopMoveCalculator();
+            case ROOK   -> new RookMoveCalculator();
             case QUEEN  -> new QueenMoveCalculator();
             case KING   -> new KingMoveCalculator();
             case KNIGHT -> new KnightMoveCalculator();

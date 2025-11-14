@@ -9,49 +9,57 @@ import java.util.Collection;
 
 import static chess.ChessGame.*;
 
-public class PawnMoveCalculator extends ProgrammaticMoveCalculator {
+public class PawnMoveCalculator extends SymmetricCalculator {
     @Override
-    protected boolean collectMovesInDirection(
-            ChessBoard board, ChessPosition start, Collection<ChessMove> endMoves,
-            boolean flipA, boolean flipB, boolean ignored) {
-        return super.collectMovesInDirection(board, start, endMoves, flipA, flipB,
-                board.getPiece(start).color() == TeamColor.BLACK);
+    protected int getAxes() {
+        return 2;
     }
 
-    protected Boolean checkAndAdd(Collection<ChessMove> endMoves, ChessBoard board,
-                                  ChessPosition start, ChessPosition temp, boolean flipA) {
-        ChessPiece atTemp = board.getPiece(temp);
+    @Override
+    protected boolean isContinuous() {
+        return false;
+    }
+
+    @Override
+    protected IntTuple getEndOffset(ChessBoard board, ChessPosition start, int offset, boolean... flips) {
+        boolean straight = flips[0],
+                mirror = flips[1];
         TeamColor color = board.getPiece(start).color();
-        if (flipA && atTemp != null) {
-            return true;
-        }
-        if (flipA || atTemp != null && atTemp.color() != color) {
-            ChessPiece.PieceType[] pieces = temp.getRow() == getTeamInitialRow(getOtherTeam(color))
-                    ? promotions : new ChessPiece.PieceType[] { null };
-            for (var pieceType : pieces) {
-                endMoves.add(new ChessMove(start, temp, pieceType));
+        IntTuple off = new IntTuple(
+                getTeamDirection(color),
+                boolMod(mirror));
+
+        if (straight) {
+            off = off.flatten();
+            if (mirror) {
+                if (start.getRow() != getTeamInitialRow(color) + off.x() ||
+                        board.getPiece(newPosition(start, off)) != null) {
+                    return null;
+                }
+                off = new IntTuple(off.x() * 2, off.y());
             }
         }
-        return flipA && start.getRow() != getTeamInitialRow(color) + getTeamDirection(color);
-    }
-
-    @Override
-    protected int getLimit(ChessPosition start, boolean flipA, boolean flipB){
-        return 1;
-    }
-
-    @Override
-    protected boolean ignoreThird(){
-        return true;
-    }
-
-    @Override
-    protected int getDirMod(boolean isRow, boolean flipA, boolean flipB, boolean flipC) {
-        return isRow ? getOffset(flipA && flipB) * getMod(flipC) : getMod(flipA, flipB);
+        return off;
     }
 
     private static final ChessPiece.PieceType[] promotions = {
             ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KNIGHT,
             ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.ROOK
     };
+
+    private static final ChessPiece.PieceType[] none = { null };
+
+    @Override
+    protected boolean tryAdd(Collection<ChessMove> endMoves, ChessBoard board, ChessPosition start, ChessPosition end) {
+        TeamColor color = board.getPiece(start).color();
+        ChessPiece atEnd = board.getPiece(end);
+        if ((start.getColumn() == end.getColumn()) != (atEnd == null)) {
+            return false;
+        }
+        ChessPiece.PieceType[] pieces = end.getRow() == getTeamInitialRow(getOtherTeam(color)) ? promotions : none;
+        for (var piece : pieces) {
+            endMoves.add(new ChessMove(start, end, piece));
+        }
+        return true;
+    }
 }

@@ -2,13 +2,33 @@ package chess.calculator;
 
 import chess.*;
 
-import java.util.Collection;
-
-public class QueenMoveCalculator implements PieceMoveCalculator {
+public class QueenMoveCalculator extends SymmetricCalculator {
     @Override
-    public Collection<ChessMove> calculateMoves(ChessBoard board, ChessPosition start) {
-        Collection<ChessMove> endMoves = PieceMoveCalculatorFactory.getFrom(ChessPiece.PieceType.ROOK).calculateMoves(board, start);
-        endMoves.addAll(PieceMoveCalculatorFactory.getFrom(ChessPiece.PieceType.BISHOP).calculateMoves(board, start));
-        return endMoves;
+    protected int getAxes() {
+        return 3;
+    }
+
+    @Override
+    protected boolean isContinuous() {
+        return true;
+    }
+
+    @Override
+    protected IntTuple getEndOffset(ChessBoard board, ChessPosition start, int offset, boolean... flips) {
+        boolean invert = flips[0],
+                flatten = flips[1],
+                rotate = flips[2];
+        IntTuple off = new IntTuple(offset);
+        if (invert) {
+            off = off.invert();
+        }
+        if (flatten) {
+            off = off.flatten();
+        }
+        if (rotate) {
+            off = off.rotate();
+        }
+
+        return off;
     }
 }

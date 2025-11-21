@@ -62,7 +62,7 @@ public class ChessBoard implements Cloneable {
 
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("  1 2 3 4 5 6 7 8\n");
+        builder.append("  A B C D E F G H\n");
         for (int i = 0; i < BOARD_SIZE; i++) {
             builder.append(i + 1);
             for (int j = 0; j < BOARD_SIZE; j++) {

@@ -7,7 +7,7 @@ import client.exceptions.ClientException;
 import client.states.ClientCommandProcessing.*;
 import model.dataaccess.GameData;
 
-public class PostLoginClientState extends ChessClientState {
+public class PostLoginState extends ChessClientState {
     private final ClientCommand[] stateCommands = {
             new ClientCommand(this::listGames, "List Games",
                     "show all games that are currently being hosted in the server."),
@@ -27,7 +27,7 @@ public class PostLoginClientState extends ChessClientState {
 
     private int[] existingGames = null;
 
-    public PostLoginClientState(ClientStateManager client) {
+    public PostLoginState(ClientStateManager client) {
         super(client);
     }
 

@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import client.states.ClientCommandProcessing.*;
 
-public class PreLoginClientState extends ChessClientState {
+public class PreLoginState extends ChessClientState {
     private final ClientCommand[] stateCommands = {
             new ClientCommand(this::register, "Register", 3,
                     "Please provide a username, password, and email.", "username password email",
@@ -17,7 +17,7 @@ public class PreLoginClientState extends ChessClientState {
                     "exit out of the client.")
     };
 
-    public PreLoginClientState(ClientStateManager client) {
+    public PreLoginState(ClientStateManager client) {
         super(client);
     }
 

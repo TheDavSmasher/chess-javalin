@@ -52,9 +52,9 @@ public class ClientStateManager extends EnumObjectFactory<ClientStateManager.Men
     @Override
     protected ChessClientState generateValue(MenuState key) {
         return switch (key) {
-            case PRE_LOGIN  -> new PreLoginClientState(this);
-            case POST_LOGIN -> new PostLoginClientState(this);
-            case MID_GAME   -> new InGameClientState(this);
+            case PRE_LOGIN  -> new PreLoginState(this);
+            case POST_LOGIN -> new PostLoginState(this);
+            case MID_GAME   -> new InGameState(this);
         };
     }
 }

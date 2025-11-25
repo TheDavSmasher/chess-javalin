@@ -19,7 +19,7 @@ import websocket.messages.ServerMessage;
 import static utils.Catcher.tryCatchRethrow;
 import static utils.Serializer.*;
 
-public class InGameClientState extends ChessClientState implements ServerMessageObserver {
+public class InGameState extends ChessClientState implements ServerMessageObserver {
     private static final String moveFormat = "        Format positions column then row, such as G6.";
 
     private final ClientCommand[] observerCommands = {
@@ -52,7 +52,7 @@ public class InGameClientState extends ChessClientState implements ServerMessage
     private ChessGame currentGame = null;
     private final BoardPrinter boardPrinter;
 
-    public InGameClientState(ClientStateManager client) {
+    public InGameState(ClientStateManager client) {
         super(client);
         this.boardPrinter = new ChessUI(client.out);
         client.serverFacade.registerObserver(this);

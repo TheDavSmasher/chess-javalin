@@ -3,11 +3,12 @@ package client.states;
 import backend.ServerFacade;
 import backend.http.HTTPServerFacade;
 import client.exceptions.ClientException;
+import utils.EnumObjectFactory;
 
 import java.io.IOException;
 import java.io.PrintStream;
 
-public class ClientStateManager {
+public class ClientStateManager extends EnumObjectFactory<ClientStateManager.MenuState, ChessClientState> {
     public enum MenuState {
         PRE_LOGIN,
         POST_LOGIN,
@@ -17,7 +18,6 @@ public class ClientStateManager {
     //Utils
     public final ServerFacade serverFacade = new HTTPServerFacade();
     public final PrintStream out;
-    private final ClientStateFactory clientStates;
 
     //State variables
     public String authToken = null;
@@ -26,16 +26,17 @@ public class ClientStateManager {
     private MenuState currentState = null;
 
     public ClientStateManager(PrintStream out) {
+        super(false);
         this.out = out;
-        this.clientStates = new ClientStateFactory(this);
+        generateValues();
     }
 
     public void evaluate(int command, String[] params) throws ClientException, IOException {
-        getCurrentState().evaluate(command - 1, params);
+        get(currentState).evaluate(command - 1, params);
     }
 
     public void help(boolean simple) {
-        getCurrentState().help(simple);
+        get(currentState).help(simple);
     }
 
     public void changeState(MenuState state) {
@@ -43,7 +44,17 @@ public class ClientStateManager {
         help(false);
     }
 
-    private ChessClientState getCurrentState() {
-        return clientStates.get(currentState);
+    @Override
+    protected Class<MenuState> getKeyClass() {
+        return MenuState.class;
+    }
+
+    @Override
+    protected ChessClientState generateValue(MenuState key) {
+        return switch (key) {
+            case PRE_LOGIN  -> new PreLoginClientState(this);
+            case POST_LOGIN -> new PostLoginClientState(this);
+            case MID_GAME   -> new InGameClientState(this);
+        };
     }
 }

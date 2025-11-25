@@ -7,6 +7,7 @@ import websocket.messages.*;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashSet;
 
 import static utils.Catcher.*;
 import static utils.Serializer.*;
@@ -15,23 +16,29 @@ public class WebsocketCommunicator extends Endpoint implements MessageHandler.Wh
     private Session session;
     private boolean connected = false;
     private final String socketUrl;
-    private ServerMessageObserver observer;
+    private final HashSet<ServerMessageObserver> observers = new HashSet<>();
 
     public WebsocketCommunicator(String url) {
         socketUrl = url.replace("http", "ws");
     }
 
     public void registerObserver(ServerMessageObserver observer) {
-        this.observer = observer;
+        observers.add(observer);
     }
 
     @Override
     public void onMessage(String message) {
-        observer.notify(deserialize(message, ServerMessage.class));
+        notifyAll(deserialize(message, ServerMessage.class));
     }
 
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {}
+
+    private void notifyAll(ServerMessage message) {
+        for (ServerMessageObserver observer : observers) {
+            observer.notify(message);
+        }
+    }
 
     public void sendCommand(UserGameCommand command) throws IOException {
         connectToServer();
@@ -43,7 +50,7 @@ public class WebsocketCommunicator extends Endpoint implements MessageHandler.Wh
             if (session.isOpen()) {
                 return;
             }
-            observer.notify(new Notification("Reconnecting to server..."));
+            notifyAll(new Notification("Reconnecting to server..."));
         }
         session = tryCatchRethrow(
                 () -> ContainerProvider.getWebSocketContainer().connectToServer(this, URI.create(socketUrl + "ws")),

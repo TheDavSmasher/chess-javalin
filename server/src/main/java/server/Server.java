@@ -20,6 +20,7 @@ import service.exception.ServiceException;
 import service.exception.UnauthorizedException;
 import utils.Serializer;
 import websocket.commands.UserGameCommand;
+import websocket.messages.ErrorMessage;
 
 public class Server {
 
@@ -68,7 +69,7 @@ public class Server {
             case UnauthorizedException _ -> HttpStatus.UNAUTHORIZED;
             case PreexistingException _  -> HttpStatus.FORBIDDEN;
             default                      -> HttpStatus.INTERNAL_SERVER_ERROR;
-        }).json(getErrorResponse(e));
+        }).json(new ErrorResponse("Error: " + e.getMessage()));
     }
 
     private void setupWebsocket(WsConfig ws) {
@@ -82,10 +83,6 @@ public class Server {
     }
 
     private void handleWebsocketException(ServiceException e, WsContext wsContext) {
-        wsContext.send(getErrorResponse(e));
-    }
-
-    private static ErrorResponse getErrorResponse(Exception e) {
-        return new ErrorResponse("Error: " + e.getMessage());
+        wsContext.send(new ErrorMessage(e.getMessage()));
     }
 }

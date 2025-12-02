@@ -1,7 +1,10 @@
 package utils;
 
 import com.google.gson.*;
-import websocket.messages.*;
+import websocket.commands.UserCommandDeserializer;
+import websocket.commands.UserGameCommand;
+import websocket.messages.ServerMessage;
+import websocket.messages.ServerMessageDeserializer;
 
 public final class Serializer {
     public static final Gson gson;
@@ -10,6 +13,7 @@ public final class Serializer {
         GsonBuilder gsonBuilder = new GsonBuilder();
 
         gsonBuilder.registerTypeAdapter(ServerMessage.class, new ServerMessageDeserializer());
+        gsonBuilder.registerTypeAdapter(UserGameCommand.class, new UserCommandDeserializer());
 
         gson = gsonBuilder.create();
     }

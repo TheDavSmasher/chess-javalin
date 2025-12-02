@@ -115,23 +115,16 @@ public class InGameState extends ChessClientState implements ServerMessageObserv
 
     @Override
     public void notify(ServerMessage message) {
-        switch (message.getServerMessageType()) {
-            case NOTIFICATION -> displayNotification((Notification) message);
-            case ERROR        -> displayError((ErrorMessage) message);
-            case LOAD_GAME    -> loadGame((LoadGameMessage) message);
+        switch (message) {
+            case Notification notification ->
+                stateManager.out.println(notification.getNotification());
+            case ErrorMessage errorMessage ->
+                stateManager.out.println(Format.TEXT.set(Color.RED) + errorMessage.getError() + Format.resetAll());
+            case LoadGameMessage load -> {
+                currentGame = deserialize(load.getGame(), ChessGame.class);
+                redrawBoard();
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + message);
         }
-    }
-
-    private void displayNotification(Notification notification) {
-        stateManager.out.println(notification.getNotification());
-    }
-
-    private void displayError(ErrorMessage errorMessage) {
-        stateManager.out.println(Format.TEXT.set(Color.RED) + errorMessage.getError() + Format.resetAll());
-    }
-
-    private void loadGame(LoadGameMessage message) {
-        currentGame = deserialize(message.getGame(), ChessGame.class);
-        redrawBoard();
     }
 }

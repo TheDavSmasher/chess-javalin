@@ -74,7 +74,7 @@ public abstract class SQLDAO implements ChessDAO {
             switch (params[i]) {
                 case String s  -> statement.setString(++i, s);
                 case Integer s -> statement.setInt(++i, s);
-                default        -> statement.setNull(++i, NULL);
+                case null, default        -> statement.setNull(++i, NULL);
             }
         }
         return statement;

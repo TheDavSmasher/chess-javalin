@@ -103,7 +103,10 @@ public class ChessGame {
         if (!inPlay) {
             throw new InvalidMoveException("The game has already ended.");
         }
-        if (gameBoard.getPiece(move.getStartPosition()).getTeamColor() != currentTurn) {
+        if (!(gameBoard.getPiece(move.getStartPosition()) instanceof ChessPiece piece)) {
+            throw new InvalidMoveException("There is no piece at the specified position.");
+        }
+        if (piece.getTeamColor() != currentTurn) {
             throw new InvalidMoveException("Piece not part of current turn's color.");
         }
         if (!(validMoves(move.getStartPosition()) instanceof Collection<ChessMove> validMoves)

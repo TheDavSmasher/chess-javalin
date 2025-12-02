@@ -22,7 +22,7 @@ class SQLUserDAOTest {
     }
     @Test
     void getUserTest() throws DataAccessException {
-        userDAO.createUser(username, password, email);
+        userDAO.createUser(username, BCrypt.hashpw(password, BCrypt.gensalt()), email);
 
         UserData normal = userDAO.getUser(username);
 

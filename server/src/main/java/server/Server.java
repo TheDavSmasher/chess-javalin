@@ -18,6 +18,7 @@ import service.exception.BadRequestException;
 import service.exception.PreexistingException;
 import service.exception.ServiceException;
 import service.exception.UnauthorizedException;
+import utils.Serializer;
 import websocket.commands.UserGameCommand;
 
 public class Server {
@@ -37,7 +38,7 @@ public class Server {
 
         javalin = Javalin.create(config -> {
             config.staticFiles.add("web");
-            config.jsonMapper(new JavalinGson());
+            config.jsonMapper(new JavalinGson(Serializer.gson, true));
         });
 
         // Register your endpoints and exception handlers here.

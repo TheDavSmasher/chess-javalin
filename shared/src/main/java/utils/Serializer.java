@@ -4,7 +4,7 @@ import com.google.gson.*;
 import websocket.messages.*;
 
 public final class Serializer {
-    private static final Gson gson;
+    public static final Gson gson;
 
     static {
         GsonBuilder gsonBuilder = new GsonBuilder();

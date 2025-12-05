@@ -32,11 +32,11 @@ public class PawnMoveCalculator extends SymmetricCalculator {
         if (straight) {
             off = off.flatten();
             if (mirror) {
-                if (start.getRow() != getTeamInitialRow(color) + off.x() ||
+                if (start.getRow() != getTeamInitialRow(color) + off.a() ||
                         board.getPiece(newPosition(start, off)) != null) {
                     return null;
                 }
-                off = new IntTuple(off.x() * 2, off.y());
+                off = new IntTuple(off.a() * 2, off.b());
             }
         }
         return off;

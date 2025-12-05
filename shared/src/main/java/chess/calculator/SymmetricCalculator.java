@@ -56,32 +56,10 @@ public abstract class SymmetricCalculator implements PieceMoveCalculator {
     }
 
     protected static ChessPosition newPosition(ChessPosition start, IntTuple offset) {
-        return new ChessPosition(start.getRow() + offset.x, start.getColumn() + offset.y);
+        return new ChessPosition(start.getRow() + offset.a(), start.getColumn() + offset.b());
     }
 
     protected static int boolMod(boolean flip) {
         return flip ? -1 : 1;
-    }
-
-    protected record IntTuple(int x, int y) {
-        public IntTuple(int val) {
-            this(val, val);
-        }
-
-        public IntTuple invert() {
-            return new IntTuple(-x, -y);
-        }
-
-        public IntTuple rotate() {
-            return new IntTuple(-y, x);
-        }
-
-        public IntTuple swap() {
-            return new IntTuple(y, x);
-        }
-
-        public IntTuple flatten() {
-            return new IntTuple(x, 0);
-        }
     }
 }

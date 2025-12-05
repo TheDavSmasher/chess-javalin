@@ -23,6 +23,10 @@ public record IntTuple(int a, int b) {
         return new IntTuple(a, 0);
     }
 
+    public IntTuple doubleA() {
+        return new IntTuple(a * 2, b);
+    }
+
     public IntTuple self() {
         return this;
     }

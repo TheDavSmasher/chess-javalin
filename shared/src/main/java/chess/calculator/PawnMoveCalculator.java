@@ -36,7 +36,7 @@ public class PawnMoveCalculator extends SymmetricCalculator {
                         board.getPiece(newPosition(start, off)) != null) {
                     return null;
                 }
-                off = new IntTuple(off.a() * 2, off.b());
+                off = off.doubleA();
             }
         }
         return off;

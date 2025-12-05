@@ -5,10 +5,6 @@ import chess.ChessPosition;
 import java.util.function.Function;
 
 public record IntTuple(int a, int b) {
-    public IntTuple(int val) {
-        this(val, val);
-    }
-
     public IntTuple invert() {
         return new IntTuple(-a, -b);
     }

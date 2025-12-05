@@ -1,34 +1,17 @@
 package chess.calculator;
 
-import chess.*;
-
 public class QueenMoveCalculator extends SymmetricCalculator {
+    private static final IntTuple.Modifier[] modifiers = {
+            IntTuple::invert, IntTuple::flatten, IntTuple::rotate
+    };
+
     @Override
-    protected int getAxes() {
-        return 3;
+    protected IntTuple.Modifier[] getAxes() {
+        return modifiers;
     }
 
     @Override
     protected boolean isContinuous() {
         return true;
-    }
-
-    @Override
-    protected IntTuple getEndOffset(ChessBoard board, ChessPosition start, int offset, boolean... flips) {
-        boolean invert = flips[0],
-                flatten = flips[1],
-                rotate = flips[2];
-        IntTuple off = new IntTuple(offset);
-        if (invert) {
-            off = off.invert();
-        }
-        if (flatten) {
-            off = off.flatten();
-        }
-        if (rotate) {
-            off = off.rotate();
-        }
-
-        return off;
     }
 }

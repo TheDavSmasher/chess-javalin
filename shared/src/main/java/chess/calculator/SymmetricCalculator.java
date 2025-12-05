@@ -38,7 +38,7 @@ public abstract class SymmetricCalculator implements PieceMoveCalculator {
                 if (endOffset == null) {
                     break;
                 }
-                ChessPosition end = newPosition(start, endOffset);
+                ChessPosition end = endOffset.newPosition(start);
                 if (end.outOfBounds()) {
                     break;
                 }
@@ -53,13 +53,5 @@ public abstract class SymmetricCalculator implements PieceMoveCalculator {
             }
         }
         return moves;
-    }
-
-    protected static ChessPosition newPosition(ChessPosition start, IntTuple offset) {
-        return new ChessPosition(start.getRow() + offset.a(), start.getColumn() + offset.b());
-    }
-
-    protected static int boolMod(boolean flip) {
-        return flip ? -1 : 1;
     }
 }

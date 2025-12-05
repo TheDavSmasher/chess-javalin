@@ -27,13 +27,13 @@ public class PawnMoveCalculator extends SymmetricCalculator {
         TeamColor color = board.getPiece(start).color();
         IntTuple off = new IntTuple(
                 getTeamDirection(color),
-                boolMod(mirror));
+                mirror ? -1 : 1);
 
         if (straight) {
             off = off.flatten();
             if (mirror) {
                 if (start.getRow() != getTeamInitialRow(color) + off.a() ||
-                        board.getPiece(newPosition(start, off)) != null) {
+                        board.getPiece(off.newPosition(start)) != null) {
                     return null;
                 }
                 off = off.doubleA();

@@ -1,5 +1,7 @@
 package chess.calculator;
 
+import chess.ChessPosition;
+
 import java.util.function.Function;
 
 public record IntTuple(int a, int b) {
@@ -33,4 +35,8 @@ public record IntTuple(int a, int b) {
 
     @FunctionalInterface
     public interface Modifier extends Function<IntTuple, IntTuple> {}
+
+    public ChessPosition newPosition(ChessPosition start) {
+        return new ChessPosition(start.getRow() + a, start.getColumn() + b);
+    }
 }

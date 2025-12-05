@@ -23,8 +23,8 @@ public record IntTuple(int a, int b) {
         return new IntTuple(a, 0);
     }
 
-    public IntTuple mul(int val) {
-        return new IntTuple(a * val, b * val);
+    public IntTuple self() {
+        return this;
     }
 
     @FunctionalInterface

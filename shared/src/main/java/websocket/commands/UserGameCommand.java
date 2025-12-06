@@ -8,15 +8,15 @@ import java.util.Objects;
  * Note: You can add to this class, but you should not alter the existing
  * methods.
  */
-public class UserGameCommand {
+public abstract class UserGameCommand {
 
     private final CommandType commandType;
 
     private final String authToken;
 
-    private final Integer gameID;
+    private final int gameID;
 
-    public UserGameCommand(CommandType commandType, String authToken, Integer gameID) {
+    protected UserGameCommand(CommandType commandType, String authToken, int gameID) {
         this.commandType = commandType;
         this.authToken = authToken;
         this.gameID = gameID;
@@ -37,7 +37,7 @@ public class UserGameCommand {
         return authToken;
     }
 
-    public Integer getGameID() {
+    public int getGameID() {
         return gameID;
     }
 

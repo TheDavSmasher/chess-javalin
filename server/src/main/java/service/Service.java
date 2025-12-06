@@ -37,13 +37,8 @@ public abstract class Service {
 
     //region Interfaces
     @FunctionalInterface
-    protected interface EndpointSupplier<T> {
+    public interface EndpointSupplier<T> {
         T method() throws ServiceException, DataAccessException;
-    }
-
-    @FunctionalInterface
-    public interface AuthorizedSupplier<T> {
-        T call() throws ServiceException, DataAccessException;
     }
 
     @FunctionalInterface
@@ -57,10 +52,10 @@ public abstract class Service {
         return tryCatchRethrow(call::method, DataAccessException.class, ServiceException.class, UnexpectedException.class);
     }
 
-    public <T> T tryAuthorized(String authToken, AuthorizedSupplier<T> logic) throws ServiceException {
+    public <T> T tryAuthorized(String authToken, EndpointSupplier<T> logic) throws ServiceException {
         return tryCatch(() -> {
             validateAuth(authToken);
-            return logic.call();
+            return logic.method();
         });
     }
 

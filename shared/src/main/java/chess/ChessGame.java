@@ -177,9 +177,10 @@ public class ChessGame {
             for (int j = 1; j <= BOARD_SIZE; j++) {
                 ChessPosition temp = new ChessPosition(i,j);
                 ChessPiece atTemp = board.getPiece(temp);
-                if (atTemp != null && atTemp.getTeamColor() == team) {
-                    allMoves.addAll(atTemp.pieceMoves(board, temp));
+                if (atTemp == null || atTemp.getTeamColor() != team) {
+                    continue;
                 }
+                allMoves.addAll(atTemp.pieceMoves(board, temp));
             }
         }
         return allMoves;

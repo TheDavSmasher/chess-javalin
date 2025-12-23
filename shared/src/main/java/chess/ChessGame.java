@@ -166,10 +166,10 @@ public class ChessGame {
 
     private boolean isInCheckTest(TeamColor teamColor, ChessBoard board) {
         Collection<ChessMove> allOpposingMoves = allPossibleTeamMoves(teamColor.otherTeam(), board);
-        return allOpposingMoves.stream().anyMatch(move -> {
-            ChessPiece temp = board.getPiece(move.getEndPosition());
-            return temp != null && temp.getTeamColor() == teamColor && temp.getPieceType() == ChessPiece.PieceType.KING;
-        });
+        return allOpposingMoves.stream().anyMatch(move ->
+                board.getPiece(move.getEndPosition()) instanceof ChessPiece temp &&
+                temp.getTeamColor() == teamColor &&
+                temp.getPieceType() == ChessPiece.PieceType.KING);
     }
 
     private Collection<ChessMove> allPossibleTeamMoves(TeamColor team, ChessBoard board) {

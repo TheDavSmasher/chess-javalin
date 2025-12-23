@@ -71,7 +71,7 @@ public record ChessUI(PrintStream out) implements BoardPrinter {
                         moveSpot ? Color.YELLOW : isWhite ? Color.GREEN: Color.DARK_GREEN :
                         isWhite ? Color.WHITE : Color.BLACK,
                 moveSpot != null || piece == null ? Color.BLACK :
-                        piece.color() == ChessGame.TeamColor.WHITE ? Color.RED : Color.BLUE
+                        piece.getTeamColor() == ChessGame.TeamColor.WHITE ? Color.RED : Color.BLUE
                 );
     }
 

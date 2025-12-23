@@ -94,7 +94,7 @@ public final class EscapeSequences {
 
     //region Pieces
     public static String getAsUnicode(ChessPiece piece) {
-        return getAsUnicode(piece.type(), piece.getTeamColor() == ChessGame.TeamColor.WHITE);
+        return getAsUnicode(piece.getPieceType(), piece.getTeamColor() == ChessGame.TeamColor.WHITE);
     }
 
     public static String getAsUnicode(ChessPiece.PieceType type, boolean isWhite) {

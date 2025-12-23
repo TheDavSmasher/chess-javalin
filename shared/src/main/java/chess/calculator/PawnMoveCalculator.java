@@ -19,7 +19,7 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
     protected IntTuple getEndOffset(ChessBoard board, ChessPosition start, boolean... flips) {
         boolean straight = flips[0],
                 mirror = flips[1];
-        TeamColor color = board.getPiece(start).color();
+        TeamColor color = board.getPiece(start).getTeamColor();
         IntTuple off = new IntTuple(
                 getTeamDirection(color),
                 mirror ? -1 : 1);
@@ -45,7 +45,7 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
     private static final ChessPiece.PieceType[] none = { null };
 
     protected boolean tryAdd(Collection<ChessMove> endMoves, ChessBoard board, ChessPosition start, ChessPosition end) {
-        TeamColor color = board.getPiece(start).color();
+        TeamColor color = board.getPiece(start).getTeamColor();
         ChessPiece atEnd = board.getPiece(end);
         if ((start.getColumn() == end.getColumn()) != (atEnd == null)) {
             return false;
@@ -81,7 +81,7 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
                     break;
                 }
                 ChessPiece atEnd = board.getPiece(end);
-                if (atEnd != null && atEnd.color() == board.getPiece(start).color()) {
+                if (atEnd != null && atEnd.getTeamColor() == board.getPiece(start).getTeamColor()) {
                     break;
                 }
                 // either is null or is opponent

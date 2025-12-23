@@ -4,6 +4,7 @@ import chess.calculator.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -11,7 +12,7 @@ import java.util.Collection;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public record ChessPiece(ChessGame.TeamColor color, PieceType type) {
+public class ChessPiece {
     /**
      * The various different chess piece options
      */
@@ -22,6 +23,14 @@ public record ChessPiece(ChessGame.TeamColor color, PieceType type) {
         KNIGHT,
         ROOK,
         PAWN
+    }
+
+    private final ChessGame.TeamColor color;
+    private final PieceType type;
+
+    public ChessPiece(ChessGame.TeamColor color, PieceType type) {
+        this.color = color;
+        this.type = type;
     }
 
     /**
@@ -61,5 +70,18 @@ public record ChessPiece(ChessGame.TeamColor color, PieceType type) {
             case QUEEN  -> "q";
         };
         return color == ChessGame.TeamColor.WHITE ? s.toUpperCase() : s;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ChessPiece that)) {
+            return false;
+        }
+        return color == that.color && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(color, type);
     }
 }

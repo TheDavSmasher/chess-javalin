@@ -50,8 +50,8 @@ public class ChessBoard implements Cloneable {
         board = new ChessPiece[BOARD_SIZE][BOARD_SIZE];
 
         for (var team : ChessGame.TeamColor.values()) {
-            int row = ChessGame.getTeamInitialRow(team) - 1;
-            int dir = ChessGame.getTeamDirection(team);
+            int row = team.initialRow() - 1;
+            int dir = team.direction();
 
             for (int i = 0; i < BOARD_SIZE; i++) {
                 board[row][i] = new ChessPiece(team, PIECE_ORDER[i]);

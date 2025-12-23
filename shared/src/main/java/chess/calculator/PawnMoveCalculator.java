@@ -21,13 +21,13 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
                 mirror = flips[1];
         TeamColor color = board.getPiece(start).getTeamColor();
         IntTuple off = new IntTuple(
-                getTeamDirection(color),
+                color.direction(),
                 mirror ? -1 : 1);
 
         if (straight) {
             off = off.flatten();
             if (mirror) {
-                if (start.getRow() != getTeamInitialRow(color) + off.a() ||
+                if (start.getRow() != color.initialRow() + off.a() ||
                         board.getPiece(off.newPosition(start)) != null) {
                     return null;
                 }
@@ -50,7 +50,7 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
         if ((start.getColumn() == end.getColumn()) != (atEnd == null)) {
             return false;
         }
-        ChessPiece.PieceType[] pieces = end.getRow() == getTeamInitialRow(getOtherTeam(color)) ? promotions : none;
+        ChessPiece.PieceType[] pieces = end.getRow() == color.otherTeam().initialRow() ? promotions : none;
         for (var piece : pieces) {
             endMoves.add(new ChessMove(start, end, piece));
         }

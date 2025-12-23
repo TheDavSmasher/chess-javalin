@@ -41,19 +41,7 @@ public class ChessGame {
     }
 
     private void changeTurn() {
-        setTeamTurn(getOtherTeam(currentTurn));
-    }
-
-    public static TeamColor getOtherTeam(TeamColor teamColor) {
-        return teamColor == TeamColor.WHITE ? TeamColor.BLACK : TeamColor.WHITE;
-    }
-
-    public static int getTeamDirection(TeamColor teamColor) {
-        return teamColor == TeamColor.WHITE ? 1 : -1;
-    }
-
-    public static int getTeamInitialRow(TeamColor teamColor) {
-        return teamColor == TeamColor.WHITE ? 1 : 8;
+        setTeamTurn(currentTurn.otherTeam());
     }
 
     /**
@@ -61,7 +49,19 @@ public class ChessGame {
      */
     public enum TeamColor {
         WHITE,
-        BLACK
+        BLACK;
+
+        public TeamColor otherTeam() {
+            return this == WHITE ? BLACK : WHITE;
+        }
+
+        public int direction() {
+            return this == WHITE ? 1 : -1;
+        }
+
+        public int initialRow() {
+            return this == WHITE ? 1 : 8;
+        }
     }
 
     public enum CheckState {
@@ -175,7 +175,7 @@ public class ChessGame {
     }
 
     private boolean isInCheckTest(TeamColor teamColor, ChessBoard board) {
-        Collection<ChessMove> allOpposingMoves = allPossibleTeamMoves(getOtherTeam(teamColor), board);
+        Collection<ChessMove> allOpposingMoves = allPossibleTeamMoves(teamColor.otherTeam(), board);
         return allOpposingMoves.stream().anyMatch(move -> {
             ChessPiece temp = board.getPiece(move.getEndPosition());
             return temp != null && temp.getTeamColor() == teamColor && temp.getPieceType() == ChessPiece.PieceType.KING;

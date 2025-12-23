@@ -37,6 +37,15 @@ public class ChessBoard implements Cloneable {
         return board[position.getRow() - 1][position.getColumn() - 1];
     }
 
+    public void makeMove(ChessMove move) {
+        ChessPiece oldPiece = getPiece(move.getStartPosition());
+        addPiece(move.getStartPosition(), null);
+        ChessPiece newPiece =
+                move.getPromotionPiece() == null ? oldPiece :
+                new ChessPiece(oldPiece.getTeamColor(), move.getPromotionPiece());
+        addPiece(move.getEndPosition(), newPiece);
+    }
+
     private static final ChessPiece.PieceType[] PIECE_ORDER = {
         ChessPiece.PieceType.ROOK, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.QUEEN,
         ChessPiece.PieceType.KING, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK

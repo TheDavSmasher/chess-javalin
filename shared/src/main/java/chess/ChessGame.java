@@ -88,7 +88,7 @@ public class ChessGame {
         moves.removeIf(move -> {
             ChessBoard testBoard = gameBoard.clone();
             TeamColor colorToCheck = gameBoard.getPiece(move.getStartPosition()).getTeamColor();
-            makeMoveInGame(move, testBoard);
+            testBoard.makeMove(move);
             return isInCheckTest(colorToCheck, testBoard);
         });
         return moves;
@@ -114,21 +114,10 @@ public class ChessGame {
                 || !validMoves.contains(move)) {
             throw new InvalidMoveException("Move chosen is illegal.");
         }
-        makeMoveInGame(move, gameBoard);
+        gameBoard.makeMove(move);
         gameBoard.getPiece(move.getEndPosition()).pieceMoved();
         setTeamTurn(currentTurn.otherTeam());
     }
-
-    private void makeMoveInGame(ChessMove move, ChessBoard board) {
-        ChessPiece oldPiece = board.getPiece(move.getStartPosition());
-        if (move.getPromotionPiece() == null) {
-            board.addPiece(move.getEndPosition(), oldPiece);
-        } else {
-            board.addPiece(move.getEndPosition(), new ChessPiece(oldPiece.getTeamColor(), move.getPromotionPiece()));
-        }
-        board.addPiece(move.getStartPosition(), null);
-    }
-
 
     /**
      * Determines if the given team is in check

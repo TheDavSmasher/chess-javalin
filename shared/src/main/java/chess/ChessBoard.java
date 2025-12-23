@@ -60,11 +60,11 @@ public class ChessBoard implements Cloneable {
 
         for (var team : ChessGame.TeamColor.values()) {
             int row = team.initialRow() - 1;
-            int dir = team.direction();
+            int pawnRow = row + team.direction();
 
             for (int i = 0; i < BOARD_SIZE; i++) {
                 board[row][i] = new ChessPiece(team, PIECE_ORDER[i]);
-                board[row + dir][i] = new ChessPiece(team, ChessPiece.PieceType.PAWN);
+                board[pawnRow][i] = new ChessPiece(team, ChessPiece.PieceType.PAWN);
             }
         }
     }

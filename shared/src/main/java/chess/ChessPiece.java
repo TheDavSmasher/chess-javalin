@@ -48,7 +48,7 @@ public class ChessPiece {
         return type;
     }
 
-    public void pieceMoved() {
+    public void pieceWasMoved() {
         hasMoved = true;
     }
 

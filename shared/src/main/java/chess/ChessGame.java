@@ -108,7 +108,7 @@ public class ChessGame {
             throw new InvalidMoveException("Move chosen is illegal.");
         }
         gameBoard.makeMove(move);
-        gameBoard.getPiece(move.getEndPosition()).pieceMoved();
+        gameBoard.getPiece(move.getEndPosition()).pieceWasMoved();
         setTeamTurn(currentTurn.otherTeam());
     }
 

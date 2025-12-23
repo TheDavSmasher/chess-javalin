@@ -27,6 +27,7 @@ public class ChessPiece {
 
     private final ChessGame.TeamColor color;
     private final PieceType type;
+    private boolean hasMoved = false;
 
     public ChessPiece(ChessGame.TeamColor color, PieceType type) {
         this.color = color;
@@ -45,6 +46,14 @@ public class ChessPiece {
      */
     public PieceType getPieceType() {
         return type;
+    }
+
+    public void pieceMoved() {
+        hasMoved = true;
+    }
+
+    public boolean hasMoved() {
+        return hasMoved;
     }
 
     /**

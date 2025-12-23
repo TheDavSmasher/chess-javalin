@@ -168,7 +168,6 @@ public class ChessGame {
         Collection<ChessMove> allOpposingMoves = allPossibleTeamMoves(teamColor.otherTeam(), board);
         return allOpposingMoves.stream().anyMatch(move ->
                 board.getPiece(move.getEndPosition()) instanceof ChessPiece temp &&
-                temp.getTeamColor() == teamColor &&
                 temp.getPieceType() == ChessPiece.PieceType.KING);
     }
 

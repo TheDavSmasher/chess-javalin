@@ -65,13 +65,6 @@ public class ChessGame {
         }
     }
 
-    public enum CheckState {
-        NONE,
-        STALEMATE,
-        CHECK,
-        CHECKMATE
-    }
-
     /**
      * Gets a valid moves for a piece at the given location
      *
@@ -119,6 +112,13 @@ public class ChessGame {
         setTeamTurn(currentTurn.otherTeam());
     }
 
+    public enum CheckState {
+        NONE,
+        STALEMATE,
+        CHECK,
+        CHECKMATE
+    }
+
     /**
      * Determines if the given team is in check
      *
@@ -151,7 +151,7 @@ public class ChessGame {
     }
 
     public CheckState getCheckState(TeamColor teamColor) {
-        boolean isInCheck = isInCheck(teamColor);
+        boolean isInCheck = isInCheckTest(teamColor, gameBoard);
         boolean hasNoMoves = removeInvalidMoves(allPossibleTeamMoves(teamColor, gameBoard)).isEmpty();
 
         if (isInCheck) {

@@ -21,9 +21,6 @@ public class ChessGame {
         gameBoard.resetBoard();
     }
 
-    public boolean isGameOver() { return !inPlay; }
-    public void endGame() { inPlay = false; }
-
     /**
      * @return Which team's turn it is
      */
@@ -40,8 +37,12 @@ public class ChessGame {
         currentTurn = team;
     }
 
-    private void changeTurn() {
-        setTeamTurn(currentTurn.otherTeam());
+    public boolean isGameOver() {
+        return !inPlay;
+    }
+
+    public void endGame() {
+        inPlay = false;
     }
 
     /**
@@ -115,7 +116,7 @@ public class ChessGame {
         }
         makeMoveInGame(move, gameBoard);
         gameBoard.getPiece(move.getEndPosition()).pieceMoved();
-        changeTurn();
+        setTeamTurn(currentTurn.otherTeam());
     }
 
     private void makeMoveInGame(ChessMove move, ChessBoard board) {

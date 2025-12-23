@@ -13,6 +13,15 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessPiece {
+    private final ChessGame.TeamColor color;
+    private final PieceType type;
+    private boolean hasMoved = false;
+
+    public ChessPiece(ChessGame.TeamColor color, PieceType type) {
+        this.color = color;
+        this.type = type;
+    }
+
     /**
      * The various different chess piece options
      */
@@ -23,15 +32,6 @@ public class ChessPiece {
         KNIGHT,
         ROOK,
         PAWN
-    }
-
-    private final ChessGame.TeamColor color;
-    private final PieceType type;
-    private boolean hasMoved = false;
-
-    public ChessPiece(ChessGame.TeamColor color, PieceType type) {
-        this.color = color;
-        this.type = type;
     }
 
     /**

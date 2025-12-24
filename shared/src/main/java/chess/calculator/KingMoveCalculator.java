@@ -32,7 +32,7 @@ public class KingMoveCalculator extends SymmetricCalculator {
 
         for (var isRight : new BooleanCombinations(1).next().values()) {
             int dirMod = isRight ? 1 : -1;
-            ChessPosition endPosition = new ChessPosition(teamRow, start.getRow() + dirMod * 2);
+            ChessPosition endPosition = new ChessPosition(teamRow, start.getColumn() + dirMod * 2);
             if (endPosition.outOfBounds()) {
                 continue;
             }

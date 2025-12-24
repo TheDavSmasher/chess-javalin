@@ -108,7 +108,6 @@ public class ChessGame {
                 || !validMoves.contains(move)) {
             throw new InvalidMoveException("Move chosen is illegal.");
         }
-        gameBoard.makeMove(move, true);
         if (moveIsCastle(move, gameBoard)) {
             int row = move.getStartPosition().getRow();
             int rookDir = moveColDir(move);
@@ -117,11 +116,12 @@ public class ChessGame {
             ChessMove castle = new ChessMove(new ChessPosition(row, rookCol), new ChessPosition(row, rookEnd));
             gameBoard.makeMove(castle, true);
         }
+        gameBoard.makeMove(move, true);
         setTeamTurn(currentTurn.otherTeam());
     }
 
     private static boolean moveIsCastle(ChessMove move, ChessBoard board) {
-        return board.getPiece(move.getEndPosition()).getPieceType() == ChessPiece.PieceType.KING
+        return board.getPiece(move.getStartPosition()).getPieceType() == ChessPiece.PieceType.KING
                 && Math.abs(moveColDist(move)) >= 2;
     }
 

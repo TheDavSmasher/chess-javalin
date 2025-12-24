@@ -30,7 +30,8 @@ public class KingMoveCalculator extends SymmetricCalculator {
             return moves;
         }
 
-        for (var isRight : new BooleanCombinations(1).next().values()) {
+        for (var perm : new BooleanCombinations(1)) {
+            boolean isRight = perm.iterator().next().value();
             int dirMod = isRight ? 1 : -1;
             ChessPosition endPosition = new ChessPosition(teamRow, start.getColumn() + dirMod * 2);
             if (endPosition.outOfBounds()) {
@@ -44,8 +45,9 @@ public class KingMoveCalculator extends SymmetricCalculator {
             }
 
             boolean cleanPath = true;
-            for (int c = start.getColumn() + dirMod; c < rookCol; c += dirMod) {
-                if (board.getPiece(new ChessPosition(teamRow, c)) != null) {
+            int maxCol = (rookCol - start.getColumn()) * dirMod;
+            for (int c = 1; c < maxCol; c++) {
+                if (board.getPiece(new ChessPosition(teamRow, start.getColumn() + dirMod * c)) != null) {
                     cleanPath = false;
                     break;
                 }

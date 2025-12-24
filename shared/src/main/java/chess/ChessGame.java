@@ -108,7 +108,24 @@ public class ChessGame {
             throw new InvalidMoveException("Move chosen is illegal.");
         }
         gameBoard.makeMove(move, true);
+        if (moveIsCastle(move)) {
+            int row = move.getStartPosition().getRow();
+            int rookDir = (int)Math.signum(moveColDist(move));
+            int rookCol = rookDir > 0 ? 8 : 1;
+            int rookEnd = move.getStartPosition().getColumn() + rookDir;
+            ChessMove castle = new ChessMove(new ChessPosition(row, rookCol), new ChessPosition(row, rookEnd));
+            gameBoard.makeMove(castle, true);
+        }
         setTeamTurn(currentTurn.otherTeam());
+    }
+
+    private boolean moveIsCastle(ChessMove move) {
+        return gameBoard.getPiece(move.getEndPosition()).getPieceType() == ChessPiece.PieceType.KING
+                && Math.abs(moveColDist(move)) == 2;
+    }
+
+    private static int moveColDist(ChessMove move) {
+        return move.getEndPosition().getColumn() - move.getStartPosition().getColumn();
     }
 
     public enum CheckState {

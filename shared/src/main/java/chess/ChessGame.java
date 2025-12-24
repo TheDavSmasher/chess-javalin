@@ -3,6 +3,7 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import static chess.ChessBoard.BOARD_SIZE;
 
@@ -181,10 +182,14 @@ public class ChessGame {
     }
 
     private static boolean isInCheckTest(TeamColor teamColor, ChessBoard board) {
-        Collection<ChessMove> allOpposingMoves = allPossibleTeamMoves(teamColor.otherTeam(), board);
-        return allOpposingMoves.stream().anyMatch(move ->
+        return opponentMovesTest(teamColor, board, move ->
                 board.getPiece(move.getEndPosition()) instanceof ChessPiece temp &&
                 temp.getPieceType() == ChessPiece.PieceType.KING);
+    }
+
+    private static boolean opponentMovesTest(TeamColor teamColor, ChessBoard board, Predicate<ChessMove> tester) {
+        Collection<ChessMove> allOpposingMoves = allPossibleTeamMoves(teamColor.otherTeam(), board);
+        return allOpposingMoves.stream().anyMatch(tester);
     }
 
     private static Collection<ChessMove> allPossibleTeamMoves(TeamColor team, ChessBoard board) {

@@ -111,7 +111,7 @@ public class ChessGame {
         gameBoard.makeMove(move, true);
         if (moveIsCastle(move, gameBoard)) {
             int row = move.getStartPosition().getRow();
-            int rookDir = (int)Math.signum(moveColDist(move));
+            int rookDir = moveColDir(move);
             int rookCol = rookDir > 0 ? 8 : 1;
             int rookEnd = move.getStartPosition().getColumn() + rookDir;
             ChessMove castle = new ChessMove(new ChessPosition(row, rookCol), new ChessPosition(row, rookEnd));
@@ -122,11 +122,15 @@ public class ChessGame {
 
     private static boolean moveIsCastle(ChessMove move, ChessBoard board) {
         return board.getPiece(move.getEndPosition()).getPieceType() == ChessPiece.PieceType.KING
-                && Math.abs(moveColDist(move)) == 2;
+                && Math.abs(moveColDist(move)) >= 2;
     }
 
     private static int moveColDist(ChessMove move) {
         return move.getEndPosition().getColumn() - move.getStartPosition().getColumn();
+    }
+
+    private static int moveColDir(ChessMove move) {
+        return (int)Math.signum(moveColDist(move));
     }
 
     public enum CheckState {

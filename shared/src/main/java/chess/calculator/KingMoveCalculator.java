@@ -1,7 +1,6 @@
 package chess.calculator;
 
 import chess.*;
-import chess.extracredit.CastlingMove;
 import utils.BooleanCombinations;
 
 import java.util.Collection;
@@ -54,7 +53,7 @@ public class KingMoveCalculator extends SymmetricCalculator {
                 }
             }
             if (cleanPath) {
-                moves.add(new CastlingMove(start, endPosition));
+                moves.add(new ChessMove(start, endPosition));
             }
         }
 

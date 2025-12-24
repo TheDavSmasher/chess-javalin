@@ -81,7 +81,7 @@ public class ChessGame {
         moves.removeIf(move -> {
             ChessBoard testBoard = gameBoard.clone();
             TeamColor colorToCheck = gameBoard.getPiece(move.getStartPosition()).getTeamColor();
-            testBoard.makeMove(move);
+            testBoard.makeMove(move, false);
             return isInCheckTest(colorToCheck, testBoard);
         });
         return moves;
@@ -107,8 +107,7 @@ public class ChessGame {
                 || !validMoves.contains(move)) {
             throw new InvalidMoveException("Move chosen is illegal.");
         }
-        gameBoard.makeMove(move);
-        gameBoard.getPiece(move.getEndPosition()).pieceWasMoved();
+        gameBoard.makeMove(move, true);
         setTeamTurn(currentTurn.otherTeam());
     }
 

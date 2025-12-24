@@ -180,14 +180,14 @@ public class ChessGame {
         return CheckState.NONE;
     }
 
-    private boolean isInCheckTest(TeamColor teamColor, ChessBoard board) {
+    private static boolean isInCheckTest(TeamColor teamColor, ChessBoard board) {
         Collection<ChessMove> allOpposingMoves = allPossibleTeamMoves(teamColor.otherTeam(), board);
         return allOpposingMoves.stream().anyMatch(move ->
                 board.getPiece(move.getEndPosition()) instanceof ChessPiece temp &&
                 temp.getPieceType() == ChessPiece.PieceType.KING);
     }
 
-    private Collection<ChessMove> allPossibleTeamMoves(TeamColor team, ChessBoard board) {
+    private static Collection<ChessMove> allPossibleTeamMoves(TeamColor team, ChessBoard board) {
         Collection<ChessMove> allMoves = new ArrayList<>();
         for (int i = 1; i <= BOARD_SIZE; i++) {
             for (int j = 1; j <= BOARD_SIZE; j++) {

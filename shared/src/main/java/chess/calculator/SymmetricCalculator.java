@@ -1,6 +1,7 @@
 package chess.calculator;
 
 import chess.*;
+import utils.BooleanCombinations;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,16 +20,13 @@ public abstract class SymmetricCalculator implements PieceMoveCalculator {
         Collection<ChessMove> moves = new ArrayList<>();
 
         IntTuple.Modifier[] axes = getAxes();
-        int perms = 1 << axes.length;
-        for (int perm = 0; perm < perms; perm++) {
+        for (var perm : new BooleanCombinations(axes.length)) {
             int i = 0;
             do {
                 i++;
                 IntTuple endOffset = startModifier().apply(new IntTuple(i, i));
-                for (int axis = 0, p = perm; axis < axes.length; axis++, p >>= 1) {
-                    if ((p & 1) != 0) {
-                        endOffset = axes[axis].apply(endOffset);
-                    }
+                for (var combination : perm.whereTrue()) {
+                    endOffset = axes[combination.index()].apply(endOffset);
                 }
                 ChessPosition end = endOffset.newPosition(start);
                 if (end.outOfBounds()) {

@@ -82,6 +82,15 @@ public class ChessGame {
         moves.removeIf(move -> {
             ChessBoard testBoard = gameBoard.clone();
             TeamColor colorToCheck = gameBoard.getPiece(move.getStartPosition()).getTeamColor();
+            if (moveIsCastle(move, testBoard)) {
+                int rookDir = moveColDir(move);
+                int rookEnd = move.getStartPosition().getColumn() + rookDir;
+                ChessPosition midPosition = new ChessPosition(move.getStartPosition().getRow(), rookEnd);
+                return opponentMovesTest(colorToCheck, testBoard, testMove ->
+                        testMove.getEndPosition().equals(move.getStartPosition()) ||
+                        testMove.getEndPosition().equals(midPosition) ||
+                        testMove.getEndPosition().equals(move.getEndPosition()));
+            }
             testBoard.makeMove(move, false);
             return isInCheckTest(colorToCheck, testBoard);
         });

@@ -107,9 +107,13 @@ public class ChessGame {
                 || !validMoves.contains(move)) {
             throw new InvalidMoveException("Move chosen is illegal.");
         }
+        makeFullMove(move);
+        setTeamTurn(currentTurn.otherTeam());
+    }
+
+    private void makeFullMove(ChessMove move) {
         gameBoard.makeMove(move);
         gameBoard.getPiece(move.getEndPosition()).pieceWasMoved();
-        setTeamTurn(currentTurn.otherTeam());
     }
 
     public enum CheckState {

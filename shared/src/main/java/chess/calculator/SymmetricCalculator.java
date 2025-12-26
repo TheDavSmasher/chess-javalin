@@ -4,7 +4,6 @@ import chess.*;
 import utils.BooleanCombinations;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 public abstract class SymmetricCalculator implements PieceMoveCalculator {
@@ -16,8 +15,8 @@ public abstract class SymmetricCalculator implements PieceMoveCalculator {
 
     protected abstract boolean isContinuous();
 
-    protected void addMoves(Collection<ChessMove> moves, ChessMove... newMoves) {
-        moves.addAll(Arrays.asList(newMoves));
+    protected void addMoves(Collection<ChessMove> moves, ChessPosition start, ChessPosition end) {
+        moves.add(new ChessMove(start, end));
     }
 
     @Override
@@ -40,7 +39,7 @@ public abstract class SymmetricCalculator implements PieceMoveCalculator {
                 }
                 ChessPiece atEnd = board.getPiece(end);
                 if (atEnd == null || atEnd.getTeamColor() != currentTeam) {
-                    addMoves(moves, new ChessMove(start, end));
+                    addMoves(moves, start, end);
                 }
                 if (atEnd != null) {
                     break;

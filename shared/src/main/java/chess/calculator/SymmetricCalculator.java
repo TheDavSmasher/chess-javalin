@@ -6,6 +6,8 @@ import utils.BooleanCombinations;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static utils.iter.SelfIterable.asArray;
+
 public abstract class SymmetricCalculator implements PieceMoveCalculator {
     protected IntTuple.Modifier startModifier() {
         return IntTuple::self;
@@ -19,10 +21,12 @@ public abstract class SymmetricCalculator implements PieceMoveCalculator {
         moves.add(new ChessMove(start, end));
     }
 
-    protected IntTuple getEndOffset(BooleanCombinations.BoolCombination perm) {
+    protected IntTuple getEndOffset(Boolean... flips) {
         IntTuple endOffset = startModifier().apply(new IntTuple(1));
-        for (var combination : perm.whereTrue()) {
-            endOffset = getAxes()[combination.index()].apply(endOffset);
+        for (int i = 0; i < flips.length; i++) {
+            if (flips[i]) {
+                endOffset = getAxes()[i].apply(endOffset);
+            }
         }
         return endOffset;
     }
@@ -33,10 +37,12 @@ public abstract class SymmetricCalculator implements PieceMoveCalculator {
         ChessGame.TeamColor currentTeam = board.getPiece(start).getTeamColor();
 
         for (var perm : new BooleanCombinations(getAxes().length)) {
+            Boolean[] offsets = asArray(perm.values());
+            IntTuple endOffset = getEndOffset(offsets);
             int i = 0;
             do {
                 i++;
-                ChessPosition end = getEndOffset(perm).mul(i).newPosition(start);
+                ChessPosition end = endOffset.mul(i).newPosition(start);
                 if (end.outOfBounds()) {
                     break;
                 }

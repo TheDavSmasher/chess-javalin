@@ -19,21 +19,24 @@ public abstract class SymmetricCalculator implements PieceMoveCalculator {
         moves.add(new ChessMove(start, end));
     }
 
+    protected IntTuple getEndOffset(BooleanCombinations.BoolCombination perm) {
+        IntTuple endOffset = startModifier().apply(new IntTuple(1));
+        for (var combination : perm.whereTrue()) {
+            endOffset = getAxes()[combination.index()].apply(endOffset);
+        }
+        return endOffset;
+    }
+
     @Override
     public Collection<ChessMove> calculateMoves(ChessBoard board, ChessPosition start) {
         Collection<ChessMove> moves = new ArrayList<>();
         ChessGame.TeamColor currentTeam = board.getPiece(start).getTeamColor();
 
-        IntTuple.Modifier[] axes = getAxes();
-        for (var perm : new BooleanCombinations(axes.length)) {
+        for (var perm : new BooleanCombinations(getAxes().length)) {
             int i = 0;
             do {
                 i++;
-                IntTuple endOffset = startModifier().apply(new IntTuple(1));
-                for (var combination : perm.whereTrue()) {
-                    endOffset = axes[combination.index()].apply(endOffset);
-                }
-                ChessPosition end = endOffset.mul(i).newPosition(start);
+                ChessPosition end = getEndOffset(perm).mul(i).newPosition(start);
                 if (end.outOfBounds()) {
                     break;
                 }

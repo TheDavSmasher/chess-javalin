@@ -23,6 +23,7 @@ public abstract class SymmetricCalculator implements PieceMoveCalculator {
     @Override
     public Collection<ChessMove> calculateMoves(ChessBoard board, ChessPosition start) {
         Collection<ChessMove> moves = new ArrayList<>();
+        ChessGame.TeamColor currentTeam = board.getPiece(start).getTeamColor();
 
         IntTuple.Modifier[] axes = getAxes();
         for (var perm : new BooleanCombinations(axes.length)) {
@@ -38,7 +39,7 @@ public abstract class SymmetricCalculator implements PieceMoveCalculator {
                     break;
                 }
                 ChessPiece atEnd = board.getPiece(end);
-                if (atEnd == null || atEnd.getTeamColor() != board.getPiece(start).getTeamColor()) {
+                if (atEnd == null || atEnd.getTeamColor() != currentTeam) {
                     addMoves(moves, new ChessMove(start, end));
                 }
                 if (atEnd != null) {

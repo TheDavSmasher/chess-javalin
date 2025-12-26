@@ -6,7 +6,6 @@ import utils.BooleanCombinations;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static chess.ChessGame.*;
 import static utils.iter.SelfIterable.asArray;
 
 public class PawnMoveCalculator implements PieceMoveCalculator {
@@ -21,15 +20,14 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
     protected IntTuple getEndOffset(ChessBoard board, ChessPosition start, Boolean... flips) {
         boolean straight = flips[0],
                 mirror = flips[1];
-        TeamColor color = board.getPiece(start).getTeamColor();
         IntTuple off = new IntTuple(
-                color.direction(),
+                currentTeam.direction(),
                 mirror ? -1 : 1);
 
         if (straight) {
             off = off.flatten();
             if (mirror) {
-                if (start.getRow() != color.initialRow() + off.a() ||
+                if (start.getRow() != currentTeam.initialRow() + off.a() ||
                         board.getPiece(off.newPosition(start)) != null) {
                     return null;
                 }
@@ -47,26 +45,26 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
     private static final ChessPiece.PieceType[] none = { null };
 
     protected boolean tryAdd(Collection<ChessMove> endMoves, ChessBoard board, ChessPosition start, ChessPosition end) {
-        TeamColor color = board.getPiece(start).getTeamColor();
         ChessPiece atEnd = board.getPiece(end);
         if ((start.getColumn() == end.getColumn()) != (atEnd == null)) {
             return false;
         }
-        ChessPiece.PieceType[] pieces = end.getRow() == color.otherTeam().initialRow() ? promotions : none;
+        ChessPiece.PieceType[] pieces = end.getRow() == currentTeam.otherTeam().initialRow() ? promotions : none;
         for (var piece : pieces) {
             endMoves.add(new ChessMove(start, end, piece));
         }
         return true;
     }
 
+    private ChessGame.TeamColor currentTeam;
+
     @Override
     public Collection<ChessMove> calculateMoves(ChessBoard board, ChessPosition start) {
+        currentTeam = board.getPiece(start).getTeamColor();
         Collection<ChessMove> moves = new ArrayList<>();
 
         for (var perm : new BooleanCombinations(getAxes())) {
-            int i = 0;
             do {
-                i++;
                 IntTuple endOffset = getEndOffset(board, start, asArray(perm.values()));
                 if (endOffset == null) {
                     break;
@@ -76,7 +74,7 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
                     break;
                 }
                 ChessPiece atEnd = board.getPiece(end);
-                if (atEnd != null && atEnd.getTeamColor() == board.getPiece(start).getTeamColor()) {
+                if (atEnd != null && atEnd.getTeamColor() == currentTeam) {
                     break;
                 }
                 // either is null or is opponent

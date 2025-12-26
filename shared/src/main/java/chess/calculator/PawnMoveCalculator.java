@@ -44,16 +44,11 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
 
     private static final ChessPiece.PieceType[] none = { null };
 
-    protected boolean tryAdd(Collection<ChessMove> endMoves, ChessBoard board, ChessPosition start, ChessPosition end) {
-        ChessPiece atEnd = board.getPiece(end);
-        if ((start.getColumn() == end.getColumn()) != (atEnd == null)) {
-            return false;
-        }
+    protected void addMoves(Collection<ChessMove> moves, ChessPosition start, ChessPosition end) {
         ChessPiece.PieceType[] pieces = end.getRow() == currentTeam.otherTeam().initialRow() ? promotions : none;
         for (var piece : pieces) {
-            endMoves.add(new ChessMove(start, end, piece));
+            moves.add(new ChessMove(start, end, piece));
         }
-        return true;
     }
 
     private ChessGame.TeamColor currentTeam;
@@ -78,9 +73,10 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
                     break;
                 }
                 // either is null or is opponent
-                if (!tryAdd(moves, board, start, end)) {
+                if ((start.getColumn() == end.getColumn()) != (atEnd == null)) {
                     break;
                 }
+                addMoves(moves, start, end);
             } while (isContinuous());
         }
         return moves;

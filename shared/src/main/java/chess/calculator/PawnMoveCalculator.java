@@ -17,7 +17,8 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
         return false;
     }
 
-    protected IntTuple getEndOffset(ChessBoard board, ChessPosition start, Boolean... flips) {
+    protected IntTuple getEndOffset(ChessBoard board, ChessPosition start, BooleanCombinations.BoolCombination perm) {
+        Boolean[] flips = asArray(perm.values());
         boolean straight = flips[0],
                 mirror = flips[1];
         IntTuple off = new IntTuple(
@@ -63,7 +64,7 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
             int i = 0;
             do {
                 i++;
-                IntTuple endOffset = getEndOffset(board, start, offsets);
+                IntTuple endOffset = getEndOffset(board, start, perm);
                 if (endOffset == null) {
                     break;
                 }

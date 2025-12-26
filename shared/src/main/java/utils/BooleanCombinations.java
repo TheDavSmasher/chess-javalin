@@ -1,6 +1,7 @@
 package utils;
 
 import org.jetbrains.annotations.NotNull;
+import utils.iter.FilterIterator;
 import utils.iter.MapIterator;
 import utils.iter.SelfIterable;
 
@@ -35,6 +36,10 @@ public class BooleanCombinations implements SelfIterable<BooleanCombinations.Boo
         @Override
         public @NotNull Iterator<Combination> iterator() {
             return new BoolCombinationIterator();
+        }
+
+        public Iterable<Combination> whereTrue() {
+            return new FilterIterator<>(this, Combination::value);
         }
 
         public Iterable<Boolean> values() {

@@ -1,11 +1,13 @@
 package chess.calculator;
 
 import chess.*;
+import utils.BooleanCombinations;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import static chess.ChessGame.*;
+import static utils.iter.SelfIterable.asArray;
 
 public class PawnMoveCalculator implements PieceMoveCalculator {
     protected int getAxes() {
@@ -16,7 +18,7 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
         return false;
     }
 
-    protected IntTuple getEndOffset(ChessBoard board, ChessPosition start, boolean... flips) {
+    protected IntTuple getEndOffset(ChessBoard board, ChessPosition start, Boolean... flips) {
         boolean straight = flips[0],
                 mirror = flips[1];
         TeamColor color = board.getPiece(start).getTeamColor();
@@ -60,19 +62,12 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
     @Override
     public Collection<ChessMove> calculateMoves(ChessBoard board, ChessPosition start) {
         Collection<ChessMove> moves = new ArrayList<>();
-        int axes = getAxes();
-        int perms = 1 << axes;
 
-        boolean[] flips = new boolean[axes];
-
-        for (int perm = 0; perm < perms; perm++) {
-            for (int axis = 0, p = perm; axis < axes; axis++, p >>= 1) {
-                flips[axis] = (p & 1) != 0;
-            }
-
-            boolean continuous = isContinuous();
-            for (int i = 1; continuous || i <= 1; i++) {
-                IntTuple endOffset = getEndOffset(board, start, flips);
+        for (var perm : new BooleanCombinations(getAxes())) {
+            int i = 0;
+            do {
+                i++;
+                IntTuple endOffset = getEndOffset(board, start, asArray(perm.values()));
                 if (endOffset == null) {
                     break;
                 }
@@ -88,7 +83,7 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
                 if (!tryAdd(moves, board, start, end)) {
                     break;
                 }
-            }
+            } while (isContinuous());
         }
         return moves;
     }

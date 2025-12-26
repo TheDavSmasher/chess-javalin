@@ -59,12 +59,15 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
         Collection<ChessMove> moves = new ArrayList<>();
 
         for (var perm : new BooleanCombinations(getAxes())) {
+            Boolean[] offsets = asArray(perm.values());
+            int i = 0;
             do {
-                IntTuple endOffset = getEndOffset(board, start, asArray(perm.values()));
+                i++;
+                IntTuple endOffset = getEndOffset(board, start, offsets);
                 if (endOffset == null) {
                     break;
                 }
-                ChessPosition end = endOffset.newPosition(start);
+                ChessPosition end = endOffset.mul(i).newPosition(start);
                 if (end.outOfBounds()) {
                     break;
                 }
@@ -72,7 +75,7 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
                 if (atEnd != null && atEnd.getTeamColor() == currentTeam) {
                     break;
                 }
-                if ((start.getColumn() == end.getColumn()) != (atEnd == null)) {
+                if (offsets[0] != (atEnd == null)) {
                     break;
                 }
                 addMoves(moves, start, end);

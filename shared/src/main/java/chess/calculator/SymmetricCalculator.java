@@ -29,7 +29,7 @@ public abstract class SymmetricCalculator implements PieceMoveCalculator {
             int i = 0;
             do {
                 i++;
-                IntTuple endOffset = startModifier().apply(new IntTuple(i, i));
+                IntTuple endOffset = startModifier().apply(new IntTuple(i));
                 for (var combination : perm.whereTrue()) {
                     endOffset = axes[combination.index()].apply(endOffset);
                 }

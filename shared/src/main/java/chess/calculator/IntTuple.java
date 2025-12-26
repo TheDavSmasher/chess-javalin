@@ -29,6 +29,10 @@ public record IntTuple(int a, int b) {
         return this;
     }
 
+    public IntTuple(int v) {
+        this(v, v);
+    }
+
     @FunctionalInterface
     public interface Modifier extends Function<IntTuple, IntTuple> {}
 

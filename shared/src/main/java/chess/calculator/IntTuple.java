@@ -25,6 +25,10 @@ public record IntTuple(int a, int b) {
         return new IntTuple(a * 2, b);
     }
 
+    public IntTuple mul(int mul) {
+        return new IntTuple(a * mul, b * mul);
+    }
+
     public IntTuple self() {
         return this;
     }

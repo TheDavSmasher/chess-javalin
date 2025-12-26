@@ -38,9 +38,10 @@ public abstract class SymmetricCalculator implements PieceMoveCalculator {
                     break;
                 }
                 ChessPiece atEnd = board.getPiece(end);
-                if (atEnd == null || atEnd.getTeamColor() != currentTeam) {
-                    addMoves(moves, start, end);
+                if (atEnd != null && atEnd.getTeamColor() == currentTeam) {
+                    break;
                 }
+                addMoves(moves, start, end);
                 if (atEnd != null) {
                     break;
                 }

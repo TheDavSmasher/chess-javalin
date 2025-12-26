@@ -72,11 +72,13 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
                 if (atEnd != null && atEnd.getTeamColor() == currentTeam) {
                     break;
                 }
-                // either is null or is opponent
                 if ((start.getColumn() == end.getColumn()) != (atEnd == null)) {
                     break;
                 }
                 addMoves(moves, start, end);
+                if (atEnd != null) {
+                    break;
+                }
             } while (isContinuous());
         }
         return moves;

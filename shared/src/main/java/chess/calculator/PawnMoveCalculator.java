@@ -9,7 +9,7 @@ import java.util.Collection;
 import static utils.iter.SelfIterable.asArray;
 
 public class PawnMoveCalculator implements PieceMoveCalculator {
-    protected int getAxes() {
+    protected int getCombinationCount() {
         return 2;
     }
 
@@ -59,7 +59,7 @@ public class PawnMoveCalculator implements PieceMoveCalculator {
         currentTeam = board.getPiece(start).getTeamColor();
         Collection<ChessMove> moves = new ArrayList<>();
 
-        for (var perm : new BooleanCombinations(getAxes())) {
+        for (var perm : new BooleanCombinations(getCombinationCount())) {
             Boolean[] offsets = asArray(perm.values());
             int i = 0;
             do {

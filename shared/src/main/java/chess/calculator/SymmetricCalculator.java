@@ -13,6 +13,10 @@ public abstract class SymmetricCalculator implements PieceMoveCalculator {
 
     protected abstract IntTuple.Modifier[] getAxes();
 
+    protected int getCombinationCount() {
+        return getAxes().length;
+    }
+
     protected abstract boolean isContinuous();
 
     protected void addMoves(Collection<ChessMove> moves, ChessPosition start, ChessPosition end) {
@@ -32,7 +36,7 @@ public abstract class SymmetricCalculator implements PieceMoveCalculator {
         Collection<ChessMove> moves = new ArrayList<>();
         ChessGame.TeamColor currentTeam = board.getPiece(start).getTeamColor();
 
-        for (var perm : new BooleanCombinations(getAxes().length)) {
+        for (var perm : new BooleanCombinations(getCombinationCount())) {
             int i = 0;
             do {
                 i++;

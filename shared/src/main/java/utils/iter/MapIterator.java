@@ -36,6 +36,16 @@ public class MapIterator<T, R> implements SelfIterable<R> {
     }
 
     /**
+     * Creates an {@link SelfIterable} that transforms each item from the passed {@param iterable}
+     * to the new type, according to the {@param mapper} function
+     * @param iterable The {@link SelfIterable} to transform.
+     * @param mapper The transformer function.
+     */
+    public MapIterator(SelfIterable<T> iterable, Function<T, R> mapper) {
+        this(iterable.iterator(), mapper);
+    }
+
+    /**
      * Creates an {@link SelfIterable} that transforms each item from the passed {@param items} array
      * to the new type, according to the {@param mapper} function
      * @param items The array to transform.

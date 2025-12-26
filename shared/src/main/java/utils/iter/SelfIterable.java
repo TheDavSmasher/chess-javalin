@@ -2,6 +2,9 @@ package utils.iter;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -14,5 +17,22 @@ import java.util.Iterator;
 public interface SelfIterable<T> extends Iterable<T>, Iterator<T> {
     default @NotNull Iterator<T> iterator() {
         return this;
+    }
+
+    static <T> Collection<T> asCollection(Iterable<T> iterable) {
+        Collection<T> collection = new ArrayList<>();
+        for (T element : iterable)
+            collection.add(element);
+        return collection;
+    }
+
+    @SuppressWarnings("unchecked")
+    static <T> T[] asArray(Iterable<T> iterable) {
+        Collection<T> collection = asCollection(iterable);
+        T[] array = (T[]) Array.newInstance(collection.iterator().next().getClass(), collection.size());
+        int i = 0;
+        for (T element : collection)
+            array[i++] = element;
+        return array;
     }
 }

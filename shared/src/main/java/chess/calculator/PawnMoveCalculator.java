@@ -31,7 +31,7 @@ public class PawnMoveCalculator extends CombinationMoveCalculator {
         boolean straight = flips[0],
                 mirror = flips[1];
         if (currentTeam == ChessGame.TeamColor.BLACK) {
-            offset = offset.swap().rotate();
+            offset = offset.mirrorA();
         }
         if (straight) {
             offset = offset.flatten();
@@ -44,7 +44,7 @@ public class PawnMoveCalculator extends CombinationMoveCalculator {
             }
         }
         if (mirror) {
-            offset = offset.rotate().swap();
+            offset = offset.mirrorB();
         }
         return offset;
     }

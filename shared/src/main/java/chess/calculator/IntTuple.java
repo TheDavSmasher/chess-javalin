@@ -25,6 +25,14 @@ public record IntTuple(int a, int b) {
         return new IntTuple(a * 2, b);
     }
 
+    public IntTuple mirrorA() {
+        return new IntTuple(-a, b);
+    }
+
+    public IntTuple mirrorB() {
+        return new IntTuple(a, -b);
+    }
+
     public IntTuple self() {
         return this;
     }

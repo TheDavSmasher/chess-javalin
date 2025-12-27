@@ -41,10 +41,8 @@ public abstract class CombinationMoveCalculator implements PieceMoveCalculator {
                     break;
                 }
                 ChessPiece atEnd = board.getPiece(end);
-                if (atEnd != null && atEnd.getTeamColor() == currentTeam) {
-                    break;
-                }
-                if (!(endLoopCheck(board, end, offsets) instanceof Boolean s)) {
+                if (atEnd != null && atEnd.getTeamColor() == currentTeam ||
+                        !(endLoopCheck(board, end, offsets) instanceof Boolean s)) {
                     break;
                 }
                 addMoves(moves, start, end);

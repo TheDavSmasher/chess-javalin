@@ -13,7 +13,7 @@ public abstract class CombinationMoveCalculator implements PieceMoveCalculator {
 
     protected abstract IntTuple getEndOffset(IntTuple offset, ChessBoard board, ChessPosition start, Boolean... flips);
 
-    protected abstract Boolean endLoopCheck(ChessPiece atEnd, Boolean... flips);
+    protected abstract Boolean endLoopCheck(ChessBoard board, ChessPosition end, Boolean... flips);
 
     protected void addMoves(Collection<ChessMove> moves, ChessPosition start, ChessPosition end) {
         moves.add(new ChessMove(start, end));
@@ -44,7 +44,7 @@ public abstract class CombinationMoveCalculator implements PieceMoveCalculator {
                 if (atEnd != null && atEnd.getTeamColor() == currentTeam) {
                     break;
                 }
-                if (!(endLoopCheck(atEnd, offsets) instanceof Boolean s)) {
+                if (!(endLoopCheck(board, end, offsets) instanceof Boolean s)) {
                     break;
                 }
                 addMoves(moves, start, end);

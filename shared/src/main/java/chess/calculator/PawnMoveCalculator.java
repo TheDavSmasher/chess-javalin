@@ -50,8 +50,8 @@ public class PawnMoveCalculator extends CombinationMoveCalculator {
     }
 
     @Override
-    protected Boolean endLoopCheck(ChessPiece atEnd, Boolean... flips) {
-        if (flips[0] != (atEnd == null)) {
+    protected Boolean endLoopCheck(ChessBoard board, ChessPosition end, Boolean... flips) {
+        if (flips[0] != (board.getPiece(end) == null)) {
             return null;
         }
         return false;

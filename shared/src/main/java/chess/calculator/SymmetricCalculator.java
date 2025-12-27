@@ -28,7 +28,7 @@ public abstract class SymmetricCalculator extends CombinationMoveCalculator {
     }
 
     @Override
-    protected Boolean endLoopCheck(ChessPiece atEnd, Boolean... flips) {
+    protected Boolean endLoopCheck(ChessBoard board, ChessPosition end, Boolean... flips) {
         return isContinuous();
     }
 }

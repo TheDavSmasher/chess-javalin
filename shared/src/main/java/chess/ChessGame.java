@@ -83,7 +83,7 @@ public class ChessGame {
             ChessBoard testBoard = gameBoard.clone();
             TeamColor colorToCheck = gameBoard.getPiece(move.getStartPosition()).getTeamColor();
             if (moveIsCastle(move, testBoard)) {
-                int rookDir = moveColDir(move);
+                int rookDir = intSign(moveColDist(move));
                 int rookEnd = move.getStartPosition().getColumn() + rookDir;
                 ChessPosition midPosition = new ChessPosition(move.getStartPosition().getRow(), rookEnd);
                 return opponentMovesTest(colorToCheck, testBoard, testMove ->
@@ -119,7 +119,7 @@ public class ChessGame {
         }
         if (moveIsCastle(move, gameBoard)) {
             int row = move.getStartPosition().getRow();
-            int rookDir = moveColDir(move);
+            int rookDir = intSign(moveColDist(move));
             int rookCol = rookDir > 0 ? 8 : 1;
             int rookEnd = move.getStartPosition().getColumn() + rookDir;
             ChessMove castle = new ChessMove(new ChessPosition(row, rookCol), new ChessPosition(row, rookEnd));
@@ -138,8 +138,8 @@ public class ChessGame {
         return move.getEndPosition().getColumn() - move.getStartPosition().getColumn();
     }
 
-    private static int moveColDir(ChessMove move) {
-        return (int)Math.signum(moveColDist(move));
+    private static int intSign(int num) {
+        return (int)Math.signum(num);
     }
 
     public enum CheckState {

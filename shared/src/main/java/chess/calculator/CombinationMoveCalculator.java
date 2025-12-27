@@ -15,14 +15,16 @@ public abstract class CombinationMoveCalculator implements PieceMoveCalculator {
 
     protected abstract Boolean endLoopCheck(ChessPiece atEnd, Boolean... flips);
 
-    protected void addMoves(Collection<ChessMove> moves, ChessBoard board, ChessPosition start, ChessPosition end) {
+    protected void addMoves(Collection<ChessMove> moves, ChessPosition start, ChessPosition end) {
         moves.add(new ChessMove(start, end));
     }
+
+    protected ChessGame.TeamColor currentTeam;
 
     @Override
     public Collection<ChessMove> calculateMoves(ChessBoard board, ChessPosition start) {
         Collection<ChessMove> moves = new ArrayList<>();
-        ChessGame.TeamColor currentTeam = board.getPiece(start).getTeamColor();
+        currentTeam = board.getPiece(start).getTeamColor();
 
         for (var perm : new BooleanCombinations(getCombinationCount())) {
             Boolean[] offsets = asArray(perm.values());
@@ -45,7 +47,7 @@ public abstract class CombinationMoveCalculator implements PieceMoveCalculator {
                 if (!(endLoopCheck(atEnd, offsets) instanceof Boolean s)) {
                     break;
                 }
-                addMoves(moves, board, start, end);
+                addMoves(moves, start, end);
                 if (atEnd != null) {
                     break;
                 }

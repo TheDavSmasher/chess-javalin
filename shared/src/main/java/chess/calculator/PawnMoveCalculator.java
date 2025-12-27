@@ -16,10 +16,9 @@ public class PawnMoveCalculator extends CombinationMoveCalculator {
     };
 
     @Override
-    protected void addMoves(Collection<ChessMove> moves, ChessBoard board, ChessPosition start, ChessPosition end) {
-        ChessGame.TeamColor currentTeam = board.getPiece(start).getTeamColor();
+    protected void addMoves(Collection<ChessMove> moves, ChessPosition start, ChessPosition end) {
         if (end.getRow() != currentTeam.otherTeam().initialRow()) {
-            super.addMoves(moves, board, start, end);
+            super.addMoves(moves, start, end);
             return;
         }
         for (var piece : promotions) {
@@ -29,7 +28,6 @@ public class PawnMoveCalculator extends CombinationMoveCalculator {
 
     @Override
     protected IntTuple getEndOffset(IntTuple offset, ChessBoard board, ChessPosition start, Boolean... flips) {
-        ChessGame.TeamColor currentTeam = board.getPiece(start).getTeamColor();
         boolean straight = flips[0],
                 mirror = flips[1];
         if (currentTeam == ChessGame.TeamColor.BLACK) {

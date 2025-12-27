@@ -45,7 +45,7 @@ public class ChessBoard implements Cloneable {
                 new ChessPiece(oldPiece.getTeamColor(), move.getPromotionPiece());
         addPiece(move.getEndPosition(), newPiece);
         if (markMoved) {
-            newPiece.pieceWasMoved();
+            newPiece.pieceWasMoved(move);
         }
     }
 

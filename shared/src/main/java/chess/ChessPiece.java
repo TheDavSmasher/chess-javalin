@@ -15,7 +15,7 @@ import java.util.Objects;
 public class ChessPiece {
     private final ChessGame.TeamColor color;
     private final PieceType type;
-    private ChessMove lastMove = null;
+    private boolean hasMoved = false;
 
     public ChessPiece(ChessGame.TeamColor color, PieceType type) {
         this.color = color;
@@ -48,16 +48,12 @@ public class ChessPiece {
         return type;
     }
 
-    public ChessMove getLastMove() {
-        return lastMove;
-    }
-
-    public void pieceWasMoved(ChessMove move) {
-        lastMove = move;
+    public void pieceWasMoved() {
+        hasMoved = true;
     }
 
     public boolean hasMoved() {
-        return lastMove != null;
+        return hasMoved;
     }
 
     /**

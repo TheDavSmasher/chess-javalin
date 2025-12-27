@@ -56,6 +56,16 @@ public class PawnMoveCalculator extends CombinationMoveCalculator {
             return null;
         }
         if (!flips[0] && atEnd == null) {
+            ChessMove lastMove = board.getLastMove();
+            if (lastMove == null) {
+                return null;
+            }
+            ChessPiece lastPieceMoved = board.getPiece(lastMove.getEndPosition());
+            int distMoved = lastMove.getStartPosition().getRow() - lastMove.getEndPosition().getRow();
+            if (lastPieceMoved.getPieceType() == ChessPiece.PieceType.PAWN &&
+                    Math.abs(distMoved) > 1) {
+                return false;
+            }
             return null;
         }
         return false;

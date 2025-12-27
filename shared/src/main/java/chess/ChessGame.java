@@ -83,7 +83,7 @@ public class ChessGame {
             ChessBoard testBoard = gameBoard.clone();
             TeamColor colorToCheck = gameBoard.getPiece(move.getStartPosition()).getTeamColor();
             if (moveIsCastle(move, testBoard)) {
-                int rookDir = intSign(moveColDist(move));
+                int rookDir = intSign(move.distance(ChessPosition::getColumn));
                 int rookEnd = move.getStartPosition().getColumn() + rookDir;
                 ChessPosition midPosition = new ChessPosition(move.getStartPosition().getRow(), rookEnd);
                 return opponentMovesTest(colorToCheck, testBoard, testMove ->
@@ -119,7 +119,7 @@ public class ChessGame {
         }
         if (moveIsCastle(move, gameBoard)) {
             int row = move.getStartPosition().getRow();
-            int rookDir = intSign(moveColDist(move));
+            int rookDir = intSign(move.distance(ChessPosition::getColumn));
             int rookCol = rookDir > 0 ? 8 : 1;
             int rookEnd = move.getStartPosition().getColumn() + rookDir;
             ChessMove castle = new ChessMove(new ChessPosition(row, rookCol), new ChessPosition(row, rookEnd));
@@ -131,11 +131,7 @@ public class ChessGame {
 
     private static boolean moveIsCastle(ChessMove move, ChessBoard board) {
         return board.getPiece(move.getStartPosition()).getPieceType() == ChessPiece.PieceType.KING
-                && Math.abs(moveColDist(move)) >= 2;
-    }
-
-    private static int moveColDist(ChessMove move) {
-        return move.getEndPosition().getColumn() - move.getStartPosition().getColumn();
+                && Math.abs(move.distance(ChessPosition::getColumn)) >= 2;
     }
 
     private static int intSign(int num) {

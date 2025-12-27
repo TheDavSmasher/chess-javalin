@@ -61,9 +61,8 @@ public class PawnMoveCalculator extends CombinationMoveCalculator {
                 return null;
             }
             ChessPiece lastPieceMoved = board.getPiece(lastMove.getEndPosition());
-            int distMoved = lastMove.getStartPosition().getRow() - lastMove.getEndPosition().getRow();
             if (lastPieceMoved.getPieceType() == ChessPiece.PieceType.PAWN &&
-                    Math.abs(distMoved) > 1) {
+                    Math.abs(lastMove.distance(ChessPosition::getRow)) > 1) {
                 return false;
             }
             return null;

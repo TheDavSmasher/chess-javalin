@@ -2,6 +2,8 @@ package chess;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Function;
+
 /**
  * Represents moving a chess piece on a chessboard
  * <p>
@@ -35,6 +37,10 @@ public record ChessMove(ChessPosition startPosition, ChessPosition endPosition, 
      */
     public ChessPiece.PieceType getPromotionPiece() {
         return promotionPiece;
+    }
+
+    public int distance(Function<ChessPosition, Integer> distanceFunction) {
+        return distanceFunction.apply(getEndPosition()) - distanceFunction.apply(getStartPosition());
     }
 
     @NotNull

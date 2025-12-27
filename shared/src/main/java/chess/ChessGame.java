@@ -117,13 +117,16 @@ public class ChessGame {
                 || !validMoves.contains(move)) {
             throw new InvalidMoveException("Move chosen is illegal.");
         }
+        int row = move.getStartPosition().getRow();
         if (moveIsCastle(move, gameBoard)) {
-            int row = move.getStartPosition().getRow();
             int rookDir = intSign(move.distance(ChessPosition::getColumn));
             int rookCol = rookDir > 0 ? 8 : 1;
             int rookEnd = move.getStartPosition().getColumn() + rookDir;
             ChessMove castle = new ChessMove(new ChessPosition(row, rookCol), new ChessPosition(row, rookEnd));
             gameBoard.makeMove(castle, true);
+        } else if (moveIsEnPassant(move)) {
+            ChessPosition passingPawn = new ChessPosition(row, move.getEndPosition().getColumn());
+            gameBoard.addPiece(passingPawn, null);
         }
         gameBoard.makeMove(move, true);
         setTeamTurn(currentTurn.otherTeam());
@@ -132,6 +135,13 @@ public class ChessGame {
     private static boolean moveIsCastle(ChessMove move, ChessBoard board) {
         return board.getPiece(move.getStartPosition()).getPieceType() == ChessPiece.PieceType.KING
                 && Math.abs(move.distance(ChessPosition::getColumn)) >= 2;
+    }
+
+    private boolean moveIsEnPassant(ChessMove move) {
+        return gameBoard.getPiece(move.getStartPosition()).getPieceType() == ChessPiece.PieceType.PAWN
+                && Math.abs(move.distance(ChessPosition::getColumn)) >= 1
+                && gameBoard.getLastMove() instanceof ChessMove lastMove
+                && Math.abs(lastMove.distance(ChessPosition::getRow)) >= 2;
     }
 
     private static int intSign(int num) {

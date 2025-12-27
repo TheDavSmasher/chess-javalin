@@ -32,10 +32,11 @@ public class PawnMoveCalculator extends CombinationMoveCalculator {
         ChessGame.TeamColor currentTeam = board.getPiece(start).getTeamColor();
         boolean straight = flips[0],
                 mirror = flips[1];
-        IntTuple off = new IntTuple(
-                currentTeam.direction(),
-                mirror ? -1 : 1);
+        IntTuple off = new IntTuple(1);
 
+        if (currentTeam == ChessGame.TeamColor.BLACK) {
+            off = off.swap().rotate();
+        }
         if (straight) {
             off = off.flatten();
             if (mirror) {
@@ -45,6 +46,9 @@ public class PawnMoveCalculator extends CombinationMoveCalculator {
                 }
                 off = off.doubleA();
             }
+        }
+        if (mirror) {
+            off = off.rotate().swap();
         }
         return off;
     }

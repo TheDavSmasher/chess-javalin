@@ -11,12 +11,13 @@ import static utils.iter.SelfIterable.asArray;
 public abstract class CombinationMoveCalculator implements PieceMoveCalculator {
     protected abstract int getCombinationCount();
 
-    protected abstract void addMoves(
-            Collection<ChessMove> moves, ChessBoard board, ChessPosition start, ChessPosition end);
-
     protected abstract IntTuple getEndOffset(ChessBoard board, ChessPosition start, Boolean... flips);
 
     protected abstract Boolean endLoopCheck(ChessPiece atEnd, Boolean... flips);
+
+    protected void addMoves(Collection<ChessMove> moves, ChessBoard board, ChessPosition start, ChessPosition end) {
+        moves.add(new ChessMove(start, end));
+    }
 
     @Override
     public Collection<ChessMove> calculateMoves(ChessBoard board, ChessPosition start) {

@@ -15,13 +15,14 @@ public class PawnMoveCalculator extends CombinationMoveCalculator {
             ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.ROOK
     };
 
-    private static final ChessPiece.PieceType[] none = { null };
-
     @Override
     protected void addMoves(Collection<ChessMove> moves, ChessBoard board, ChessPosition start, ChessPosition end) {
         ChessGame.TeamColor currentTeam = board.getPiece(start).getTeamColor();
-        ChessPiece.PieceType[] pieces = end.getRow() == currentTeam.otherTeam().initialRow() ? promotions : none;
-        for (var piece : pieces) {
+        if (end.getRow() != currentTeam.otherTeam().initialRow()) {
+            super.addMoves(moves, board, start, end);
+            return;
+        }
+        for (var piece : promotions) {
             moves.add(new ChessMove(start, end, piece));
         }
     }

@@ -2,8 +2,6 @@ package chess.calculator;
 
 import chess.*;
 
-import java.util.Collection;
-
 public abstract class SymmetricCalculator extends CombinationMoveCalculator {
     protected abstract IntTuple.Modifier[] getAxes();
 
@@ -12,11 +10,6 @@ public abstract class SymmetricCalculator extends CombinationMoveCalculator {
     @Override
     protected int getCombinationCount() {
         return getAxes().length;
-    }
-
-    @Override
-    protected void addMoves(Collection<ChessMove> moves, ChessBoard board, ChessPosition start, ChessPosition end) {
-        moves.add(new ChessMove(start, end));
     }
 
     protected IntTuple.Modifier startModifier() {

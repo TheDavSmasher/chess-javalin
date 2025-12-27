@@ -10,6 +10,21 @@ public class PawnMoveCalculator extends CombinationMoveCalculator {
         return 2;
     }
 
+    private static final ChessPiece.PieceType[] promotions = {
+            ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KNIGHT,
+            ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.ROOK
+    };
+
+    private static final ChessPiece.PieceType[] none = { null };
+
+    @Override
+    protected void addMoves(Collection<ChessMove> moves, ChessPosition start, ChessPosition end) {
+        ChessPiece.PieceType[] pieces = end.getRow() == currentTeam.otherTeam().initialRow() ? promotions : none;
+        for (var piece : pieces) {
+            moves.add(new ChessMove(start, end, piece));
+        }
+    }
+
     @Override
     protected IntTuple getEndOffset(ChessBoard board, ChessPosition start, Boolean... flips) {
         boolean straight = flips[0],
@@ -29,21 +44,6 @@ public class PawnMoveCalculator extends CombinationMoveCalculator {
             }
         }
         return off;
-    }
-
-    private static final ChessPiece.PieceType[] promotions = {
-            ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.KNIGHT,
-            ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.ROOK
-    };
-
-    private static final ChessPiece.PieceType[] none = { null };
-
-    @Override
-    protected void addMoves(Collection<ChessMove> moves, ChessPosition start, ChessPosition end) {
-        ChessPiece.PieceType[] pieces = end.getRow() == currentTeam.otherTeam().initialRow() ? promotions : none;
-        for (var piece : pieces) {
-            moves.add(new ChessMove(start, end, piece));
-        }
     }
 
     @Override

@@ -15,7 +15,7 @@ public abstract class SymmetricCalculator extends CombinationMoveCalculator {
     }
 
     @Override
-    protected void addMoves(Collection<ChessMove> moves, ChessPosition start, ChessPosition end) {
+    protected void addMoves(Collection<ChessMove> moves, ChessBoard board, ChessPosition start, ChessPosition end) {
         moves.add(new ChessMove(start, end));
     }
 

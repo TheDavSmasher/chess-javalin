@@ -11,7 +11,7 @@ import static utils.iter.SelfIterable.asArray;
 public abstract class CombinationMoveCalculator implements PieceMoveCalculator {
     protected abstract int getCombinationCount();
 
-    protected abstract IntTuple getEndOffset(ChessBoard board, ChessPosition start, Boolean... flips);
+    protected abstract IntTuple getEndOffset(IntTuple offset, ChessBoard board, ChessPosition start, Boolean... flips);
 
     protected abstract Boolean endLoopCheck(ChessPiece atEnd, Boolean... flips);
 
@@ -30,11 +30,11 @@ public abstract class CombinationMoveCalculator implements PieceMoveCalculator {
             boolean moveCheck;
             do {
                 i++;
-                IntTuple endOffset = getEndOffset(board, start, offsets);
+                IntTuple endOffset = getEndOffset(new IntTuple(i), board, start, offsets);
                 if (endOffset == null) {
                     break;
                 }
-                ChessPosition end = endOffset.mul(i).newPosition(start);
+                ChessPosition end = endOffset.newPosition(start);
                 if (end.outOfBounds()) {
                     break;
                 }

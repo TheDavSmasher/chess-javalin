@@ -28,29 +28,27 @@ public class PawnMoveCalculator extends CombinationMoveCalculator {
     }
 
     @Override
-    protected IntTuple getEndOffset(ChessBoard board, ChessPosition start, Boolean... flips) {
+    protected IntTuple getEndOffset(IntTuple offset, ChessBoard board, ChessPosition start, Boolean... flips) {
         ChessGame.TeamColor currentTeam = board.getPiece(start).getTeamColor();
         boolean straight = flips[0],
                 mirror = flips[1];
-        IntTuple off = new IntTuple(1);
-
         if (currentTeam == ChessGame.TeamColor.BLACK) {
-            off = off.swap().rotate();
+            offset = offset.swap().rotate();
         }
         if (straight) {
-            off = off.flatten();
+            offset = offset.flatten();
             if (mirror) {
-                if (start.getRow() != currentTeam.initialRow() + off.a() ||
-                        board.getPiece(off.newPosition(start)) != null) {
+                if (start.getRow() != currentTeam.initialRow() + offset.a() ||
+                        board.getPiece(offset.newPosition(start)) != null) {
                     return null;
                 }
-                off = off.doubleA();
+                offset = offset.doubleA();
             }
         }
         if (mirror) {
-            off = off.rotate().swap();
+            offset = offset.rotate().swap();
         }
-        return off;
+        return offset;
     }
 
     @Override

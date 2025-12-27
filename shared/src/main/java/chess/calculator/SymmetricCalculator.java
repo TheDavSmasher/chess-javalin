@@ -17,14 +17,14 @@ public abstract class SymmetricCalculator extends CombinationMoveCalculator {
     }
 
     @Override
-    protected IntTuple getEndOffset(ChessBoard board, ChessPosition start, Boolean... flips) {
-        IntTuple endOffset = startModifier().apply(new IntTuple(1));
+    protected IntTuple getEndOffset(IntTuple offset, ChessBoard board, ChessPosition start, Boolean... flips) {
+        offset = startModifier().apply(offset);
         for (int i = 0; i < flips.length; i++) {
             if (flips[i]) {
-                endOffset = getAxes()[i].apply(endOffset);
+                offset = getAxes()[i].apply(offset);
             }
         }
-        return endOffset;
+        return offset;
     }
 
     @Override

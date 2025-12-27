@@ -40,7 +40,7 @@ public class PawnMoveCalculator extends CombinationMoveCalculator {
                         board.getPiece(offset.newPosition(start)) != null) {
                     return null;
                 }
-                offset = offset.doubleA();
+                return offset.doubleA();
             }
         }
         if (mirror) {

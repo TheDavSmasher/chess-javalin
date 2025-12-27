@@ -14,6 +14,7 @@ import static utils.Catcher.*;
 public class ChessBoard implements Cloneable {
     public static final int BOARD_SIZE = 8;
     private ChessPiece[][] board = new ChessPiece[BOARD_SIZE][BOARD_SIZE];
+    private ChessMove lastMove;
 
     /**
      * Adds a chess piece to the chessboard
@@ -37,6 +38,10 @@ public class ChessBoard implements Cloneable {
         return board[position.getRow() - 1][position.getColumn() - 1];
     }
 
+    public ChessMove getLastMove() {
+        return lastMove;
+    }
+
     public void makeMove(ChessMove move, boolean markMoved) {
         ChessPiece oldPiece = getPiece(move.getStartPosition());
         addPiece(move.getStartPosition(), null);
@@ -47,6 +52,7 @@ public class ChessBoard implements Cloneable {
         if (markMoved) {
             newPiece.pieceWasMoved();
         }
+        lastMove = move;
     }
 
     private static final ChessPiece.PieceType[] PIECE_ORDER = {

@@ -122,7 +122,7 @@ public final class Catcher {
     private static <E extends Throwable> void createError(Class<E> throwAs, Class<?>[] types, Object... values) throws E {
         try {
             throw throwAs.getConstructor(types).newInstance(values);
-        } catch (ReflectiveOperationException _) {}
+        } catch (ReflectiveOperationException ignored) {}
     }
 
     private static <R extends Throwable> void tryCatchDoInner(

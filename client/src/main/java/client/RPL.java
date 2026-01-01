@@ -33,9 +33,9 @@ public class RPL {
                     return null;
                 }, IOException.class, ClientException.class),
                 NumberFormatException.class,
-                    _ -> clientStates.help(true),
+                    ignored -> clientStates.help(true),
                 ClientException.class);
-            }, ExitException.class, _ -> {
+            }, ExitException.class, ignored -> {
                 out.println();
                 System.exit(0);
             }, Throwable.class), Throwable.class,

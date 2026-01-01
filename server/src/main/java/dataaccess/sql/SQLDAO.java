@@ -23,13 +23,13 @@ public abstract class SQLDAO implements ChessDAO {
         DatabaseManager.createDatabase();
         tryCatchResources(() -> getStatement("CREATE TABLE IF NOT EXISTS " + getTableName() + getTableSetup()),
                 PreparedStatement::executeUpdate,
-                SQLException.class, DataAccessException.class, _ -> "could not configure table " + getTableName());
+                SQLException.class, DataAccessException.class, ignore -> "could not configure table " + getTableName());
         tableExists.set(true);
     }
 
     @Override
     public void clear() throws DataAccessException {
-        tryUpdate("TRUNCATE " + getTableName(), _ -> {});
+        tryUpdate("TRUNCATE " + getTableName(), ignore -> {});
     }
 
     @FunctionalInterface
@@ -40,7 +40,7 @@ public abstract class SQLDAO implements ChessDAO {
     protected <T> T tryQuery(@Language("SQL") String sql, SqlQuery<T> query, Object... params) throws DataAccessException {
         return tryCatchResources(() -> getStatement("SELECT * FROM " + getTableName() + sql, params),
                 PreparedStatement::executeQuery, query::execute,
-                SQLException.class, DataAccessException.class, _ -> "could not execute query");
+                SQLException.class, DataAccessException.class, ignore -> "could not execute query");
     }
 
     protected <T> T trySingleQuery(@Language("SQL") String whereCol, Object whereVal, SqlQuery<T> query) throws DataAccessException {
@@ -60,7 +60,7 @@ public abstract class SQLDAO implements ChessDAO {
                     rs.next() ? rs.getInt(1) : result,
                     null, SQLException.class, Throwable::getMessage));
             return null;
-        }, SQLException.class, DataAccessException.class, _ -> "could not execute update");
+        }, SQLException.class, DataAccessException.class, ignore -> "could not execute update");
     }
 
     protected void tryInsert(@Language("SQL") String rows, SqlUpdate update, Object... values) throws DataAccessException {

@@ -28,7 +28,7 @@ public final class ClientCommandProcessing {
         }
 
         public ClientCommand(CommandRunnable command, String option, String... description) {
-            this(_ -> command.process(), option, 0,
+            this(ignored -> command.process(), option, 0,
                     "This command takes no arguments", null, description);
         }
 

@@ -56,7 +56,7 @@ public class GameService extends Service {
     }
 
     public void updateGameState(UserGameCommand command, ChessGame game) throws ServiceException {
-        tryAuthorized(command.getAuthToken(), _ -> gameDAO().updateGameBoard(command.getGameID(), serialize(game)));
+        tryAuthorized(command.getAuthToken(), ignore -> gameDAO().updateGameBoard(command.getGameID(), serialize(game)));
     }
     //endregion
 

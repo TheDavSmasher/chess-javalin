@@ -36,7 +36,7 @@ public class UserService extends Service {
     }
 
     public Void logout(String authToken) throws ServiceException {
-        return tryAuthorized(authToken, _ -> authDAO().deleteAuth(authToken));
+        return tryAuthorized(authToken, ignore -> authDAO().deleteAuth(authToken));
     }
 
     @FunctionalInterface

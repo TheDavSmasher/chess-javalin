@@ -71,7 +71,7 @@ public class InGameState extends ChessClientState implements ServerMessageObserv
         String start = params[0], end = params[1];
         ChessPiece.PieceType type = params.length < 3 ? null : tryCatchRethrow(() ->
                         ChessPiece.PieceType.valueOf(params[2]),
-                IllegalArgumentException.class, IOException.class, _ -> "That Piece Type does not exist.");
+                IllegalArgumentException.class, IOException.class, ignore -> "That Piece Type does not exist.");
         ChessMove move = new ChessMove(positionFromString(start), positionFromString(end), type);
         stateManager.serverFacade.makeMove(stateManager.authToken, stateManager.currentGameID, move);
     }

@@ -56,6 +56,11 @@ public class ChessPiece {
         return hasMoved;
     }
 
+    public ChessPiece promotePiece(PieceType type) {
+        if (type == null) return this;
+        return new ChessPiece(color, type);
+    }
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in

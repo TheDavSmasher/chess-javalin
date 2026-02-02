@@ -75,7 +75,7 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         return gameBoard.getPiece(startPosition) instanceof ChessPiece temp
-                ? removeInvalidMoves(temp.pieceMoves(gameBoard, startPosition)) : new ArrayList<>();
+                ? removeInvalidMoves(temp.pieceMoves(gameBoard, startPosition)) : null;
     }
 
     private Collection<ChessMove> removeInvalidMoves(Collection<ChessMove> moves) {

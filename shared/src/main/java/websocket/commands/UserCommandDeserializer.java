@@ -1,23 +1,20 @@
 package websocket.commands;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
+import utils.Serializer;
 
-import java.lang.reflect.Type;
-
-public final class UserCommandDeserializer implements JsonDeserializer<UserGameCommand> {
+public final class UserCommandDeserializer extends Serializer.Deserializer<UserGameCommand> {
     @Override
-    public UserGameCommand deserialize(JsonElement el, Type type, JsonDeserializationContext ctx) {
-        if (!el.isJsonObject()) {
-            return null;
-        }
-        String commandType = el.getAsJsonObject().get("commandType").getAsString();
-        return ctx.deserialize(el, switch (UserGameCommand.CommandType.valueOf(commandType)) {
-            case CONNECT -> ConnectCommand.class;
-            case LEAVE -> LeaveCommand.class;
-            case RESIGN -> ResignCommand.class;
+    protected String enumField() {
+        return "commandType";
+    }
+
+    @Override
+    protected Class<? extends UserGameCommand> enumClass(String value) {
+        return switch (UserGameCommand.CommandType.valueOf(value)) {
+            case CONNECT   -> ConnectCommand.class;
+            case LEAVE     -> LeaveCommand.class;
+            case RESIGN    -> ResignCommand.class;
             case MAKE_MOVE -> MakeMoveCommand.class;
-        });
+        };
     }
 }

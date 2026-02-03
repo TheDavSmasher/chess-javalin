@@ -1,22 +1,19 @@
 package websocket.messages;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
+import utils.Serializer;
 
-import java.lang.reflect.Type;
-
-public final class ServerMessageDeserializer implements JsonDeserializer<ServerMessage> {
+public final class ServerMessageDeserializer extends Serializer.Deserializer<ServerMessage> {
     @Override
-    public ServerMessage deserialize(JsonElement el, Type type, JsonDeserializationContext ctx) {
-        if (!el.isJsonObject()) {
-            return null;
-        }
-        String messageType = el.getAsJsonObject().get("serverMessageType").getAsString();
-        return ctx.deserialize(el, switch (ServerMessage.ServerMessageType.valueOf(messageType)) {
+    protected String enumField() {
+        return "serverMessageType";
+    }
+
+    @Override
+    protected Class<? extends ServerMessage> enumClass(String value) {
+        return switch (ServerMessage.ServerMessageType.valueOf(value)) {
             case NOTIFICATION -> Notification.class;
             case LOAD_GAME    -> LoadGameMessage.class;
             case ERROR        -> ErrorMessage.class;
-        });
+        };
     }
 }

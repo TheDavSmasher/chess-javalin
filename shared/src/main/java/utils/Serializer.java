@@ -1,10 +1,10 @@
 package utils;
 
 import com.google.gson.*;
-import websocket.commands.UserCommandDeserializer;
-import websocket.commands.UserGameCommand;
-import websocket.messages.ServerMessage;
-import websocket.messages.ServerMessageDeserializer;
+import websocket.commands.*;
+import websocket.messages.*;
+
+import java.lang.reflect.Type;
 
 public final class Serializer {
     public static final Gson gson;
@@ -24,5 +24,20 @@ public final class Serializer {
 
     public static String serialize(Object object) {
         return gson.toJson(object);
+    }
+
+
+    public static abstract class Deserializer<T> implements JsonDeserializer<T> {
+        protected abstract String enumField();
+        protected abstract Class<? extends T> enumClass(String value);
+
+        @Override
+        public T deserialize(JsonElement el, Type type, JsonDeserializationContext ctx) {
+            if (!el.isJsonObject()) {
+                return null;
+            }
+            String enumVal = el.getAsJsonObject().get(enumField()).getAsString();
+            return ctx.deserialize(el, enumClass(enumVal));
+        }
     }
 }

@@ -6,7 +6,7 @@ import utils.EnumObjectFactory;
 import static chess.ChessPiece.PieceType;
 
 public final class PieceMoveCalculatorFactory extends EnumObjectFactory<PieceType, PieceMoveCalculator> {
-    private PieceMoveCalculatorFactory() {
+    public PieceMoveCalculatorFactory() {
         super(true);
     }
 
@@ -26,10 +26,4 @@ public final class PieceMoveCalculatorFactory extends EnumObjectFactory<PieceTyp
             case PAWN   -> new PawnMoveCalculator();
         };
     }
-
-    public static PieceMoveCalculator getFrom(PieceType type) {
-        return INSTANCE.get(type);
-    }
-
-    private static final PieceMoveCalculatorFactory INSTANCE = new PieceMoveCalculatorFactory();
 }
